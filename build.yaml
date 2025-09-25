@@ -1,0 +1,20 @@
+targets:
+  $default:
+    builders:
+      json_serializable|json_serializable:
+        enabled: true
+        generate_for:
+          - "lib/models/**.dart"
+      freezed|freezed:
+        enabled: true
+        generate_for:
+          - "lib/models/**.dart"
+      riverpod_generator|riverpod_generator:
+        enabled: true
+        generate_for:
+          - "lib/domain/**.dart"
+          - "lib/di/**.dart"
+      go_router_builder|go_router_builder:
+        enabled: true
+        generate_for:
+          - "lib/navigation/**.dart"

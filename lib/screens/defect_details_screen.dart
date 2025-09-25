@@ -26,7 +26,6 @@ class DefectDetailsScreen extends HookConsumerWidget {
 
     final controller = useTextEditingController(text: defectName);
 
-    final defectDetails = ref.watch(defectDetailsProvider(defectId));
     return Scaffold(
       appBar: AppBar(
         title: Hero(
@@ -35,7 +34,7 @@ class DefectDetailsScreen extends HookConsumerWidget {
             type: MaterialType.transparency,
             child: TextField(
               controller: controller,
-              decoration: objectNameTextFieldDecoration(),
+              decoration: objectNameTextFieldDecoration,
               onSubmitted: onDefectNameSubmitted,
               onTapOutside: (_) {
                 onDefectNameSubmitted(controller.text);

@@ -1,4 +1,4 @@
-import 'package:control/data/idata_provider.dart';
+import 'package:control/di/di.dart';
 import 'package:control/navigation/navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
@@ -23,9 +23,11 @@ class ControlApp extends StatelessWidget {
     return ProviderScope(
       overrides: isTesting
           ? [
-              uuidProvider.overrideWith((ref) => ref.read(testingUuidProvider)),
               dataProviderProvider.overrideWith(
                 (ref) => ref.read(testingDataProviderProvider),
+              ),
+              authServiceProvider.overrideWith(
+                (ref) => ref.read(testingAuthServiceProvider),
               ),
             ]
           : [],

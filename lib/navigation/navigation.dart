@@ -1,3 +1,4 @@
+import 'package:control/screens/auth_screen.dart';
 import 'package:control/screens/project_details_screen.dart';
 import 'package:control/screens/project_screen.dart';
 import 'package:control/screens/defect_details_screen.dart';
@@ -8,7 +9,7 @@ part 'navigation.g.dart';
 
 final router = GoRouter(
   routes: $appRoutes,
-  initialLocation: ProjectsListRoute().location,
+  initialLocation: AuthRoute().location,
 );
 
 @TypedGoRoute<ProjectsListRoute>(
@@ -56,5 +57,16 @@ class DefectDetailsRoute extends GoRouteData with $DefectDetailsRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return DefectDetailsScreen(defectId: defectId, defectName: defectName);
+  }
+}
+
+@TypedGoRoute<AuthRoute>(path: '/auth', routes: [])
+@immutable
+class AuthRoute extends GoRouteData with $AuthRoute {
+  const AuthRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return AuthScreen();
   }
 }

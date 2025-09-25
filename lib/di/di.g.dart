@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'idata_provider.dart';
+part of 'di.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -92,6 +92,89 @@ final class TestingDataProviderProvider
 String _$testingDataProviderHash() =>
     r'0656d6853de43f3f86635d1581c3def1cf6c63bd';
 
+@ProviderFor(authService)
+const authServiceProvider = AuthServiceProvider._();
+
+final class AuthServiceProvider
+    extends $FunctionalProvider<IAuthService, IAuthService, IAuthService>
+    with $Provider<IAuthService> {
+  const AuthServiceProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'authServiceProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$authServiceHash();
+
+  @$internal
+  @override
+  $ProviderElement<IAuthService> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  IAuthService create(Ref ref) {
+    return authService(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(IAuthService value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<IAuthService>(value),
+    );
+  }
+}
+
+String _$authServiceHash() => r'd4bca4a4703af7c11b237f09484f174cb18902c3';
+
+@ProviderFor(testingAuthService)
+const testingAuthServiceProvider = TestingAuthServiceProvider._();
+
+final class TestingAuthServiceProvider
+    extends $FunctionalProvider<IAuthService, IAuthService, IAuthService>
+    with $Provider<IAuthService> {
+  const TestingAuthServiceProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'testingAuthServiceProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$testingAuthServiceHash();
+
+  @$internal
+  @override
+  $ProviderElement<IAuthService> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  IAuthService create(Ref ref) {
+    return testingAuthService(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(IAuthService value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<IAuthService>(value),
+    );
+  }
+}
+
+String _$testingAuthServiceHash() =>
+    r'd233aad7ef48edf916c2ceb5705bde5624f6d7db';
+
 @ProviderFor(getDio)
 const getDioProvider = GetDioProvider._();
 
@@ -172,42 +255,49 @@ final class UuidProvider extends $FunctionalProvider<Uuid, Uuid, Uuid>
 
 String _$uuidHash() => r'bb47844b57b43df0119323b586f312fabcc6d8aa';
 
-@ProviderFor(testingUuid)
-const testingUuidProvider = TestingUuidProvider._();
+@ProviderFor(secureStorage)
+const secureStorageProvider = SecureStorageProvider._();
 
-final class TestingUuidProvider extends $FunctionalProvider<Uuid, Uuid, Uuid>
-    with $Provider<Uuid> {
-  const TestingUuidProvider._()
+final class SecureStorageProvider
+    extends
+        $FunctionalProvider<
+          FlutterSecureStorage,
+          FlutterSecureStorage,
+          FlutterSecureStorage
+        >
+    with $Provider<FlutterSecureStorage> {
+  const SecureStorageProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'testingUuidProvider',
+        name: r'secureStorageProvider',
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$testingUuidHash();
+  String debugGetCreateSourceHash() => _$secureStorageHash();
 
   @$internal
   @override
-  $ProviderElement<Uuid> $createElement($ProviderPointer pointer) =>
-      $ProviderElement(pointer);
+  $ProviderElement<FlutterSecureStorage> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
 
   @override
-  Uuid create(Ref ref) {
-    return testingUuid(ref);
+  FlutterSecureStorage create(Ref ref) {
+    return secureStorage(ref);
   }
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(Uuid value) {
+  Override overrideWithValue(FlutterSecureStorage value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<Uuid>(value),
+      providerOverride: $SyncValueProvider<FlutterSecureStorage>(value),
     );
   }
 }
 
-String _$testingUuidHash() => r'cd825ea39f30ab01413880ffbd2a8cefc87d075a';
+String _$secureStorageHash() => r'273dc403a965c1f24962aaf4d40776611a26f8b8';

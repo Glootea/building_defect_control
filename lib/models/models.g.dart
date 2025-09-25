@@ -6,18 +6,6 @@ part of 'models.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-UserData _$UserDataFromJson(Map<String, dynamic> json) => UserData(
-  firstName: json['firstName'] as String,
-  middleName: json['middleName'] as String,
-  lastName: json['lastName'] as String,
-);
-
-Map<String, dynamic> _$UserDataToJson(UserData instance) => <String, dynamic>{
-  'firstName': instance.firstName,
-  'middleName': instance.middleName,
-  'lastName': instance.lastName,
-};
-
 Defect _$DefectFromJson(Map<String, dynamic> json) => Defect(
   id: json['id'] as String,
   name: json['name'] as String,

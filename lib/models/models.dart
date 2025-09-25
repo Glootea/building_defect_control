@@ -5,26 +5,6 @@ part 'models.freezed.dart';
 part 'models.g.dart';
 
 @JsonSerializable()
-@Freezed()
-class UserData with _$UserData {
-  const UserData({
-    required this.firstName,
-    required this.middleName,
-    required this.lastName,
-    // ?post
-  });
-
-  factory UserData.fromJson(Map<String, Object?> json) =>
-      _$UserDataFromJson(json);
-
-  Map<String, dynamic> toJson() => _$UserDataToJson(this);
-
-  final String firstName;
-  final String middleName;
-  final String lastName;
-}
-
-@JsonSerializable()
 @freezed
 class Defect with _$Defect {
   const Defect({

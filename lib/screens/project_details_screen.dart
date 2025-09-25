@@ -25,9 +25,6 @@ class ProjectDetailsScreen extends HookConsumerWidget {
           .saveProjectName(projectId, value);
     }
 
-    print(
-      'Building ProjectDetailsScreen for projectId: $projectId, projectName: $projectName',
-    );
     final project = ref.watch(projectDetailsProvider(projectId));
     final controller = useTextEditingController(text: projectName);
 
@@ -39,7 +36,7 @@ class ProjectDetailsScreen extends HookConsumerWidget {
             type: MaterialType.transparency,
             child: TextField(
               controller: controller,
-              decoration: objectNameTextFieldDecoration(),
+              decoration: objectNameTextFieldDecoration,
               onSubmitted: onProjectNameSubmitted,
               onTapOutside: (_) {
                 onProjectNameSubmitted(controller.text);

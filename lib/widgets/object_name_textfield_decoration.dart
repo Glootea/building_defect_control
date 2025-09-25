@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-InputDecoration objectNameTextFieldDecoration() {
+InputDecoration get objectNameTextFieldDecoration {
   return InputDecoration(
     fillColor: Colors.transparent,
     filled: true,

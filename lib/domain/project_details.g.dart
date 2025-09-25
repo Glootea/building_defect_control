@@ -50,7 +50,7 @@ final class ProjectDetailsProvider
   }
 }
 
-String _$projectDetailsHash() => r'dfe75f2791005a6e0469a1d3a176c93b1a92e4a8';
+String _$projectDetailsHash() => r'89b19784d7a66f19dfba3d0900883d4abb90e8d1';
 
 final class ProjectDetailsFamily extends $Family
     with

@@ -1,4 +1,5 @@
 import 'package:control/domain/projects.dart';
+import 'package:control/domain/user.dart';
 import 'package:control/models/models.dart';
 import 'package:control/navigation/navigation.dart';
 import 'package:flutter/material.dart';
@@ -16,9 +17,21 @@ class ProjectScreen extends ConsumerWidget {
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Text(
-              "Projects",
-              style: Theme.of(context).textTheme.headlineMedium,
+            child: Row(
+              children: [
+                Text(
+                  "Projects",
+                  style: Theme.of(context).textTheme.headlineMedium,
+                ),
+                Spacer(),
+                IconButton(
+                  onPressed: () {
+                    ref.read(userProvider.notifier).clearUser();
+                    AuthRoute().go(context); // TODO: move to guard/middleware
+                  },
+                  icon: Icon(Icons.logout),
+                ),
+              ],
             ),
           ),
           (projects.when(
@@ -32,7 +45,6 @@ class ProjectScreen extends ConsumerWidget {
                       ),
                       itemCount: projectsList.length,
                       itemBuilder: (context, index) {
-                        print(projectsList);
                         final project = projectsList[index];
                         return ProjectCard(project: project);
                       },
