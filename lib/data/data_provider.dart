@@ -1,0 +1,49 @@
+import 'package:control/data/idata_provider.dart';
+import 'package:control/models/models.dart';
+import 'package:dio/dio.dart';
+
+class DataProvider implements IDataProvider {
+  const DataProvider(this.dio);
+
+  final Dio dio;
+
+  @override
+  Future<List<ProjectShallow>> getProjects() async {
+    return [];
+  }
+
+  @override
+  Future<List<Defect>> getDefects(String projectId) async {
+    return [];
+  }
+
+  @override
+  Future<Project> updateProject(Project project) {
+    // TODO: implement saveProjectName
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<ProjectShallow> createProject(String name) {
+    // TODO: implement createProject
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Defect> getDefect(String defectId) {
+    // TODO: implement getDefect
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Defect> updateDefect(Defect defect) {
+    // TODO: implement updateDefect
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Project> getProject(String projectId) {
+    // TODO: implement getProject
+    throw UnimplementedError();
+  }
+}
