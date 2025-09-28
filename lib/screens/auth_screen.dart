@@ -1,6 +1,6 @@
 import 'package:control/domain/user.dart';
-import 'package:control/navigation/navigation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -18,15 +18,6 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
     final loginTextController = useTextEditingController();
     final passwordTextController = useTextEditingController();
     final state = ref.watch(userProvider);
-
-    state.whenData(
-      // TODO: move to guard/middleware/listener
-      (userData) => (userData != null)
-          ? WidgetsBinding.instance.addPostFrameCallback(
-              (_) => ProjectsListRoute().go(context),
-            )
-          : null,
-    );
 
     return Scaffold(
       body: Center(
@@ -64,6 +55,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                           decoration: const InputDecoration(
                             labelText: 'Password',
                           ),
+
                           autofillHints: [AutofillHints.password],
                           obscureText: true,
                           validator: (value) => value == null || value.isEmpty
@@ -76,7 +68,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                             if (_formKey.currentState?.validate() != true) {
                               return;
                             }
-
+                            TextInput.finishAutofillContext();
                             ref
                                 .read(userProvider.notifier)
                                 .login(

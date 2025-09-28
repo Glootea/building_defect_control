@@ -46,4 +46,34 @@ class DataProvider implements IDataProvider {
     // TODO: implement getProject
     throw UnimplementedError();
   }
+
+  @override
+  Future<List<String>> getExecutors() async {
+    // TODO: implement getExecutors
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<DefectElimination?> getDefectElimination(String defectId) {
+    // TODO: implement getDefectElimination
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> createDefectElimination(String defectId) {
+    // TODO: implement createDefectElimination
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> updateDefectElimination(DefectElimination elimination) {
+    // TODO: implement updateDefectElimination
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> deleteDefectElimination(String defectId) {
+    // TODO: implement deleteDefectElimination
+    throw UnimplementedError();
+  }
 }

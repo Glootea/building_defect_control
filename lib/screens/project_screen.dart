@@ -27,7 +27,6 @@ class ProjectScreen extends ConsumerWidget {
                 IconButton(
                   onPressed: () {
                     ref.read(userProvider.notifier).clearUser();
-                    AuthRoute().go(context); // TODO: move to guard/middleware
                   },
                   icon: Icon(Icons.logout),
                 ),

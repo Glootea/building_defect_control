@@ -1,5 +1,5 @@
 import 'package:control/di/di.dart';
-import 'package:control/navigation/navigation.dart';
+import 'package:control/navigation/guard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:go_router/go_router.dart';
@@ -31,10 +31,12 @@ class ControlApp extends StatelessWidget {
               ),
             ]
           : [],
-      child: MaterialApp.router(
-        title: 'Control App',
-        theme: ThemeData(primarySwatch: Colors.blue),
-        routerConfig: router,
+      child: Consumer(
+        builder: (context, widgetRef, ref) => MaterialApp.router(
+          title: 'Control App',
+          theme: ThemeData(primarySwatch: Colors.blue),
+          routerConfig: widgetRef.watch(routerProvider),
+        ),
       ),
     );
   }

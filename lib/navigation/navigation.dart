@@ -7,11 +7,6 @@ import 'package:go_router/go_router.dart';
 
 part 'navigation.g.dart';
 
-final router = GoRouter(
-  routes: $appRoutes,
-  initialLocation: AuthRoute().location,
-);
-
 @TypedGoRoute<ProjectsListRoute>(
   path: '/projects',
   routes: [TypedGoRoute<ProjectDetailsRoute>(path: _projectDetailsPath)],

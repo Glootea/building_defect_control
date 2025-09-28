@@ -18,4 +18,14 @@ class DefectDetails extends _$DefectDetails {
     await dataProvider.updateDefect(newDefect);
     state = AsyncData(newDefect);
   }
+
+  Future<List<String>> getExecutorsSuggestions(String query) async {
+    final allUsers = await dataProvider.getExecutors();
+    return allUsers
+        .where(
+          (user) =>
+              query.isEmpty || user.toLowerCase().contains(query.toLowerCase()),
+        )
+        .toList();
+  }
 }

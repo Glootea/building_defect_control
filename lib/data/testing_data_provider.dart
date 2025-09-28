@@ -4,21 +4,16 @@ import 'package:uuid/uuid.dart';
 
 class TestingDataProvider implements IDataProvider {
   final Uuid _uuid = Uuid();
-  late final _projectsShallow = [
-    ProjectShallow(id: _uuid.v7(), name: 'Create a new app'),
-  ];
 
   late final _projects = [
-    Project(
-      id: _projectsShallow[0].id,
-      name: _projectsShallow[0].name,
-      defects: _defects,
-    ),
+    Project(id: _uuid.v7(), name: 'Create a new app', defects: _defects),
   ];
   @override
   Future<List<ProjectShallow>> getProjects() async {
     await _simulateDelay();
-    return _projectsShallow;
+    return _projects
+        .map((e) => ProjectShallow(id: e.id, name: e.name))
+        .toList();
   }
 
   late final _defects = [
@@ -48,10 +43,6 @@ class TestingDataProvider implements IDataProvider {
     final index = _projects.indexWhere((p) => p.id == project.id);
     if (index != -1) {
       _projects[index] = project;
-      _projectsShallow[index] = ProjectShallow(
-        id: project.id,
-        name: project.name,
-      );
     }
 
     await _simulateDelay();
@@ -62,7 +53,6 @@ class TestingDataProvider implements IDataProvider {
   @override
   Future<ProjectShallow> createProject(String name) async {
     final newProject = ProjectShallow(id: _uuid.v7(), name: name);
-    _projectsShallow.add(newProject);
     _projects.add(Project(id: newProject.id, name: name, defects: []));
     await _simulateDelay();
     return newProject;
@@ -87,16 +77,64 @@ class TestingDataProvider implements IDataProvider {
 
   @override
   Future<Project> getProject(String projectId) async {
-    final projectShallow = _projectsShallow.firstWhere(
-      (p) => p.id == projectId,
-    );
-    final project = Project(
-      id: projectShallow.id,
-      name: projectShallow.name,
-      defects: _defects,
-    );
+    final project = _projects.firstWhere((p) => p.id == projectId);
+
     await _simulateDelay();
     return project;
+  }
+
+  final List<String> _executors = [
+    'Alice Johnson',
+    'Bob Smith',
+    'Charlie Davis',
+    'Diana Evans',
+    'Ethan Brown',
+  ];
+
+  @override
+  Future<List<String>> getExecutors() async {
+    await _simulateDelay();
+    return Future.value(_executors);
+  }
+
+  final List<DefectElimination> _eliminations = [];
+  @override
+  Future<DefectElimination?> getDefectElimination(String defectId) async {
+    await _simulateDelay();
+    final index = _eliminations.indexWhere((e) => e.defectId == defectId);
+    if (index != -1) {
+      return _eliminations[index];
+    }
+    return null;
+  }
+
+  @override
+  Future<void> createDefectElimination(String defectId) {
+    final newElimination = DefectElimination(
+      defectId: defectId,
+      id: _uuid.v7(),
+      startDate: DateTime.now(),
+      endDate: DateTime.now().add(const Duration(hours: 2)),
+      priority: Priority.medium,
+    );
+
+    _eliminations.add(newElimination);
+    return _simulateDelay();
+  }
+
+  @override
+  Future<void> updateDefectElimination(DefectElimination elimination) {
+    final index = _eliminations.indexWhere((e) => e.id == elimination.id);
+    if (index != -1) {
+      _eliminations[index] = elimination;
+    }
+    return _simulateDelay();
+  }
+
+  @override
+  Future<void> deleteDefectElimination(String defectId) {
+    _eliminations.removeWhere((e) => e.defectId == defectId);
+    return _simulateDelay();
   }
 }
 
