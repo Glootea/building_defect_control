@@ -69,8 +69,10 @@ class TestingDataProvider implements IDataProvider {
   Future<Defect> updateDefect(Defect defect) async {
     final index = _defects.indexWhere((d) => d.id == defect.id);
     if (index != -1) {
+      print('Failed to find defect with id ${defect.id}');
       _defects[index] = defect;
     }
+    print('Updated defect: $defect');
     await _simulateDelay();
     return defect;
   }

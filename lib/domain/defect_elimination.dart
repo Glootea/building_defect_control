@@ -15,6 +15,7 @@ class DefectElimination extends _$DefectElimination {
   }
 
   Future<void> createDefectElimination() async {
+    state = const AsyncValue.loading();
     await dataProvider.createDefectElimination(defectId);
     ref.invalidateSelf();
   }

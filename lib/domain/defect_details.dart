@@ -9,12 +9,18 @@ class DefectDetails extends _$DefectDetails {
 
   @override
   Future<Defect> build(String defectId) async {
-    return dataProvider.getDefect(defectId);
+    final data = await dataProvider.getDefect(defectId);
+    return data;
   }
 
   Future<void> saveDefectName(String defectId, String newName) async {
     final newDefect = state.requireValue.copyWith(name: newName);
 
+    await dataProvider.updateDefect(newDefect);
+    state = AsyncData(newDefect);
+  }
+
+  Future<void> updateDefect(Defect newDefect) async {
     await dataProvider.updateDefect(newDefect);
     state = AsyncData(newDefect);
   }

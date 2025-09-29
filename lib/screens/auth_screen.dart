@@ -19,6 +19,15 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
     final passwordTextController = useTextEditingController();
     final state = ref.watch(userProvider);
 
+    void submitForm() async {
+      if (_formKey.currentState?.validate() != true) {
+        return;
+      }
+      ref
+          .read(userProvider.notifier)
+          .login(loginTextController.text, passwordTextController.text);
+    }
+
     return Scaffold(
       body: Center(
         child: ConstrainedBox(
@@ -50,6 +59,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                               : null,
                         ),
                         const SizedBox(height: 16),
+                        // TODO: use focus to move to password field
                         TextFormField(
                           controller: passwordTextController,
                           decoration: const InputDecoration(
@@ -61,20 +71,16 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                           validator: (value) => value == null || value.isEmpty
                               ? 'Please enter your password'
                               : null,
+                          onFieldSubmitted: (_) async {
+                            submitForm();
+                          },
                         ),
                         const SizedBox(height: 32),
                         ElevatedButton(
                           onPressed: () async {
-                            if (_formKey.currentState?.validate() != true) {
-                              return;
-                            }
                             TextInput.finishAutofillContext();
-                            ref
-                                .read(userProvider.notifier)
-                                .login(
-                                  loginTextController.text,
-                                  passwordTextController.text,
-                                );
+
+                            submitForm();
                           },
                           child: const Text('Login'),
                         ),
