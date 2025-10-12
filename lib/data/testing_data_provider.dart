@@ -1,5 +1,7 @@
 import 'package:control/data/idata_provider.dart';
 import 'package:control/models/models.dart';
+import 'package:control/models/network/user/create_user.dart';
+import 'package:control/models/network/user/login_user.dart';
 import 'package:uuid/uuid.dart';
 
 class TestingDataProvider implements IDataProvider {
@@ -142,4 +144,18 @@ class TestingDataProvider implements IDataProvider {
 
 Future<void> _simulateDelay() async {
   await Future<void>.delayed(const Duration(seconds: 1));
+}
+
+class TestingUserDataProvider implements IUserDataProvider {
+  const TestingUserDataProvider();
+
+  @override
+  Future<CreateUserResponse> createUser(CreateUserRequest request) async {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<LoginUserResponse> loginUser(LoginUserRequest request) async {
+    throw UnimplementedError();
+  }
 }

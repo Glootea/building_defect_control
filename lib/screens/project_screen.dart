@@ -26,6 +26,12 @@ class ProjectScreen extends ConsumerWidget {
                 Spacer(),
                 IconButton(
                   onPressed: () {
+                    ProfileRoute().push(context);
+                  },
+                  icon: Icon(Icons.person_outline),
+                ),
+                IconButton(
+                  onPressed: () {
                     ref.read(userProvider.notifier).clearUser();
                   },
                   icon: Icon(Icons.logout),

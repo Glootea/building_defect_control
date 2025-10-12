@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'user.dart';
+part of 'login_user.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -13,40 +13,40 @@ part of 'user.dart';
 T _$identity<T>(T value) => value;
 
 /// @nodoc
-mixin _$UserData {
+mixin _$LoginUserRequest {
 
- String get firstName; String get middleName; String get lastName; UserRole get userRole; String get post; String get email;
-/// Create a copy of UserData
+ String get email; String get password;
+/// Create a copy of LoginUserRequest
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-$UserDataCopyWith<UserData> get copyWith => _$UserDataCopyWithImpl<UserData>(this as UserData, _$identity);
+$LoginUserRequestCopyWith<LoginUserRequest> get copyWith => _$LoginUserRequestCopyWithImpl<LoginUserRequest>(this as LoginUserRequest, _$identity);
 
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserData&&(identical(other.firstName, firstName) || other.firstName == firstName)&&(identical(other.middleName, middleName) || other.middleName == middleName)&&(identical(other.lastName, lastName) || other.lastName == lastName)&&(identical(other.userRole, userRole) || other.userRole == userRole)&&(identical(other.post, post) || other.post == post)&&(identical(other.email, email) || other.email == email));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LoginUserRequest&&(identical(other.email, email) || other.email == email)&&(identical(other.password, password) || other.password == password));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,firstName,middleName,lastName,userRole,post,email);
+int get hashCode => Object.hash(runtimeType,email,password);
 
 @override
 String toString() {
-  return 'UserData(firstName: $firstName, middleName: $middleName, lastName: $lastName, userRole: $userRole, post: $post, email: $email)';
+  return 'LoginUserRequest(email: $email, password: $password)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class $UserDataCopyWith<$Res>  {
-  factory $UserDataCopyWith(UserData value, $Res Function(UserData) _then) = _$UserDataCopyWithImpl;
+abstract mixin class $LoginUserRequestCopyWith<$Res>  {
+  factory $LoginUserRequestCopyWith(LoginUserRequest value, $Res Function(LoginUserRequest) _then) = _$LoginUserRequestCopyWithImpl;
 @useResult
 $Res call({
- String firstName, String middleName, String lastName, UserRole userRole, String email, String post
+ String email, String password
 });
 
 
@@ -54,23 +54,19 @@ $Res call({
 
 }
 /// @nodoc
-class _$UserDataCopyWithImpl<$Res>
-    implements $UserDataCopyWith<$Res> {
-  _$UserDataCopyWithImpl(this._self, this._then);
+class _$LoginUserRequestCopyWithImpl<$Res>
+    implements $LoginUserRequestCopyWith<$Res> {
+  _$LoginUserRequestCopyWithImpl(this._self, this._then);
 
-  final UserData _self;
-  final $Res Function(UserData) _then;
+  final LoginUserRequest _self;
+  final $Res Function(LoginUserRequest) _then;
 
-/// Create a copy of UserData
+/// Create a copy of LoginUserRequest
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? firstName = null,Object? middleName = null,Object? lastName = null,Object? userRole = null,Object? email = null,Object? post = null,}) {
-  return _then(UserData(
-firstName: null == firstName ? _self.firstName : firstName // ignore: cast_nullable_to_non_nullable
-as String,middleName: null == middleName ? _self.middleName : middleName // ignore: cast_nullable_to_non_nullable
-as String,lastName: null == lastName ? _self.lastName : lastName // ignore: cast_nullable_to_non_nullable
-as String,userRole: null == userRole ? _self.userRole : userRole // ignore: cast_nullable_to_non_nullable
-as UserRole,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
-as String,post: null == post ? _self.post : post // ignore: cast_nullable_to_non_nullable
+@pragma('vm:prefer-inline') @override $Res call({Object? email = null,Object? password = null,}) {
+  return _then(LoginUserRequest(
+email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
+as String,password: null == password ? _self.password : password // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }
@@ -78,8 +74,8 @@ as String,
 }
 
 
-/// Adds pattern-matching-related methods to [UserData].
-extension UserDataPatterns on UserData {
+/// Adds pattern-matching-related methods to [LoginUserRequest].
+extension LoginUserRequestPatterns on LoginUserRequest {
 /// A variant of `map` that fallback to returning `orElse`.
 ///
 /// It is equivalent to doing:
@@ -202,41 +198,42 @@ case _:
 
 }
 
-/// @nodoc
-mixin _$UserRole {
 
- bool get canReportDefects; bool get canEliminateDefects; bool get canManageProjects; bool get canManageOtherUsers; bool get canViewStatistics; bool get isAdmin; DefinedUserRole? get predefinedUserRole;
-/// Create a copy of UserRole
+/// @nodoc
+mixin _$LoginUserResponse {
+
+ String get token; UserData get userData;
+/// Create a copy of LoginUserResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-$UserRoleCopyWith<UserRole> get copyWith => _$UserRoleCopyWithImpl<UserRole>(this as UserRole, _$identity);
+$LoginUserResponseCopyWith<LoginUserResponse> get copyWith => _$LoginUserResponseCopyWithImpl<LoginUserResponse>(this as LoginUserResponse, _$identity);
 
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserRole&&(identical(other.canReportDefects, canReportDefects) || other.canReportDefects == canReportDefects)&&(identical(other.canEliminateDefects, canEliminateDefects) || other.canEliminateDefects == canEliminateDefects)&&(identical(other.canManageProjects, canManageProjects) || other.canManageProjects == canManageProjects)&&(identical(other.canManageOtherUsers, canManageOtherUsers) || other.canManageOtherUsers == canManageOtherUsers)&&(identical(other.canViewStatistics, canViewStatistics) || other.canViewStatistics == canViewStatistics)&&(identical(other.isAdmin, isAdmin) || other.isAdmin == isAdmin)&&(identical(other.predefinedUserRole, predefinedUserRole) || other.predefinedUserRole == predefinedUserRole));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LoginUserResponse&&(identical(other.token, token) || other.token == token)&&(identical(other.userData, userData) || other.userData == userData));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,canReportDefects,canEliminateDefects,canManageProjects,canManageOtherUsers,canViewStatistics,isAdmin,predefinedUserRole);
+int get hashCode => Object.hash(runtimeType,token,userData);
 
 @override
 String toString() {
-  return 'UserRole(canReportDefects: $canReportDefects, canEliminateDefects: $canEliminateDefects, canManageProjects: $canManageProjects, canManageOtherUsers: $canManageOtherUsers, canViewStatistics: $canViewStatistics, isAdmin: $isAdmin, predefinedUserRole: $predefinedUserRole)';
+  return 'LoginUserResponse(token: $token, userData: $userData)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class $UserRoleCopyWith<$Res>  {
-  factory $UserRoleCopyWith(UserRole value, $Res Function(UserRole) _then) = _$UserRoleCopyWithImpl;
+abstract mixin class $LoginUserResponseCopyWith<$Res>  {
+  factory $LoginUserResponseCopyWith(LoginUserResponse value, $Res Function(LoginUserResponse) _then) = _$LoginUserResponseCopyWithImpl;
 @useResult
 $Res call({
- bool canReportDefects, bool canEliminateDefects, bool canManageProjects, bool canManageOtherUsers, bool canViewStatistics, bool isAdmin, DefinedUserRole? predefinedUserRole
+ String token, UserData userData
 });
 
 
@@ -244,33 +241,28 @@ $Res call({
 
 }
 /// @nodoc
-class _$UserRoleCopyWithImpl<$Res>
-    implements $UserRoleCopyWith<$Res> {
-  _$UserRoleCopyWithImpl(this._self, this._then);
+class _$LoginUserResponseCopyWithImpl<$Res>
+    implements $LoginUserResponseCopyWith<$Res> {
+  _$LoginUserResponseCopyWithImpl(this._self, this._then);
 
-  final UserRole _self;
-  final $Res Function(UserRole) _then;
+  final LoginUserResponse _self;
+  final $Res Function(LoginUserResponse) _then;
 
-/// Create a copy of UserRole
+/// Create a copy of LoginUserResponse
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? canReportDefects = null,Object? canEliminateDefects = null,Object? canManageProjects = null,Object? canManageOtherUsers = null,Object? canViewStatistics = null,Object? isAdmin = null,Object? predefinedUserRole = freezed,}) {
-  return _then(UserRole(
-canReportDefects: null == canReportDefects ? _self.canReportDefects : canReportDefects // ignore: cast_nullable_to_non_nullable
-as bool,canEliminateDefects: null == canEliminateDefects ? _self.canEliminateDefects : canEliminateDefects // ignore: cast_nullable_to_non_nullable
-as bool,canManageProjects: null == canManageProjects ? _self.canManageProjects : canManageProjects // ignore: cast_nullable_to_non_nullable
-as bool,canManageOtherUsers: null == canManageOtherUsers ? _self.canManageOtherUsers : canManageOtherUsers // ignore: cast_nullable_to_non_nullable
-as bool,canViewStatistics: null == canViewStatistics ? _self.canViewStatistics : canViewStatistics // ignore: cast_nullable_to_non_nullable
-as bool,isAdmin: null == isAdmin ? _self.isAdmin : isAdmin // ignore: cast_nullable_to_non_nullable
-as bool,predefinedUserRole: freezed == predefinedUserRole ? _self.predefinedUserRole : predefinedUserRole // ignore: cast_nullable_to_non_nullable
-as DefinedUserRole?,
+@pragma('vm:prefer-inline') @override $Res call({Object? token = null,Object? userData = null,}) {
+  return _then(LoginUserResponse(
+token: null == token ? _self.token : token // ignore: cast_nullable_to_non_nullable
+as String,userData: null == userData ? _self.userData : userData // ignore: cast_nullable_to_non_nullable
+as UserData,
   ));
 }
 
 }
 
 
-/// Adds pattern-matching-related methods to [UserRole].
-extension UserRolePatterns on UserRole {
+/// Adds pattern-matching-related methods to [LoginUserResponse].
+extension LoginUserResponsePatterns on LoginUserResponse {
 /// A variant of `map` that fallback to returning `orElse`.
 ///
 /// It is equivalent to doing:

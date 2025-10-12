@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'user.dart';
+part of 'create_report.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -13,40 +13,40 @@ part of 'user.dart';
 T _$identity<T>(T value) => value;
 
 /// @nodoc
-mixin _$UserData {
+mixin _$CreateReportRequest {
 
- String get firstName; String get middleName; String get lastName; UserRole get userRole; String get post; String get email;
-/// Create a copy of UserData
+ String get name; String get description;
+/// Create a copy of CreateReportRequest
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-$UserDataCopyWith<UserData> get copyWith => _$UserDataCopyWithImpl<UserData>(this as UserData, _$identity);
+$CreateReportRequestCopyWith<CreateReportRequest> get copyWith => _$CreateReportRequestCopyWithImpl<CreateReportRequest>(this as CreateReportRequest, _$identity);
 
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserData&&(identical(other.firstName, firstName) || other.firstName == firstName)&&(identical(other.middleName, middleName) || other.middleName == middleName)&&(identical(other.lastName, lastName) || other.lastName == lastName)&&(identical(other.userRole, userRole) || other.userRole == userRole)&&(identical(other.post, post) || other.post == post)&&(identical(other.email, email) || other.email == email));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CreateReportRequest&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,firstName,middleName,lastName,userRole,post,email);
+int get hashCode => Object.hash(runtimeType,name,description);
 
 @override
 String toString() {
-  return 'UserData(firstName: $firstName, middleName: $middleName, lastName: $lastName, userRole: $userRole, post: $post, email: $email)';
+  return 'CreateReportRequest(name: $name, description: $description)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class $UserDataCopyWith<$Res>  {
-  factory $UserDataCopyWith(UserData value, $Res Function(UserData) _then) = _$UserDataCopyWithImpl;
+abstract mixin class $CreateReportRequestCopyWith<$Res>  {
+  factory $CreateReportRequestCopyWith(CreateReportRequest value, $Res Function(CreateReportRequest) _then) = _$CreateReportRequestCopyWithImpl;
 @useResult
 $Res call({
- String firstName, String middleName, String lastName, UserRole userRole, String email, String post
+ String name, String description
 });
 
 
@@ -54,23 +54,19 @@ $Res call({
 
 }
 /// @nodoc
-class _$UserDataCopyWithImpl<$Res>
-    implements $UserDataCopyWith<$Res> {
-  _$UserDataCopyWithImpl(this._self, this._then);
+class _$CreateReportRequestCopyWithImpl<$Res>
+    implements $CreateReportRequestCopyWith<$Res> {
+  _$CreateReportRequestCopyWithImpl(this._self, this._then);
 
-  final UserData _self;
-  final $Res Function(UserData) _then;
+  final CreateReportRequest _self;
+  final $Res Function(CreateReportRequest) _then;
 
-/// Create a copy of UserData
+/// Create a copy of CreateReportRequest
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? firstName = null,Object? middleName = null,Object? lastName = null,Object? userRole = null,Object? email = null,Object? post = null,}) {
-  return _then(UserData(
-firstName: null == firstName ? _self.firstName : firstName // ignore: cast_nullable_to_non_nullable
-as String,middleName: null == middleName ? _self.middleName : middleName // ignore: cast_nullable_to_non_nullable
-as String,lastName: null == lastName ? _self.lastName : lastName // ignore: cast_nullable_to_non_nullable
-as String,userRole: null == userRole ? _self.userRole : userRole // ignore: cast_nullable_to_non_nullable
-as UserRole,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
-as String,post: null == post ? _self.post : post // ignore: cast_nullable_to_non_nullable
+@pragma('vm:prefer-inline') @override $Res call({Object? name = null,Object? description = null,}) {
+  return _then(CreateReportRequest(
+name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }
@@ -78,8 +74,8 @@ as String,
 }
 
 
-/// Adds pattern-matching-related methods to [UserData].
-extension UserDataPatterns on UserData {
+/// Adds pattern-matching-related methods to [CreateReportRequest].
+extension CreateReportRequestPatterns on CreateReportRequest {
 /// A variant of `map` that fallback to returning `orElse`.
 ///
 /// It is equivalent to doing:
@@ -202,41 +198,42 @@ case _:
 
 }
 
-/// @nodoc
-mixin _$UserRole {
 
- bool get canReportDefects; bool get canEliminateDefects; bool get canManageProjects; bool get canManageOtherUsers; bool get canViewStatistics; bool get isAdmin; DefinedUserRole? get predefinedUserRole;
-/// Create a copy of UserRole
+/// @nodoc
+mixin _$CreateReportResponse {
+
+ String get id;
+/// Create a copy of CreateReportResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-$UserRoleCopyWith<UserRole> get copyWith => _$UserRoleCopyWithImpl<UserRole>(this as UserRole, _$identity);
+$CreateReportResponseCopyWith<CreateReportResponse> get copyWith => _$CreateReportResponseCopyWithImpl<CreateReportResponse>(this as CreateReportResponse, _$identity);
 
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserRole&&(identical(other.canReportDefects, canReportDefects) || other.canReportDefects == canReportDefects)&&(identical(other.canEliminateDefects, canEliminateDefects) || other.canEliminateDefects == canEliminateDefects)&&(identical(other.canManageProjects, canManageProjects) || other.canManageProjects == canManageProjects)&&(identical(other.canManageOtherUsers, canManageOtherUsers) || other.canManageOtherUsers == canManageOtherUsers)&&(identical(other.canViewStatistics, canViewStatistics) || other.canViewStatistics == canViewStatistics)&&(identical(other.isAdmin, isAdmin) || other.isAdmin == isAdmin)&&(identical(other.predefinedUserRole, predefinedUserRole) || other.predefinedUserRole == predefinedUserRole));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CreateReportResponse&&(identical(other.id, id) || other.id == id));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,canReportDefects,canEliminateDefects,canManageProjects,canManageOtherUsers,canViewStatistics,isAdmin,predefinedUserRole);
+int get hashCode => Object.hash(runtimeType,id);
 
 @override
 String toString() {
-  return 'UserRole(canReportDefects: $canReportDefects, canEliminateDefects: $canEliminateDefects, canManageProjects: $canManageProjects, canManageOtherUsers: $canManageOtherUsers, canViewStatistics: $canViewStatistics, isAdmin: $isAdmin, predefinedUserRole: $predefinedUserRole)';
+  return 'CreateReportResponse(id: $id)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class $UserRoleCopyWith<$Res>  {
-  factory $UserRoleCopyWith(UserRole value, $Res Function(UserRole) _then) = _$UserRoleCopyWithImpl;
+abstract mixin class $CreateReportResponseCopyWith<$Res>  {
+  factory $CreateReportResponseCopyWith(CreateReportResponse value, $Res Function(CreateReportResponse) _then) = _$CreateReportResponseCopyWithImpl;
 @useResult
 $Res call({
- bool canReportDefects, bool canEliminateDefects, bool canManageProjects, bool canManageOtherUsers, bool canViewStatistics, bool isAdmin, DefinedUserRole? predefinedUserRole
+ String id
 });
 
 
@@ -244,33 +241,27 @@ $Res call({
 
 }
 /// @nodoc
-class _$UserRoleCopyWithImpl<$Res>
-    implements $UserRoleCopyWith<$Res> {
-  _$UserRoleCopyWithImpl(this._self, this._then);
+class _$CreateReportResponseCopyWithImpl<$Res>
+    implements $CreateReportResponseCopyWith<$Res> {
+  _$CreateReportResponseCopyWithImpl(this._self, this._then);
 
-  final UserRole _self;
-  final $Res Function(UserRole) _then;
+  final CreateReportResponse _self;
+  final $Res Function(CreateReportResponse) _then;
 
-/// Create a copy of UserRole
+/// Create a copy of CreateReportResponse
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? canReportDefects = null,Object? canEliminateDefects = null,Object? canManageProjects = null,Object? canManageOtherUsers = null,Object? canViewStatistics = null,Object? isAdmin = null,Object? predefinedUserRole = freezed,}) {
-  return _then(UserRole(
-canReportDefects: null == canReportDefects ? _self.canReportDefects : canReportDefects // ignore: cast_nullable_to_non_nullable
-as bool,canEliminateDefects: null == canEliminateDefects ? _self.canEliminateDefects : canEliminateDefects // ignore: cast_nullable_to_non_nullable
-as bool,canManageProjects: null == canManageProjects ? _self.canManageProjects : canManageProjects // ignore: cast_nullable_to_non_nullable
-as bool,canManageOtherUsers: null == canManageOtherUsers ? _self.canManageOtherUsers : canManageOtherUsers // ignore: cast_nullable_to_non_nullable
-as bool,canViewStatistics: null == canViewStatistics ? _self.canViewStatistics : canViewStatistics // ignore: cast_nullable_to_non_nullable
-as bool,isAdmin: null == isAdmin ? _self.isAdmin : isAdmin // ignore: cast_nullable_to_non_nullable
-as bool,predefinedUserRole: freezed == predefinedUserRole ? _self.predefinedUserRole : predefinedUserRole // ignore: cast_nullable_to_non_nullable
-as DefinedUserRole?,
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,}) {
+  return _then(CreateReportResponse(
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 
 }
 
 
-/// Adds pattern-matching-related methods to [UserRole].
-extension UserRolePatterns on UserRole {
+/// Adds pattern-matching-related methods to [CreateReportResponse].
+extension CreateReportResponsePatterns on CreateReportResponse {
 /// A variant of `map` that fallback to returning `orElse`.
 ///
 /// It is equivalent to doing:

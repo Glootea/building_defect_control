@@ -11,6 +11,7 @@ List<RouteBase> get $appRoutes => [
   $projectDetailsRoute,
   $defectDetailsRoute,
   $authRoute,
+  $profileRoute,
 ];
 
 RouteBase get $projectsListRoute => GoRouteData.$route(
@@ -127,6 +128,29 @@ mixin $AuthRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/auth');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $profileRoute =>
+    GoRouteData.$route(path: '/profile', factory: $ProfileRoute._fromState);
+
+mixin $ProfileRoute on GoRouteData {
+  static ProfileRoute _fromState(GoRouterState state) => const ProfileRoute();
+
+  @override
+  String get location => GoRouteData.$location('/profile');
 
   @override
   void go(BuildContext context) => context.go(location);

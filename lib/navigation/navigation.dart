@@ -1,4 +1,5 @@
 import 'package:control/screens/auth_screen.dart';
+import 'package:control/screens/profile_screen.dart';
 import 'package:control/screens/project_details_screen.dart';
 import 'package:control/screens/project_screen.dart';
 import 'package:control/screens/defect_details_screen.dart';
@@ -62,6 +63,17 @@ class AuthRoute extends GoRouteData with $AuthRoute {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return AuthScreen();
+    return const AuthScreen();
+  }
+}
+
+@TypedGoRoute<ProfileRoute>(path: '/profile', routes: [])
+@immutable
+class ProfileRoute extends GoRouteData with $ProfileRoute {
+  const ProfileRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const ProfileScreen();
   }
 }

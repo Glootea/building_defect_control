@@ -48,7 +48,7 @@ final class DataProviderProvider
   }
 }
 
-String _$dataProviderHash() => r'aba8643ff1280e3d7e0c79c7cde7e43e097914f5';
+String _$dataProviderHash() => r'6f13da1349ba0ea24613af7801b4986d44049fa5';
 
 @ProviderFor(testingDataProvider)
 const testingDataProviderProvider = TestingDataProviderProvider._();
@@ -131,7 +131,7 @@ final class AuthServiceProvider
   }
 }
 
-String _$authServiceHash() => r'd4bca4a4703af7c11b237f09484f174cb18902c3';
+String _$authServiceHash() => r'a09508be360111cbaf0e9366783038289e37f375';
 
 @ProviderFor(testingAuthService)
 const testingAuthServiceProvider = TestingAuthServiceProvider._();
@@ -213,7 +213,102 @@ final class GetDioProvider extends $FunctionalProvider<Dio, Dio, Dio>
   }
 }
 
-String _$getDioHash() => r'a5e8a5aaaa8544c15bf23e372f80bb30839cafdf';
+String _$getDioHash() => r'c81d549104eff4924af44b6bc7045f14b58d144a';
+
+@ProviderFor(userDataProvider)
+const userDataProviderProvider = UserDataProviderProvider._();
+
+final class UserDataProviderProvider
+    extends
+        $FunctionalProvider<
+          IUserDataProvider,
+          IUserDataProvider,
+          IUserDataProvider
+        >
+    with $Provider<IUserDataProvider> {
+  const UserDataProviderProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'userDataProviderProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$userDataProviderHash();
+
+  @$internal
+  @override
+  $ProviderElement<IUserDataProvider> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  IUserDataProvider create(Ref ref) {
+    return userDataProvider(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(IUserDataProvider value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<IUserDataProvider>(value),
+    );
+  }
+}
+
+String _$userDataProviderHash() => r'be4da20e04ff27f82a3132ac8aa1cd5ee1e3e845';
+
+@ProviderFor(testingUserDataProvider)
+const testingUserDataProviderProvider = TestingUserDataProviderProvider._();
+
+final class TestingUserDataProviderProvider
+    extends
+        $FunctionalProvider<
+          IUserDataProvider,
+          IUserDataProvider,
+          IUserDataProvider
+        >
+    with $Provider<IUserDataProvider> {
+  const TestingUserDataProviderProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'testingUserDataProviderProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$testingUserDataProviderHash();
+
+  @$internal
+  @override
+  $ProviderElement<IUserDataProvider> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  IUserDataProvider create(Ref ref) {
+    return testingUserDataProvider(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(IUserDataProvider value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<IUserDataProvider>(value),
+    );
+  }
+}
+
+String _$testingUserDataProviderHash() =>
+    r'c4b422dfee9540671e1b562e050589eb40bf4c45';
 
 @ProviderFor(uuid)
 const uuidProvider = UuidProvider._();

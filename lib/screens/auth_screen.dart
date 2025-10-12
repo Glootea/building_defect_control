@@ -1,4 +1,5 @@
 import 'package:control/domain/user.dart';
+import 'package:control/utils/riverpod_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -13,11 +14,13 @@ class AuthScreen extends StatefulHookConsumerWidget {
 
 class _AuthScreenState extends ConsumerState<AuthScreen> {
   final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
+    final state = ref.watch(userProvider);
+
     final loginTextController = useTextEditingController();
     final passwordTextController = useTextEditingController();
-    final state = ref.watch(userProvider);
 
     void submitForm() async {
       if (_formKey.currentState?.validate() != true) {
@@ -29,65 +32,55 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
     }
 
     return Scaffold(
-      body: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 400),
-          child: (state.isLoading)
-              ? const CircularProgressIndicator()
-              : Form(
-                  key: _formKey,
-                  child: AutofillGroup(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        if (state.hasError) ...[
-                          Text(
-                            state.error.toString(),
-                            style: const TextStyle(color: Colors.red),
-                          ),
-                          const SizedBox(height: 16),
-                        ],
+      body: RiverpodScreen(
+        state: state,
+        child: (_) => Align(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 400),
+            child: Form(
+              key: _formKey,
+              child: AutofillGroup(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    TextFormField(
+                      controller: loginTextController,
+                      decoration: const InputDecoration(labelText: 'Email'),
 
-                        TextFormField(
-                          controller: loginTextController,
-                          decoration: const InputDecoration(
-                            labelText: 'Username',
-                          ),
-                          autofillHints: [AutofillHints.username],
-                          validator: (value) => value == null || value.isEmpty
-                              ? 'Please enter your username'
-                              : null,
-                        ),
-                        const SizedBox(height: 16),
-                        // TODO: use focus to move to password field
-                        TextFormField(
-                          controller: passwordTextController,
-                          decoration: const InputDecoration(
-                            labelText: 'Password',
-                          ),
-
-                          autofillHints: [AutofillHints.password],
-                          obscureText: true,
-                          validator: (value) => value == null || value.isEmpty
-                              ? 'Please enter your password'
-                              : null,
-                          onFieldSubmitted: (_) async {
-                            submitForm();
-                          },
-                        ),
-                        const SizedBox(height: 32),
-                        ElevatedButton(
-                          onPressed: () async {
-                            TextInput.finishAutofillContext();
-
-                            submitForm();
-                          },
-                          child: const Text('Login'),
-                        ),
-                      ],
+                      autofillHints: [AutofillHints.email],
+                      validator: (value) => value == null || value.isEmpty
+                          ? 'Please enter your email'
+                          : null,
                     ),
-                  ),
+                    const SizedBox(height: 16),
+                    // TODO: use focus to move to password field
+                    TextFormField(
+                      controller: passwordTextController,
+                      decoration: const InputDecoration(labelText: 'Password'),
+
+                      autofillHints: [AutofillHints.password],
+                      obscureText: true,
+                      validator: (value) => value == null || value.isEmpty
+                          ? 'Please enter your password'
+                          : null,
+                      onFieldSubmitted: (_) async {
+                        submitForm();
+                      },
+                    ),
+                    const SizedBox(height: 32),
+                    ElevatedButton(
+                      onPressed: () async {
+                        TextInput.finishAutofillContext();
+
+                        submitForm();
+                      },
+                      child: const Text('Login'),
+                    ),
+                  ],
                 ),
+              ),
+            ),
+          ),
         ),
       ),
     );

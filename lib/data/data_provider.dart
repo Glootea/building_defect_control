@@ -1,5 +1,7 @@
 import 'package:control/data/idata_provider.dart';
 import 'package:control/models/models.dart';
+import 'package:control/models/network/user/create_user.dart';
+import 'package:control/models/network/user/login_user.dart';
 import 'package:dio/dio.dart';
 
 class DataProvider implements IDataProvider {
@@ -75,5 +77,23 @@ class DataProvider implements IDataProvider {
   Future<void> deleteDefectElimination(String defectId) {
     // TODO: implement deleteDefectElimination
     throw UnimplementedError();
+  }
+}
+
+class UserDataProvider implements IUserDataProvider {
+  const UserDataProvider(this.dio);
+
+  final Dio dio;
+
+  @override
+  Future<CreateUserResponse> createUser(CreateUserRequest request) async {
+    final response = await dio.post('/api/user', data: request.toJson());
+    return CreateUserResponse.fromJson(response.data);
+  }
+
+  @override
+  Future<LoginUserResponse> loginUser(LoginUserRequest request) async {
+    final response = await dio.post('/api/login', data: request.toJson());
+    return LoginUserResponse.fromJson(response.data);
   }
 }

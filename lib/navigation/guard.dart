@@ -10,9 +10,14 @@ typedef _GoRouterRedirect =
     FutureOr<String?> Function(BuildContext context, GoRouterState state);
 
 final routerProvider = Provider((ref) {
-  final authState = ref.watch(userProvider);
+  final _ = ref.watch(userProvider.select((s) => s.value));
+
   return _routeConfig(
     redirect: (context, state) {
+      final authState = ref.read(userProvider);
+
+      print('Router redirect called. Auth state: $authState');
+
       if (authState.isLoading || authState.hasError) return null;
 
       final isAuthenticated = authState.value != null;

@@ -1,8 +1,10 @@
 import 'dart:convert';
+import 'dart:developer';
 
+import 'package:control/data/idata_provider.dart';
 import 'package:control/di/di.dart';
+import 'package:control/models/network/user/login_user.dart';
 import 'package:control/models/user.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -11,7 +13,7 @@ part 'user.g.dart';
 @riverpod
 class User extends _$User {
   late final secureStorage = ref.watch(secureStorageProvider);
-  late final authService = ref.read(authServiceProvider);
+  late final authService = ref.watch(authServiceProvider);
 
   final String _userKey = 'user';
 
@@ -29,18 +31,17 @@ class User extends _$User {
 
   Future<void> login(String login, String password) async {
     state = const AsyncValue.loading();
-    final user = await authService.login(login, password);
-    if (user == null) {
-      state = AsyncValue.error(
-        'Invalid username or password',
-        StackTrace.current,
-      );
 
-      return;
-    }
-    state = AsyncValue.data(user);
-    final jsonString = jsonEncode(user.toJson());
-    await secureStorage.write(key: _userKey, value: jsonString);
+    state = await AsyncValue.guard(() async {
+      final user = await authService.login(login, password);
+      if (user == null) {
+        throw Exception('Invalid credentials');
+      }
+
+      final jsonString = jsonEncode(user.toJson());
+      await secureStorage.write(key: _userKey, value: jsonString);
+      return user;
+    });
   }
 
   Future<void> clearUser() async {
@@ -61,19 +62,23 @@ class TestingAuthService implements IAuthService {
   Future<UserData?> login(String username, String password) async {
     await Future.delayed(const Duration(seconds: 1));
 
-    if (username == 'admin' && password == 'admin') {
+    if (username == 'admin@admin.com' && password == 'admin') {
       return UserData(
         firstName: 'Admin',
         middleName: '',
         lastName: 'User',
         userRole: const UserRole.admin(),
+        email: 'admin@example.com',
+        post: 'Администратор',
       );
     } else if (username == 'engineer' && password == 'engineer') {
       return UserData(
         firstName: 'Engineer',
         middleName: '',
         lastName: 'User',
-        userRole: const UserRole.engineer(),
+        userRole: const UserRole.executor(),
+        email: 'engineer@example.com',
+        post: 'Engineer',
       );
     } else if (username == 'manager' && password == 'manager') {
       return UserData(
@@ -81,13 +86,17 @@ class TestingAuthService implements IAuthService {
         middleName: '',
         lastName: 'User',
         userRole: const UserRole.manager(),
+        email: 'manager@example.com',
+        post: 'Manager',
       );
     } else if (username == 'visitor' && password == 'visitor') {
       return UserData(
         firstName: 'Visitor',
         middleName: '',
         lastName: 'User',
-        userRole: const UserRole.visitor(),
+        userRole: const UserRole.observer(),
+        email: 'visitor@example.com',
+        post: 'Visitor',
       );
     } else {
       return null;
@@ -100,16 +109,38 @@ class TestingAuthService implements IAuthService {
 
 class AuthService implements IAuthService {
   final FlutterSecureStorage secureStorage;
-  final Dio dio;
-  AuthService({required this.secureStorage, required this.dio});
+  final IUserDataProvider userDataProvider;
+  AuthService({required this.secureStorage, required this.userDataProvider});
+
+  static const String _tokenKey = 'token';
+  static const String _userDataKey = 'userData';
 
   @override
-  Future<UserData?> login(String username, String password) async {
-    throw UnimplementedError();
+  Future<UserData?> login(String email, String password) async {
+    final response = await userDataProvider.loginUser(
+      LoginUserRequest(email: email, password: password),
+    );
+
+    final token = response.token;
+    final user = response.userData;
+
+    final serializedUser = jsonEncode(user.toJson());
+    log("Received: token - $token, user - $serializedUser");
+
+    await Future.wait([
+      secureStorage.write(key: _tokenKey, value: token),
+      secureStorage.write(key: _userDataKey, value: serializedUser),
+    ]);
+
+    return user;
   }
 
   @override
   Future<void> logout() async {
-    throw UnimplementedError();
+    // TODO: notify server about logout
+    await Future.wait([
+      secureStorage.delete(key: _tokenKey),
+      secureStorage.delete(key: _userDataKey),
+    ]);
   }
 }

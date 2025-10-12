@@ -1,5 +1,6 @@
 import 'package:control/data/data_provider.dart';
 import 'package:control/data/idata_provider.dart';
+import 'package:control/data/network.dart';
 import 'package:control/data/testing_data_provider.dart';
 import 'package:control/domain/user.dart';
 import 'package:dio/dio.dart';
@@ -11,7 +12,7 @@ part 'di.g.dart';
 
 @riverpod
 IDataProvider dataProvider(Ref ref) {
-  final dio = ref.read(getDioProvider);
+  final dio = ref.watch(getDioProvider);
   return DataProvider(dio);
 }
 
@@ -22,9 +23,12 @@ IDataProvider testingDataProvider(Ref ref) {
 
 @riverpod
 IAuthService authService(Ref ref) {
-  final secureStorage = ref.read(secureStorageProvider);
-  final dio = ref.read(getDioProvider);
-  return AuthService(secureStorage: secureStorage, dio: dio);
+  final secureStorage = ref.watch(secureStorageProvider);
+  final userDataProvider = ref.watch(userDataProviderProvider);
+  return AuthService(
+    secureStorage: secureStorage,
+    userDataProvider: userDataProvider,
+  );
 }
 
 @riverpod
@@ -34,8 +38,18 @@ IAuthService testingAuthService(Ref ref) {
 
 @riverpod
 Dio getDio(Ref ref) {
-  final dio = Dio();
-  return dio;
+  return setupDio();
+}
+
+@riverpod
+IUserDataProvider userDataProvider(Ref ref) {
+  final dio = ref.watch(getDioProvider);
+  return UserDataProvider(dio);
+}
+
+@riverpod
+IUserDataProvider testingUserDataProvider(Ref ref) {
+  return const TestingUserDataProvider();
 }
 
 @riverpod

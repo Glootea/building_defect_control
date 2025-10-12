@@ -21,22 +21,30 @@ class ControlApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ProviderScope(
+      retry: (retryCount, error) =>
+          null, // TODO: maybe retry on timeout, non wrong data errors
       overrides: isTesting
           ? [
               dataProviderProvider.overrideWith(
-                (ref) => ref.read(testingDataProviderProvider),
+                (ref) => ref.watch(testingDataProviderProvider),
               ),
               authServiceProvider.overrideWith(
-                (ref) => ref.read(testingAuthServiceProvider),
+                (ref) => ref.watch(testingAuthServiceProvider),
+              ),
+              userDataProviderProvider.overrideWith(
+                (ref) => ref.watch(testingUserDataProviderProvider),
               ),
             ]
           : [],
       child: Consumer(
-        builder: (context, widgetRef, ref) => MaterialApp.router(
-          title: 'Control App',
-          theme: ThemeData(primarySwatch: Colors.blue),
-          routerConfig: widgetRef.watch(routerProvider),
-        ),
+        builder: (context, widgetRef, child) {
+          final router = widgetRef.watch(routerProvider);
+          return MaterialApp.router(
+            title: 'Control App',
+            theme: ThemeData(primarySwatch: Colors.blue),
+            routerConfig: router,
+          );
+        },
       ),
     );
   }

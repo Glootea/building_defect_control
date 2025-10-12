@@ -20,6 +20,17 @@
             "type": "dart"
         },
         {
+            "name": "control local backend",
+            "request": "launch",
+            "toolArgs": [
+                "--dart-define",
+                "BACKEND_URL=http://localhost:8080",
+                "--dart-define",
+                "USE_NETWORK_LOGGING=true",
+            ],
+            "type": "dart"
+        },
+        {
             "name": "control (profile mode)",
             "request": "launch",
             "type": "dart",

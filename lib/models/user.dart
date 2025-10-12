@@ -7,16 +7,24 @@ part 'user.g.dart';
 @JsonSerializable()
 @freezed
 class UserData with _$UserData {
+  @JsonKey(name: 'firstname')
   final String firstName;
+  @JsonKey(name: 'middlename')
   final String middleName;
+  @JsonKey(name: 'lastname')
   final String lastName;
+  @JsonKey(name: 'role')
   final UserRole userRole;
+  final String post;
+  final String email;
 
   const UserData({
     required this.firstName,
     required this.middleName,
     required this.lastName,
-    required this.userRole,
+    this.userRole = const UserRole.admin(), // TODO: waiting on fix from backend
+    required this.email,
+    required this.post,
   });
 
   factory UserData.fromJson(Map<String, Object?> json) =>
@@ -50,12 +58,12 @@ class UserRole with _$UserRole {
     if (json['predefinedUserRole'] != null) {
       final roleString = json['predefinedUserRole'] as String;
       switch (roleString) {
-        case 'engineer':
-          return const UserRole.engineer();
+        case 'executor':
+          return const UserRole.executor();
         case 'manager':
           return const UserRole.manager();
-        case 'visitor':
-          return const UserRole.visitor();
+        case 'observer':
+          return const UserRole.observer();
         case 'admin':
           return const UserRole.admin();
       }
@@ -64,14 +72,14 @@ class UserRole with _$UserRole {
   }
   Map<String, dynamic> toJson() => _$UserRoleToJson(this);
 
-  const UserRole.engineer()
+  const UserRole.executor()
     : canReportDefects = true,
       canEliminateDefects = true,
       canManageProjects = false,
       canManageOtherUsers = false,
       canViewStatistics = false,
       isAdmin = false,
-      predefinedUserRole = DefinedUserRole.engineer;
+      predefinedUserRole = DefinedUserRole.executor;
 
   const UserRole.manager()
     : canReportDefects = true,
@@ -82,14 +90,14 @@ class UserRole with _$UserRole {
       isAdmin = false,
       predefinedUserRole = DefinedUserRole.manager;
 
-  const UserRole.visitor()
+  const UserRole.observer()
     : canReportDefects = false,
       canEliminateDefects = false,
       canManageProjects = false,
       canManageOtherUsers = false,
       canViewStatistics = true,
       isAdmin = false,
-      predefinedUserRole = DefinedUserRole.visitor;
+      predefinedUserRole = DefinedUserRole.observer;
 
   const UserRole.admin()
     : canReportDefects = true,
@@ -101,4 +109,4 @@ class UserRole with _$UserRole {
       predefinedUserRole = DefinedUserRole.admin;
 }
 
-enum DefinedUserRole { engineer, manager, visitor, admin }
+enum DefinedUserRole { executor, manager, observer, admin }

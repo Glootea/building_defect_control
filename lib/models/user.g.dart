@@ -7,17 +7,23 @@ part of 'user.dart';
 // **************************************************************************
 
 UserData _$UserDataFromJson(Map<String, dynamic> json) => UserData(
-  firstName: json['firstName'] as String,
-  middleName: json['middleName'] as String,
-  lastName: json['lastName'] as String,
-  userRole: UserRole.fromJson(json['userRole'] as Map<String, dynamic>),
+  firstName: json['firstname'] as String,
+  middleName: json['middlename'] as String,
+  lastName: json['lastname'] as String,
+  userRole: json['role'] == null
+      ? const UserRole.admin()
+      : UserRole.fromJson(json['role'] as Map<String, dynamic>),
+  email: json['email'] as String,
+  post: json['post'] as String,
 );
 
 Map<String, dynamic> _$UserDataToJson(UserData instance) => <String, dynamic>{
-  'firstName': instance.firstName,
-  'middleName': instance.middleName,
-  'lastName': instance.lastName,
-  'userRole': instance.userRole,
+  'firstname': instance.firstName,
+  'middlename': instance.middleName,
+  'lastname': instance.lastName,
+  'role': instance.userRole,
+  'post': instance.post,
+  'email': instance.email,
 };
 
 UserRole _$UserRoleFromJson(Map<String, dynamic> json) => UserRole(
@@ -44,8 +50,8 @@ Map<String, dynamic> _$UserRoleToJson(UserRole instance) => <String, dynamic>{
 };
 
 const _$DefinedUserRoleEnumMap = {
-  DefinedUserRole.engineer: 'engineer',
+  DefinedUserRole.executor: 'executor',
   DefinedUserRole.manager: 'manager',
-  DefinedUserRole.visitor: 'visitor',
+  DefinedUserRole.observer: 'observer',
   DefinedUserRole.admin: 'admin',
 };
