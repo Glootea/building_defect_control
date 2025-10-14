@@ -1,15 +1,11 @@
 import 'package:control/models/user.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'login_user.freezed.dart';
 part 'login_user.g.dart';
 
-@freezed
 @JsonSerializable()
-class LoginUserRequest with _$LoginUserRequest {
-  @override
+class LoginUserRequest {
   final String email;
-  @override
   final String password;
 
   const LoginUserRequest({required this.email, required this.password});
@@ -20,12 +16,9 @@ class LoginUserRequest with _$LoginUserRequest {
   Map<String, dynamic> toJson() => _$LoginUserRequestToJson(this);
 }
 
-@freezed
 @JsonSerializable()
-class LoginUserResponse with _$LoginUserResponse {
-  @override
+class LoginUserResponse {
   final String token;
-  @override
   @JsonKey(name: 'userdata')
   final UserData userData;
 

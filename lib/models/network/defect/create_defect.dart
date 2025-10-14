@@ -1,17 +1,12 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 part 'create_defect.g.dart';
-part 'create_defect.freezed.dart';
 
-@freezed
 @JsonSerializable()
-class CreateDefectRequest with _$CreateDefectRequest {
-  @override
+class CreateDefectRequest {
   @JsonKey(name: 'Name')
   final String name;
-  @override
   @JsonKey(name: 'Description')
   final String description;
-  @override
   @JsonKey(name: 'Class')
   final String clazz;
 

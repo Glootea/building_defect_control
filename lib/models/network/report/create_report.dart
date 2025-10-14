@@ -1,14 +1,10 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 part 'create_report.g.dart';
-part 'create_report.freezed.dart';
 
-@freezed
 @JsonSerializable()
-class CreateReportRequest with _$CreateReportRequest {
-  @override
+class CreateReportRequest {
   @JsonKey(name: 'Name')
   final String name;
-  @override
   @JsonKey(name: 'Description')
   final String description;
 
@@ -20,10 +16,8 @@ class CreateReportRequest with _$CreateReportRequest {
   Map<String, dynamic> toJson() => _$CreateReportRequestToJson(this);
 }
 
-@freezed
 @JsonSerializable()
-class CreateReportResponse with _$CreateReportResponse {
-  @override
+class CreateReportResponse {
   @JsonKey(name: 'Id')
   final String id;
 

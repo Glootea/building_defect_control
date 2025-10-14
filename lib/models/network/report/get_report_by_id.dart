@@ -1,11 +1,8 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 part 'get_report_by_id.g.dart';
-part 'get_report_by_id.freezed.dart';
 
-@freezed
 @JsonSerializable()
-class GetReportByIdRequest with _$GetReportByIdRequest {
-  @override
+class GetReportByIdRequest {
   @JsonKey(name: 'Id')
   final String id;
 
@@ -17,14 +14,10 @@ class GetReportByIdRequest with _$GetReportByIdRequest {
   Map<String, dynamic> toJson() => _$GetReportByIdRequestToJson(this);
 }
 
-@freezed
 @JsonSerializable()
-class GetReportByIdResponse with _$GetReportByIdResponse {
-  @override
+class GetReportByIdResponse {
   final String name;
-  @override
   final String description;
-  @override
   @JsonKey(name: 'SubmissionDate')
   final DateTime submissionDate;
 

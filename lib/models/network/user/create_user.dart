@@ -1,23 +1,15 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-part 'create_user.freezed.dart';
+
 part 'create_user.g.dart';
 
-@freezed
 @JsonSerializable()
-class CreateUserRequest with _$CreateUserRequest {
-  @override
+class CreateUserRequest {
   final String email;
-  @override
   final String password;
-  @override
   final String firstName;
-  @override
   final String middleName;
-  @override
   final String lastName;
-  @override
   final String post;
-  @override
   final String roleName;
 
   const CreateUserRequest({
@@ -36,10 +28,8 @@ class CreateUserRequest with _$CreateUserRequest {
   Map<String, dynamic> toJson() => _$CreateUserRequestToJson(this);
 }
 
-@freezed
 @JsonSerializable()
-class CreateUserResponse with _$CreateUserResponse {
-  @override
+class CreateUserResponse {
   @JsonKey(name: 'Id')
   final String id;
 
