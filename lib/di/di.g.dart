@@ -48,7 +48,7 @@ final class DataProviderProvider
   }
 }
 
-String _$dataProviderHash() => r'6f13da1349ba0ea24613af7801b4986d44049fa5';
+String _$dataProviderHash() => r'771adfc5d4947b4452a4d39a43cbaff028601473';
 
 @ProviderFor(testingDataProvider)
 const testingDataProviderProvider = TestingDataProviderProvider._();
@@ -91,129 +91,6 @@ final class TestingDataProviderProvider
 
 String _$testingDataProviderHash() =>
     r'0656d6853de43f3f86635d1581c3def1cf6c63bd';
-
-@ProviderFor(authService)
-const authServiceProvider = AuthServiceProvider._();
-
-final class AuthServiceProvider
-    extends $FunctionalProvider<IAuthService, IAuthService, IAuthService>
-    with $Provider<IAuthService> {
-  const AuthServiceProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'authServiceProvider',
-        isAutoDispose: true,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
-
-  @override
-  String debugGetCreateSourceHash() => _$authServiceHash();
-
-  @$internal
-  @override
-  $ProviderElement<IAuthService> $createElement($ProviderPointer pointer) =>
-      $ProviderElement(pointer);
-
-  @override
-  IAuthService create(Ref ref) {
-    return authService(ref);
-  }
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(IAuthService value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<IAuthService>(value),
-    );
-  }
-}
-
-String _$authServiceHash() => r'a09508be360111cbaf0e9366783038289e37f375';
-
-@ProviderFor(testingAuthService)
-const testingAuthServiceProvider = TestingAuthServiceProvider._();
-
-final class TestingAuthServiceProvider
-    extends $FunctionalProvider<IAuthService, IAuthService, IAuthService>
-    with $Provider<IAuthService> {
-  const TestingAuthServiceProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'testingAuthServiceProvider',
-        isAutoDispose: true,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
-
-  @override
-  String debugGetCreateSourceHash() => _$testingAuthServiceHash();
-
-  @$internal
-  @override
-  $ProviderElement<IAuthService> $createElement($ProviderPointer pointer) =>
-      $ProviderElement(pointer);
-
-  @override
-  IAuthService create(Ref ref) {
-    return testingAuthService(ref);
-  }
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(IAuthService value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<IAuthService>(value),
-    );
-  }
-}
-
-String _$testingAuthServiceHash() =>
-    r'd233aad7ef48edf916c2ceb5705bde5624f6d7db';
-
-@ProviderFor(getDio)
-const getDioProvider = GetDioProvider._();
-
-final class GetDioProvider extends $FunctionalProvider<Dio, Dio, Dio>
-    with $Provider<Dio> {
-  const GetDioProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'getDioProvider',
-        isAutoDispose: true,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
-
-  @override
-  String debugGetCreateSourceHash() => _$getDioHash();
-
-  @$internal
-  @override
-  $ProviderElement<Dio> $createElement($ProviderPointer pointer) =>
-      $ProviderElement(pointer);
-
-  @override
-  Dio create(Ref ref) {
-    return getDio(ref);
-  }
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(Dio value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<Dio>(value),
-    );
-  }
-}
-
-String _$getDioHash() => r'c81d549104eff4924af44b6bc7045f14b58d144a';
 
 @ProviderFor(userDataProvider)
 const userDataProviderProvider = UserDataProviderProvider._();
@@ -260,7 +137,7 @@ final class UserDataProviderProvider
   }
 }
 
-String _$userDataProviderHash() => r'be4da20e04ff27f82a3132ac8aa1cd5ee1e3e845';
+String _$userDataProviderHash() => r'627958d3f14dad60ba477f9fcd4b2b12d826a9de';
 
 @ProviderFor(testingUserDataProvider)
 const testingUserDataProviderProvider = TestingUserDataProviderProvider._();
@@ -396,3 +273,44 @@ final class SecureStorageProvider
 }
 
 String _$secureStorageHash() => r'273dc403a965c1f24962aaf4d40776611a26f8b8';
+
+@ProviderFor(userCache)
+const userCacheProvider = UserCacheProvider._();
+
+final class UserCacheProvider
+    extends $FunctionalProvider<UserCache, UserCache, UserCache>
+    with $Provider<UserCache> {
+  const UserCacheProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'userCacheProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$userCacheHash();
+
+  @$internal
+  @override
+  $ProviderElement<UserCache> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  UserCache create(Ref ref) {
+    return userCache(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(UserCache value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<UserCache>(value),
+    );
+  }
+}
+
+String _$userCacheHash() => r'abeda657eb27f5a05821cfd1eedbe4d2658877f0';

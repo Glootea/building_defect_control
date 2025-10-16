@@ -1,6 +1,6 @@
 import 'package:control/models/models.dart';
 import 'package:control/models/network/user/create_user.dart';
-import 'package:control/models/network/user/login_user.dart';
+import 'package:control/models/user.dart';
 import 'package:uuid/uuid.dart';
 
 // TODO: separate into separate providers for features (projects, defects, etc)
@@ -20,8 +20,8 @@ abstract interface class IDataProvider {
 }
 
 abstract class IUserDataProvider {
-  Future<CreateUserResponse> createUser(CreateUserRequest request);
-  Future<LoginUserResponse> loginUser(LoginUserRequest request);
+  Future<String> createUser(CreateUserRequest request);
+  Future<(UserData, String)> loginUser(String email, String password);
 }
 
 extension UuidX on Uuid {

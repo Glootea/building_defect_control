@@ -1,4 +1,4 @@
-import 'package:control/domain/user.dart';
+import 'package:control/domain/auth_screen.dart';
 import 'package:control/utils/riverpod_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -17,7 +17,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(userProvider);
+    final state = ref.watch(authScreenProvider);
 
     final loginTextController = useTextEditingController();
     final passwordTextController = useTextEditingController();
@@ -27,7 +27,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
         return;
       }
       ref
-          .read(userProvider.notifier)
+          .read(authScreenProvider.notifier)
           .login(loginTextController.text, passwordTextController.text);
     }
 

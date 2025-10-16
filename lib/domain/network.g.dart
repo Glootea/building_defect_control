@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'user.dart';
+part of 'network.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -9,43 +9,51 @@ part of 'user.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(User)
-const userProvider = UserProvider._();
+@ProviderFor(DioClient)
+const dioClientProvider = DioClientProvider._();
 
-final class UserProvider extends $AsyncNotifierProvider<User, UserData?> {
-  const UserProvider._()
+final class DioClientProvider extends $NotifierProvider<DioClient, Dio> {
+  const DioClientProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'userProvider',
+        name: r'dioClientProvider',
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$userHash();
+  String debugGetCreateSourceHash() => _$dioClientHash();
 
   @$internal
   @override
-  User create() => User();
+  DioClient create() => DioClient();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(Dio value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<Dio>(value),
+    );
+  }
 }
 
-String _$userHash() => r'2ee8ee7991266d7e208e50d0f6e75d54ff194cae';
+String _$dioClientHash() => r'aad636d104e1aa72fc098021c218b3ab1351bf41';
 
-abstract class _$User extends $AsyncNotifier<UserData?> {
-  FutureOr<UserData?> build();
+abstract class _$DioClient extends $Notifier<Dio> {
+  Dio build();
   @$mustCallSuper
   @override
   void runBuild() {
     final created = build();
-    final ref = this.ref as $Ref<AsyncValue<UserData?>, UserData?>;
+    final ref = this.ref as $Ref<Dio, Dio>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<AsyncValue<UserData?>, UserData?>,
-              AsyncValue<UserData?>,
+              AnyNotifier<Dio, Dio>,
+              Dio,
               Object?,
               Object?
             >;

@@ -1,7 +1,7 @@
 import 'package:control/data/idata_provider.dart';
 import 'package:control/models/models.dart';
 import 'package:control/models/network/user/create_user.dart';
-import 'package:control/models/network/user/login_user.dart';
+import 'package:control/models/user.dart';
 import 'package:uuid/uuid.dart';
 
 class TestingDataProvider implements IDataProvider {
@@ -150,12 +150,25 @@ class TestingUserDataProvider implements IUserDataProvider {
   const TestingUserDataProvider();
 
   @override
-  Future<CreateUserResponse> createUser(CreateUserRequest request) async {
-    throw UnimplementedError();
+  Future<String> createUser(CreateUserRequest request) {
+    return Future.value(const Uuid().v7());
   }
 
   @override
-  Future<LoginUserResponse> loginUser(LoginUserRequest request) async {
-    throw UnimplementedError();
+  Future<(UserData, String)> loginUser(String email, String password) {
+    if (email == 'admin@admin.com' && password == 'admin') {
+      return Future.value((
+        UserData(
+          firstName: 'Admin',
+          middleName: 'User',
+          lastName: 'Example',
+          userRole: const UserRole.admin(),
+          email: email,
+          post: 'Administrator',
+        ),
+        const Uuid().v7(),
+      ));
+    }
+    throw Exception('Invalid credentials for testing user');
   }
 }

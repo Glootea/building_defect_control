@@ -28,9 +28,6 @@ class ControlApp extends StatelessWidget {
               dataProviderProvider.overrideWith(
                 (ref) => ref.watch(testingDataProviderProvider),
               ),
-              authServiceProvider.overrideWith(
-                (ref) => ref.watch(testingAuthServiceProvider),
-              ),
               userDataProviderProvider.overrideWith(
                 (ref) => ref.watch(testingUserDataProviderProvider),
               ),

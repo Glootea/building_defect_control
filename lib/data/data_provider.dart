@@ -2,6 +2,7 @@ import 'package:control/data/idata_provider.dart';
 import 'package:control/models/models.dart';
 import 'package:control/models/network/user/create_user.dart';
 import 'package:control/models/network/user/login_user.dart';
+import 'package:control/models/user.dart';
 import 'package:dio/dio.dart';
 
 class DataProvider implements IDataProvider {
@@ -86,14 +87,17 @@ class UserDataProvider implements IUserDataProvider {
   final Dio dio;
 
   @override
-  Future<CreateUserResponse> createUser(CreateUserRequest request) async {
+  Future<String> createUser(CreateUserRequest request) async {
     final response = await dio.post('/api/user', data: request.toJson());
-    return CreateUserResponse.fromJson(response.data);
+    final data = CreateUserResponse.fromJson(response.data);
+    return data.id;
   }
 
   @override
-  Future<LoginUserResponse> loginUser(LoginUserRequest request) async {
+  Future<(UserData, String)> loginUser(String email, String password) async {
+    final request = LoginUserRequest(email: email, password: password);
     final response = await dio.post('/api/login', data: request.toJson());
-    return LoginUserResponse.fromJson(response.data);
+    final data = LoginUserResponse.fromJson(response.data);
+    return (data.userData, data.token);
   }
 }

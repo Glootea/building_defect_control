@@ -1,9 +1,8 @@
 import 'package:control/data/data_provider.dart';
 import 'package:control/data/idata_provider.dart';
-import 'package:control/data/network.dart';
+import 'package:control/domain/network.dart';
 import 'package:control/data/testing_data_provider.dart';
-import 'package:control/domain/user.dart';
-import 'package:dio/dio.dart';
+import 'package:control/domain/user_cache.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -12,7 +11,7 @@ part 'di.g.dart';
 
 @riverpod
 IDataProvider dataProvider(Ref ref) {
-  final dio = ref.watch(getDioProvider);
+  final dio = ref.watch(dioClientProvider);
   return DataProvider(dio);
 }
 
@@ -22,28 +21,8 @@ IDataProvider testingDataProvider(Ref ref) {
 }
 
 @riverpod
-IAuthService authService(Ref ref) {
-  final secureStorage = ref.watch(secureStorageProvider);
-  final userDataProvider = ref.watch(userDataProviderProvider);
-  return AuthService(
-    secureStorage: secureStorage,
-    userDataProvider: userDataProvider,
-  );
-}
-
-@riverpod
-IAuthService testingAuthService(Ref ref) {
-  return const TestingAuthService();
-}
-
-@riverpod
-Dio getDio(Ref ref) {
-  return setupDio();
-}
-
-@riverpod
 IUserDataProvider userDataProvider(Ref ref) {
-  final dio = ref.watch(getDioProvider);
+  final dio = ref.watch(dioClientProvider);
   return UserDataProvider(dio);
 }
 
@@ -58,4 +37,10 @@ Uuid uuid(Ref ref) => Uuid();
 @riverpod
 FlutterSecureStorage secureStorage(Ref ref) {
   return const FlutterSecureStorage();
+}
+
+@riverpod
+UserCache userCache(Ref ref) {
+  final secureStorage = ref.watch(secureStorageProvider);
+  return UserCache(secureStorage: secureStorage);
 }

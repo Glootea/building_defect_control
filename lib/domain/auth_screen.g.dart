@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'user.dart';
+part of 'auth_screen.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -9,32 +9,33 @@ part of 'user.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(User)
-const userProvider = UserProvider._();
+@ProviderFor(AuthScreen)
+const authScreenProvider = AuthScreenProvider._();
 
-final class UserProvider extends $AsyncNotifierProvider<User, UserData?> {
-  const UserProvider._()
+final class AuthScreenProvider
+    extends $AsyncNotifierProvider<AuthScreen, UserData?> {
+  const AuthScreenProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'userProvider',
+        name: r'authScreenProvider',
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$userHash();
+  String debugGetCreateSourceHash() => _$authScreenHash();
 
   @$internal
   @override
-  User create() => User();
+  AuthScreen create() => AuthScreen();
 }
 
-String _$userHash() => r'2ee8ee7991266d7e208e50d0f6e75d54ff194cae';
+String _$authScreenHash() => r'c9d928ebef3cc42154dfa5c4b15f1e9b47061630';
 
-abstract class _$User extends $AsyncNotifier<UserData?> {
+abstract class _$AuthScreen extends $AsyncNotifier<UserData?> {
   FutureOr<UserData?> build();
   @$mustCallSuper
   @override
