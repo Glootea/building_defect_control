@@ -1,7 +1,9 @@
 import 'package:control/domain/projects.dart';
 import 'package:control/domain/user.dart';
 import 'package:control/models/models.dart';
+import 'package:control/models/network/project/get_projects.dart';
 import 'package:control/navigation/navigation.dart';
+import 'package:control/utils/paginated_grid.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -10,56 +12,32 @@ class ProjectScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final projects = ref.watch(projectsProvider);
     return Scaffold(
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Row(
-              children: [
-                Text(
-                  "Projects",
-                  style: Theme.of(context).textTheme.headlineMedium,
-                ),
-                Spacer(),
-                IconButton(
-                  onPressed: () {
-                    ProfileRoute().push(context);
-                  },
-                  icon: Icon(Icons.person_outline),
-                ),
-                IconButton(
-                  onPressed: () {
-                    ref.read(userProvider.notifier).clearUser();
-                  },
-                  icon: Icon(Icons.logout),
-                ),
-              ],
-            ),
+      appBar: AppBar(
+        title: Text(
+          "Projects",
+          style: Theme.of(context).textTheme.headlineMedium,
+        ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              ProfileRoute().push(context);
+            },
+            icon: Icon(Icons.person_outline),
           ),
-          (projects.when(
-            data: (projectsList) => (projectsList.isEmpty)
-                ? Center(child: Text('No Projects Found'))
-                : Expanded(
-                    child: GridView.builder(
-                      padding: const EdgeInsets.all(16),
-                      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                        maxCrossAxisExtent: 200,
-                      ),
-                      itemCount: projectsList.length,
-                      itemBuilder: (context, index) {
-                        final project = projectsList[index];
-                        return ProjectCard(project: project);
-                      },
-                    ),
-                  ),
-            error: (error, stacktrace) => Center(child: Text('Error: $error')),
-            loading: () => Center(child: CircularProgressIndicator()),
-          )),
+          IconButton(
+            onPressed: () {
+              ref.read(userProvider.notifier).clearUser();
+            },
+            icon: Icon(Icons.logout),
+          ),
         ],
       ),
+      body: PaginatedGrid<GetProjectsResponse, ProjectShallow>(
+        dataFetcher: (ref, page) => ref.watch(getProjectsProvider(page)),
+        builder: (data) => ProjectCard(project: data, key: ObjectKey(data.id)),
+      ),
+
       floatingActionButton: FloatingActionButton(
         onPressed: () => _createNewProject(context, ref),
         child: Icon(Icons.add),
@@ -74,9 +52,19 @@ class ProjectScreen extends ConsumerWidget {
         onSubmitted: (name) async {
           if (name == null) return;
 
-          final p = ref.watch(projectsProvider.notifier);
-          final id = await p.createNewProject(name);
-          if (!context.mounted) return;
+          final project = ref.watch(createProjectProvider(name));
+          final id = project.when(
+            data: (data) => data.id,
+            error: (err, stack) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text("Error creating project: $err")),
+              );
+              return null;
+            },
+            loading: () => null,
+          );
+
+          if (!context.mounted || id == null) return;
 
           ProjectDetailsRoute(projectId: id, projectName: name).push(context);
         },

@@ -1,4 +1,5 @@
 import 'package:control/di/di.dart';
+import 'package:control/domain/projects.dart';
 import 'package:control/navigation/guard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
@@ -30,6 +31,10 @@ class ControlApp extends StatelessWidget {
               ),
               userDataProviderProvider.overrideWith(
                 (ref) => ref.watch(testingUserDataProviderProvider),
+              ),
+              getProjectsProvider.overrideWith(
+                (ref, params) =>
+                    testingGetProjects(ref, params.$1, name: params.name),
               ),
             ]
           : [],

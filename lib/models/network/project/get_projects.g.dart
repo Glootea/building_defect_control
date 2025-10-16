@@ -6,16 +6,24 @@ part of 'get_projects.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+GetProjectsQueryParams _$GetProjectsQueryParamsFromJson(
+  Map<String, dynamic> json,
+) => GetProjectsQueryParams();
+
+Map<String, dynamic> _$GetProjectsQueryParamsToJson(
+  GetProjectsQueryParams instance,
+) => <String, dynamic>{};
+
 GetProjectsRequest _$GetProjectsRequestFromJson(Map<String, dynamic> json) =>
-    GetProjectsRequest();
+    GetProjectsRequest(name: json['name'] as String?);
 
 Map<String, dynamic> _$GetProjectsRequestToJson(GetProjectsRequest instance) =>
-    <String, dynamic>{};
+    <String, dynamic>{'name': instance.name};
 
 GetProjectsResponse _$GetProjectsResponseFromJson(Map<String, dynamic> json) =>
     GetProjectsResponse(
       data: (json['data'] as List<dynamic>)
-          .map((e) => Project.fromJson(e as Map<String, dynamic>))
+          .map((e) => ProjectShallow.fromJson(e as Map<String, dynamic>))
           .toList(),
       metadata: PaginatedMetadata.fromJson(
         json['metadata'] as Map<String, dynamic>,
@@ -24,4 +32,4 @@ GetProjectsResponse _$GetProjectsResponseFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$GetProjectsResponseToJson(
   GetProjectsResponse instance,
-) => <String, dynamic>{'data': instance.data, 'metadata': instance.metadata};
+) => <String, dynamic>{'metadata': instance.metadata, 'data': instance.data};
