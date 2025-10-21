@@ -1,12 +1,13 @@
 import 'package:control/models/models.dart';
+import 'package:control/models/network/project/create_project.dart';
+import 'package:control/models/network/project/get_project_by_id.dart';
+import 'package:control/models/network/project/get_projects.dart';
 import 'package:control/models/network/user/create_user.dart';
 import 'package:control/models/user.dart';
 import 'package:uuid/uuid.dart';
 
 // TODO: separate into separate providers for features (projects, defects, etc)
 abstract interface class IDataProvider {
-  Future<List<ProjectShallow>> getProjects();
-  Future<ProjectShallow> createProject(String name);
   Future<Project> getProject(String projectId);
   Future<List<Defect>> getDefects(String projectId);
   Future<Project> updateProject(Project project);
@@ -22,6 +23,12 @@ abstract interface class IDataProvider {
 abstract class IUserDataProvider {
   Future<String> createUser(CreateUserRequest request);
   Future<(UserData, String)> loginUser(String email, String password);
+}
+
+abstract class IProjectDataProvider {
+  Future<CreateProjectResponse> createProject(CreateProjectRequest request);
+  Future<GetProjectByIdResponse> getProjectById(String projectId);
+  Future<GetProjectsResponse> getProjects(GetProjectsRequest request);
 }
 
 extension UuidX on Uuid {

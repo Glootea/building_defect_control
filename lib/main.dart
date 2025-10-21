@@ -1,6 +1,7 @@
 import 'package:control/di/di.dart';
-import 'package:control/domain/projects.dart';
 import 'package:control/navigation/guard.dart';
+import 'package:control/utils/riverpod_logger.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:go_router/go_router.dart';
@@ -22,6 +23,7 @@ class ControlApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ProviderScope(
+      observers: [if (kDebugMode) Logger()],
       retry: (retryCount, error) =>
           null, // TODO: maybe retry on timeout, non wrong data errors
       overrides: isTesting
@@ -32,9 +34,8 @@ class ControlApp extends StatelessWidget {
               userDataProviderProvider.overrideWith(
                 (ref) => ref.watch(testingUserDataProviderProvider),
               ),
-              getProjectsProvider.overrideWith(
-                (ref, params) =>
-                    testingGetProjects(ref, params.$1, name: params.name),
+              projectDataProviderProvider.overrideWith(
+                (ref) => testingProjectDataProvider(ref),
               ),
             ]
           : [],

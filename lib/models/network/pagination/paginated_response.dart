@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 part 'paginated_response.g.dart';
+part 'paginated_response.freezed.dart';
 
 /// A generic paginated response model to be used across different endpoints.
 /// Do not use directly, instead create specific models for each endpoint that utilize this structure.
@@ -16,12 +17,19 @@ class PaginatedResponse {
 }
 
 @JsonSerializable()
-class PaginatedMetadata {
+@freezed
+class PaginatedMetadata with _$PaginatedMetadata {
+  @override
   final int currentPage;
+  @override
   final int pageSize;
+  @override
   final int totalCount;
+  @override
   final int totalPages;
+  @override
   final bool hasPrevious;
+  @override
   final bool hasNext;
 
   PaginatedMetadata({

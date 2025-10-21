@@ -20,7 +20,7 @@
             "type": "dart"
         },
         {
-            "name": "control profile testing ",
+            "name": "control profile testing",
             "request": "launch",
             "toolArgs": [
                 "--dart-define",
@@ -34,9 +34,12 @@
             "request": "launch",
             "toolArgs": [
                 "--dart-define",
-                "BACKEND_URL=http://localhost:8080",
+                "BACKEND_URL=http://localhost:8080/",
                 "--dart-define",
                 "USE_NETWORK_LOGGING=true",
+                "--web-port=55326",
+                "--web-tls-cert-path=.cert/root.crt",
+                "--web-tls-cert-key-path=.cert/root.key",
             ],
             "type": "dart"
         },

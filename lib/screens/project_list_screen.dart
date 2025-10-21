@@ -1,22 +1,37 @@
-import 'package:control/domain/projects.dart';
+import 'package:control/domain/page_logic/project_list_screen.dart';
 import 'package:control/domain/user.dart';
 import 'package:control/models/models.dart';
-import 'package:control/models/network/project/get_projects.dart';
 import 'package:control/navigation/navigation.dart';
+import 'package:control/utils/collapsing_searchbar.dart';
 import 'package:control/utils/paginated_grid.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class ProjectScreen extends ConsumerWidget {
-  const ProjectScreen({super.key});
+class ProjectListScreen extends ConsumerStatefulWidget {
+  const ProjectListScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ProjectListScreen> createState() => _ProjectListScreenState();
+}
+
+class _ProjectListScreenState extends ConsumerState<ProjectListScreen> {
+  int currentPage = 1;
+  String currentQuery = '';
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          "Projects",
-          style: Theme.of(context).textTheme.headlineMedium,
+        title: Row(
+          children: [
+            Text("Projects", style: Theme.of(context).textTheme.headlineMedium),
+            CollapsingSearchbar(
+              onChanged: (query) {
+                setState(() {
+                  currentQuery = query;
+                });
+              },
+            ),
+          ],
         ),
         actions: [
           IconButton(
@@ -33,36 +48,37 @@ class ProjectScreen extends ConsumerWidget {
           ),
         ],
       ),
-      body: PaginatedGrid<GetProjectsResponse, ProjectShallow>(
-        dataFetcher: (ref, page) => ref.watch(getProjectsProvider(page)),
+      body: PaginatedGrid<ProjectListPageState, ProjectShallow>(
+        dataFetcher: (ref, page) {
+          currentPage = page;
+          return ref.watch(projectListScreenProvider(page, currentQuery));
+        },
         builder: (data) => ProjectCard(project: data, key: ObjectKey(data.id)),
       ),
 
       floatingActionButton: FloatingActionButton(
-        onPressed: () => _createNewProject(context, ref),
+        onPressed: () =>
+            _createNewProject(context, ref, currentPage, currentQuery),
         child: Icon(Icons.add),
       ),
     );
   }
 
-  Future<void> _createNewProject(BuildContext context, WidgetRef ref) async {
+  Future<void> _createNewProject(
+    BuildContext context,
+    WidgetRef ref,
+    int page,
+    String currentQuery,
+  ) async {
     await showDialog(
       context: context,
       builder: (_) => _ProjectCreationDialog(
         onSubmitted: (name) async {
           if (name == null) return;
 
-          final project = ref.watch(createProjectProvider(name));
-          final id = project.when(
-            data: (data) => data.id,
-            error: (err, stack) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text("Error creating project: $err")),
-              );
-              return null;
-            },
-            loading: () => null,
-          );
+          final id = await ref
+              .watch(projectListScreenProvider(page, currentQuery).notifier)
+              .createProject(name);
 
           if (!context.mounted || id == null) return;
 

@@ -18,6 +18,7 @@ class LoginUserRequest {
 
 @JsonSerializable()
 class LoginUserResponse {
+  @JsonKey(name: 'access_token')
   final String token;
   @JsonKey(name: 'userdata')
   final UserData userData;

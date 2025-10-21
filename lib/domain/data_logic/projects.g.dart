@@ -66,7 +66,7 @@ final class GetProjectsProvider
   }
 }
 
-String _$getProjectsHash() => r'fc750445accdd5438b2dbba4c1d1567cdc01d0f4';
+String _$getProjectsHash() => r'2212ec2ffe191680ad8e0b96e0db88f6d6d2b74c';
 
 final class GetProjectsFamily extends $Family
     with
@@ -145,7 +145,7 @@ final class CreateProjectProvider
   }
 }
 
-String _$createProjectHash() => r'5be57114111a94adc534dd5682ae76c490433144';
+String _$createProjectHash() => r'1d6800823399af7c738f7def9d4b0fa5b4aac870';
 
 final class CreateProjectFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<ProjectShallow>, String> {
@@ -165,55 +165,53 @@ final class CreateProjectFamily extends $Family
   String toString() => r'createProjectProvider';
 }
 
-@ProviderFor(testingGetProjects)
-const testingGetProjectsProvider = TestingGetProjectsFamily._();
+@ProviderFor(getProjectById)
+const getProjectByIdProvider = GetProjectByIdFamily._();
 
-final class TestingGetProjectsProvider
+final class GetProjectByIdProvider
     extends
         $FunctionalProvider<
-          AsyncValue<GetProjectsResponse>,
-          GetProjectsResponse,
-          FutureOr<GetProjectsResponse>
+          AsyncValue<ProjectShallow>,
+          ProjectShallow,
+          FutureOr<ProjectShallow>
         >
-    with
-        $FutureModifier<GetProjectsResponse>,
-        $FutureProvider<GetProjectsResponse> {
-  const TestingGetProjectsProvider._({
-    required TestingGetProjectsFamily super.from,
-    required (int, {String? name}) super.argument,
+    with $FutureModifier<ProjectShallow>, $FutureProvider<ProjectShallow> {
+  const GetProjectByIdProvider._({
+    required GetProjectByIdFamily super.from,
+    required String super.argument,
   }) : super(
          retry: null,
-         name: r'testingGetProjectsProvider',
+         name: r'getProjectByIdProvider',
          isAutoDispose: true,
          dependencies: null,
          $allTransitiveDependencies: null,
        );
 
   @override
-  String debugGetCreateSourceHash() => _$testingGetProjectsHash();
+  String debugGetCreateSourceHash() => _$getProjectByIdHash();
 
   @override
   String toString() {
-    return r'testingGetProjectsProvider'
+    return r'getProjectByIdProvider'
         ''
-        '$argument';
+        '($argument)';
   }
 
   @$internal
   @override
-  $FutureProviderElement<GetProjectsResponse> $createElement(
+  $FutureProviderElement<ProjectShallow> $createElement(
     $ProviderPointer pointer,
   ) => $FutureProviderElement(pointer);
 
   @override
-  FutureOr<GetProjectsResponse> create(Ref ref) {
-    final argument = this.argument as (int, {String? name});
-    return testingGetProjects(ref, argument.$1, name: argument.name);
+  FutureOr<ProjectShallow> create(Ref ref) {
+    final argument = this.argument as String;
+    return getProjectById(ref, argument);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is TestingGetProjectsProvider && other.argument == argument;
+    return other is GetProjectByIdProvider && other.argument == argument;
   }
 
   @override
@@ -222,27 +220,22 @@ final class TestingGetProjectsProvider
   }
 }
 
-String _$testingGetProjectsHash() =>
-    r'10cde8ab21d86d5800fdf29c04e4bcd56b97d2ad';
+String _$getProjectByIdHash() => r'30ae1c1c187758e1ee0f148a9dfbfbf57105654b';
 
-final class TestingGetProjectsFamily extends $Family
-    with
-        $FunctionalFamilyOverride<
-          FutureOr<GetProjectsResponse>,
-          (int, {String? name})
-        > {
-  const TestingGetProjectsFamily._()
+final class GetProjectByIdFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<ProjectShallow>, String> {
+  const GetProjectByIdFamily._()
     : super(
         retry: null,
-        name: r'testingGetProjectsProvider',
+        name: r'getProjectByIdProvider',
         dependencies: null,
         $allTransitiveDependencies: null,
         isAutoDispose: true,
       );
 
-  TestingGetProjectsProvider call(int page, {String? name}) =>
-      TestingGetProjectsProvider._(argument: (page, name: name), from: this);
+  GetProjectByIdProvider call(String projectId) =>
+      GetProjectByIdProvider._(argument: projectId, from: this);
 
   @override
-  String toString() => r'testingGetProjectsProvider';
+  String toString() => r'getProjectByIdProvider';
 }

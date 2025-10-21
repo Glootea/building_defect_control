@@ -314,3 +314,148 @@ final class UserCacheProvider
 }
 
 String _$userCacheHash() => r'abeda657eb27f5a05821cfd1eedbe4d2658877f0';
+
+@ProviderFor(projectDataProvider)
+const projectDataProviderProvider = ProjectDataProviderProvider._();
+
+final class ProjectDataProviderProvider
+    extends
+        $FunctionalProvider<
+          IProjectDataProvider,
+          IProjectDataProvider,
+          IProjectDataProvider
+        >
+    with $Provider<IProjectDataProvider> {
+  const ProjectDataProviderProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'projectDataProviderProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$projectDataProviderHash();
+
+  @$internal
+  @override
+  $ProviderElement<IProjectDataProvider> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  IProjectDataProvider create(Ref ref) {
+    return projectDataProvider(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(IProjectDataProvider value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<IProjectDataProvider>(value),
+    );
+  }
+}
+
+String _$projectDataProviderHash() =>
+    r'3d070ecab0cf457df1eb1a4c49bf651e84a0a79f';
+
+@ProviderFor(testingProjectDataProvider)
+const testingProjectDataProviderProvider =
+    TestingProjectDataProviderProvider._();
+
+final class TestingProjectDataProviderProvider
+    extends
+        $FunctionalProvider<
+          IProjectDataProvider,
+          IProjectDataProvider,
+          IProjectDataProvider
+        >
+    with $Provider<IProjectDataProvider> {
+  const TestingProjectDataProviderProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'testingProjectDataProviderProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$testingProjectDataProviderHash();
+
+  @$internal
+  @override
+  $ProviderElement<IProjectDataProvider> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  IProjectDataProvider create(Ref ref) {
+    return testingProjectDataProvider(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(IProjectDataProvider value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<IProjectDataProvider>(value),
+    );
+  }
+}
+
+String _$testingProjectDataProviderHash() =>
+    r'61cbdbe4ebe0ac1c5be2e814794574534454e4c6';
+
+@ProviderFor(testingDataStorage)
+const testingDataStorageProvider = TestingDataStorageProvider._();
+
+final class TestingDataStorageProvider
+    extends
+        $FunctionalProvider<
+          TestingDataStorage,
+          TestingDataStorage,
+          TestingDataStorage
+        >
+    with $Provider<TestingDataStorage> {
+  const TestingDataStorageProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'testingDataStorageProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$testingDataStorageHash();
+
+  @$internal
+  @override
+  $ProviderElement<TestingDataStorage> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  TestingDataStorage create(Ref ref) {
+    return testingDataStorage(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(TestingDataStorage value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<TestingDataStorage>(value),
+    );
+  }
+}
+
+String _$testingDataStorageHash() =>
+    r'ca76349930993ae7f733a614c38773ef24ef2ad4';

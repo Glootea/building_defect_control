@@ -1,5 +1,9 @@
 import 'package:control/data/idata_provider.dart';
 import 'package:control/models/models.dart';
+import 'package:control/models/network/pagination/paginated_response.dart';
+import 'package:control/models/network/project/create_project.dart';
+import 'package:control/models/network/project/get_project_by_id.dart';
+import 'package:control/models/network/project/get_projects.dart';
 import 'package:control/models/network/user/create_user.dart';
 import 'package:control/models/user.dart';
 import 'package:uuid/uuid.dart';
@@ -10,13 +14,6 @@ class TestingDataProvider implements IDataProvider {
   late final _projects = [
     Project(id: _uuid.v7(), name: 'Create a new app', defects: _defects),
   ];
-  @override
-  Future<List<ProjectShallow>> getProjects() async {
-    await _simulateDelay();
-    return _projects
-        .map((e) => ProjectShallow(id: e.id, name: e.name))
-        .toList();
-  }
 
   late final _defects = [
     Defect(
@@ -50,14 +47,6 @@ class TestingDataProvider implements IDataProvider {
     await _simulateDelay();
     // Simulate saving the project name
     return project;
-  }
-
-  @override
-  Future<ProjectShallow> createProject(String name) async {
-    final newProject = ProjectShallow(id: _uuid.v7(), name: name);
-    _projects.add(Project(id: newProject.id, name: name, defects: []));
-    await _simulateDelay();
-    return newProject;
   }
 
   @override
@@ -171,4 +160,144 @@ class TestingUserDataProvider implements IUserDataProvider {
     }
     throw Exception('Invalid credentials for testing user');
   }
+}
+
+class TestingProjectDataProvider implements IProjectDataProvider {
+  const TestingProjectDataProvider(this.storage);
+
+  final TestingDataStorage storage;
+
+  @override
+  Future<CreateProjectResponse> createProject(
+    CreateProjectRequest request,
+  ) async {
+    final newId = Uuid().v7();
+    storage.projects.add(Project(id: newId, name: request.name, defects: []));
+    await _simulateDelay();
+    return Future.value(CreateProjectResponse(id: newId));
+  }
+
+  @override
+  Future<GetProjectByIdResponse> getProjectById(String projectId) async {
+    final project = storage.projects.firstWhere(
+      (project) => project.id == projectId,
+    );
+    return Future.value(
+      GetProjectByIdResponse(id: projectId, name: project.name),
+    );
+  }
+
+  @override
+  Future<GetProjectsResponse> getProjects(GetProjectsRequest request) async {
+    if (request.name == 'multipage') {
+      final pagination = request.pagination;
+      if (pagination == null) {
+        throw Exception(
+          'Pagination parameters are required for multipage test',
+        );
+      }
+      final currentPage = pagination.pageNumber;
+      final pageSize = pagination.pageSize;
+      final allProjects = storage.generatedProjects;
+      final pagedProjects = allProjects
+          .skip((currentPage - 1) * pageSize)
+          .take(pageSize)
+          .toList();
+      final totalCount = allProjects.length;
+      final totalPages = (totalCount / pageSize).ceil();
+      return Future.value(
+        GetProjectsResponse(
+          data: pagedProjects
+              .map(
+                (project) => ProjectShallow(id: project.id, name: project.name),
+              )
+              .toList(),
+          metadata: PaginatedMetadata(
+            currentPage: currentPage,
+            pageSize: pageSize,
+            totalCount: totalCount,
+            totalPages: totalPages,
+            hasPrevious: currentPage > 1,
+            hasNext: currentPage < totalPages,
+          ),
+        ),
+      );
+    }
+    final projects = storage.projects
+        .where((project) {
+          final query = request.name;
+          if (query == null || query.isEmpty) {
+            return true;
+          }
+          return project.name.toLowerCase().contains(query.toLowerCase());
+        })
+        .map((project) => ProjectShallow(id: project.id, name: project.name))
+        .toList();
+    return Future.value(
+      GetProjectsResponse(
+        data: projects,
+        metadata: PaginatedMetadata(
+          currentPage: 1,
+          pageSize: projects.length,
+          totalCount: projects.length,
+          totalPages: 1,
+          hasPrevious: false,
+          hasNext: false,
+        ),
+      ),
+    );
+  }
+}
+
+class TestingDataStorage {
+  late final List<Project> projects = [
+    Project(id: Uuid().v7(), name: 'Sample Project', defects: [...defects]),
+    Project(id: Uuid().v7(), name: 'Sample Project 2', defects: [...defects]),
+    Project(id: Uuid().v7(), name: 'Sample Project 3', defects: [...defects]),
+    Project(id: Uuid().v7(), name: 'Sample Project 4', defects: [...defects]),
+  ];
+
+  late final List<Project> generatedProjects = List.generate(
+    100,
+    (index) => Project(
+      id: Uuid().v7(),
+      name: 'Generated Project ${index + 1}',
+      defects: [...defects],
+    ),
+  );
+
+  final List<Defect> defects = [
+    Defect(
+      id: Uuid().v7(),
+      name: 'Sample Defect 1',
+      description: 'This is a sample defect description and elimination',
+      status: DefectStatus.closed,
+      classification: 'Minor',
+    ),
+    Defect(
+      id: Uuid().v7(),
+      name: 'Sample Defect 2',
+      description: 'This is another sample defect description.',
+      status: DefectStatus.inProgress,
+      classification: 'Major',
+    ),
+  ];
+
+  late final List<DefectElimination> eliminations = [
+    if (defects.isNotEmpty)
+      DefectElimination(
+        id: Uuid().v7(),
+        defectId: defects[0].id,
+        startDate: DateTime.now(),
+        endDate: DateTime.now().add(const Duration(days: 1)),
+        priority: Priority.high,
+      ),
+  ];
+
+  late final List<String> executors = [
+    'John Doe',
+    'Jane Smith',
+    'Alice Johnson',
+    'Bob Brown',
+  ];
 }

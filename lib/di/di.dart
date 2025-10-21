@@ -44,3 +44,19 @@ UserCache userCache(Ref ref) {
   final secureStorage = ref.watch(secureStorageProvider);
   return UserCache(secureStorage: secureStorage);
 }
+
+@riverpod
+IProjectDataProvider projectDataProvider(Ref ref) {
+  final dio = ref.watch(dioClientProvider);
+  return ProjectDataProvider(dio);
+}
+
+@riverpod
+IProjectDataProvider testingProjectDataProvider(Ref ref) {
+  return TestingProjectDataProvider(ref.watch(testingDataStorageProvider));
+}
+
+@Riverpod(keepAlive: true)
+TestingDataStorage testingDataStorage(Ref ref) {
+  return TestingDataStorage();
+}

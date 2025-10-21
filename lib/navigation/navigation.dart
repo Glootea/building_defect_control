@@ -1,7 +1,7 @@
 import 'package:control/screens/auth_screen.dart';
 import 'package:control/screens/profile_screen.dart';
 import 'package:control/screens/project_details_screen.dart';
-import 'package:control/screens/project_screen.dart';
+import 'package:control/screens/project_list_screen.dart';
 import 'package:control/screens/defect_details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -16,7 +16,7 @@ part 'navigation.g.dart';
 class ProjectsListRoute extends GoRouteData with $ProjectsListRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return const ProjectScreen();
+    return const ProjectListScreen();
   }
 }
 

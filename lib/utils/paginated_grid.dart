@@ -32,15 +32,12 @@ class PaginatedGrid<T extends PaginatedResponse, D> extends ConsumerWidget {
 
         return responseAsync.when(
           error: (err, stack) => Text(err.toString()),
-          loading: () => Center(child: CircularProgressIndicator()),
+          loading: () => const SizedBox(),
           data: (response) {
             if (index >= response.metadata.totalCount) {
               return null;
             }
 
-            if (indexInPage >= response.metadata.pageSize) {
-              return null;
-            }
             // TODO: handle not enough elements to fill the page -> not loading next
             final data = response.data[indexInPage];
             return builder(data);

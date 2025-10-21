@@ -9,6 +9,7 @@ targets:
         enabled: true
         generate_for:
           - "lib/models/**.dart"
+          - "lib/domain/page_logic/**.dart"
       riverpod_generator|riverpod_generator:
         enabled: true
         generate_for:

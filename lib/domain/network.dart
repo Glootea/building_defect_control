@@ -1,7 +1,5 @@
 import 'dart:developer';
 
-import 'package:control/di/di.dart';
-import 'package:control/domain/user.dart';
 import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'network.g.dart';
@@ -39,29 +37,6 @@ class DioClient extends _$DioClient {
       );
     }
 
-    ref.listen(userProvider, (prev, cur) async {
-      if (prev?.value == null && cur.value != null) {
-        final token = await ref.read(userCacheProvider).getToken();
-        dio.interceptors.add(_TokenInterceptor(token));
-      } else if (prev?.value != null && cur.value == null) {
-        dio.interceptors.removeWhere((element) => element is _TokenInterceptor);
-      }
-    });
-
     return dio;
-  }
-}
-
-class _TokenInterceptor extends Interceptor {
-  final String? token;
-
-  _TokenInterceptor(this.token);
-
-  @override
-  void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    if (token != null) {
-      options.headers['Authorization'] = 'Bearer $token';
-    }
-    super.onRequest(options, handler);
   }
 }
