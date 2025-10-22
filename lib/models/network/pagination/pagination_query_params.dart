@@ -20,7 +20,7 @@ class PaginatedRequest {
   @JsonKey(includeFromJson: false, includeToJson: false)
   final PaginationQueryParams? pagination;
 
-  PaginatedRequest({this.pagination});
+  const PaginatedRequest({this.pagination});
 
   Map<String, dynamic> toJson() => _$PaginatedRequestToJson(this);
   factory PaginatedRequest.fromJson(Map<String, dynamic> json) =>

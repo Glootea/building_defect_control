@@ -83,7 +83,7 @@ class ProjectShallow with _$ProjectShallow {
 @JsonSerializable()
 @freezed
 class Project with _$Project {
-  const Project({required this.id, required this.name, required this.defects});
+  const Project({required this.id, required this.name, required this.reports});
 
   factory Project.fromJson(Map<String, Object?> json) =>
       _$ProjectFromJson(json);
@@ -92,7 +92,7 @@ class Project with _$Project {
 
   final String id;
   final String name;
-  final List<Defect> defects;
+  final List<Report> reports;
 }
 
 @JsonSerializable()
@@ -100,7 +100,6 @@ class Project with _$Project {
 class Report with _$Report {
   const Report({
     required this.id,
-    required this.projectId,
     required this.name,
     required this.description,
     required this.submissionDate,
@@ -110,7 +109,6 @@ class Report with _$Report {
   Map<String, dynamic> toJson() => _$ReportToJson(this);
 
   final String id;
-  final String projectId;
   final String name;
   final String description;
   final DateTime submissionDate;

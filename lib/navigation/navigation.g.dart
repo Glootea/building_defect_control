@@ -8,7 +8,7 @@ part of 'navigation.dart';
 
 List<RouteBase> get $appRoutes => [
   $projectsListRoute,
-  $projectDetailsRoute,
+  $projectReportsRoute,
   $defectDetailsRoute,
   $authRoute,
   $profileRoute,
@@ -20,7 +20,7 @@ RouteBase get $projectsListRoute => GoRouteData.$route(
   routes: [
     GoRouteData.$route(
       path: '/project/:projectId',
-      factory: $ProjectDetailsRoute._fromState,
+      factory: $ProjectReportsRoute._fromState,
     ),
   ],
 );
@@ -46,14 +46,14 @@ mixin $ProjectsListRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-mixin $ProjectDetailsRoute on GoRouteData {
-  static ProjectDetailsRoute _fromState(GoRouterState state) =>
-      ProjectDetailsRoute(
+mixin $ProjectReportsRoute on GoRouteData {
+  static ProjectReportsRoute _fromState(GoRouterState state) =>
+      ProjectReportsRoute(
         projectId: state.pathParameters['projectId']!,
         projectName: state.uri.queryParameters['project-name']!,
       );
 
-  ProjectDetailsRoute get _self => this as ProjectDetailsRoute;
+  ProjectReportsRoute get _self => this as ProjectReportsRoute;
 
   @override
   String get location => GoRouteData.$location(
@@ -75,9 +75,9 @@ mixin $ProjectDetailsRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-RouteBase get $projectDetailsRoute => GoRouteData.$route(
+RouteBase get $projectReportsRoute => GoRouteData.$route(
   path: '/project/:projectId',
-  factory: $ProjectDetailsRoute._fromState,
+  factory: $ProjectReportsRoute._fromState,
   routes: [
     GoRouteData.$route(
       path: '/defect/:defectId',

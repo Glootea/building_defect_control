@@ -28,7 +28,8 @@ class GetProjectsRequest extends PaginatedRequest {
 
   @override
   Map<String, dynamic> get queryParams {
-    return super.queryParams..addAll((name != null ? {'name': name} : {}));
+    return super.queryParams
+      ..addAll((name != null && name!.isNotEmpty ? {'name': name} : {}));
   }
 }
 

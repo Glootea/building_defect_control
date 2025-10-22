@@ -82,7 +82,7 @@ class _ProjectListScreenState extends ConsumerState<ProjectListScreen> {
 
           if (!context.mounted || id == null) return;
 
-          ProjectDetailsRoute(projectId: id, projectName: name).push(context);
+          ProjectReportsRoute(projectId: id, projectName: name).push(context);
         },
       ),
     );
@@ -99,7 +99,7 @@ class ProjectCard extends StatelessWidget {
     return Card(
       clipBehavior: Clip.hardEdge,
       child: InkWell(
-        onTap: () => ProjectDetailsRoute(
+        onTap: () => ProjectReportsRoute(
           projectId: project.id,
           projectName: project.name,
         ).push(context),

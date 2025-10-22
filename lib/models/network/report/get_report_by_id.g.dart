@@ -8,24 +8,26 @@ part of 'get_report_by_id.dart';
 
 GetReportByIdRequest _$GetReportByIdRequestFromJson(
   Map<String, dynamic> json,
-) => GetReportByIdRequest(id: json['Id'] as String);
+) => GetReportByIdRequest(id: json['id'] as String);
 
 Map<String, dynamic> _$GetReportByIdRequestToJson(
   GetReportByIdRequest instance,
-) => <String, dynamic>{'Id': instance.id};
+) => <String, dynamic>{'id': instance.id};
 
 GetReportByIdResponse _$GetReportByIdResponseFromJson(
   Map<String, dynamic> json,
 ) => GetReportByIdResponse(
+  id: json['id'] as String,
   name: json['name'] as String,
   description: json['description'] as String,
-  submissionDate: DateTime.parse(json['SubmissionDate'] as String),
+  submissionDate: DateTime.parse(json['submissionDate'] as String),
 );
 
 Map<String, dynamic> _$GetReportByIdResponseToJson(
   GetReportByIdResponse instance,
 ) => <String, dynamic>{
+  'id': instance.id,
   'name': instance.name,
   'description': instance.description,
-  'SubmissionDate': instance.submissionDate.toIso8601String(),
+  'submissionDate': instance.submissionDate.toIso8601String(),
 };

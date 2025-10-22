@@ -3,9 +3,8 @@ part 'create_report.g.dart';
 
 @JsonSerializable()
 class CreateReportRequest {
-  @JsonKey(name: 'Name')
   final String name;
-  @JsonKey(name: 'Description')
+
   final String description;
 
   const CreateReportRequest({required this.name, required this.description});
@@ -18,7 +17,6 @@ class CreateReportRequest {
 
 @JsonSerializable()
 class CreateReportResponse {
-  @JsonKey(name: 'Id')
   final String id;
 
   const CreateReportResponse({required this.id});

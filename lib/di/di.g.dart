@@ -363,6 +363,175 @@ final class ProjectDataProviderProvider
 String _$projectDataProviderHash() =>
     r'3d070ecab0cf457df1eb1a4c49bf651e84a0a79f';
 
+@ProviderFor(reportDataProvider)
+const reportDataProviderProvider = ReportDataProviderFamily._();
+
+final class ReportDataProviderProvider
+    extends
+        $FunctionalProvider<
+          IReportDataProvider,
+          IReportDataProvider,
+          IReportDataProvider
+        >
+    with $Provider<IReportDataProvider> {
+  const ReportDataProviderProvider._({
+    required ReportDataProviderFamily super.from,
+    required String super.argument,
+  }) : super(
+         retry: null,
+         name: r'reportDataProviderProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$reportDataProviderHash();
+
+  @override
+  String toString() {
+    return r'reportDataProviderProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $ProviderElement<IReportDataProvider> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  IReportDataProvider create(Ref ref) {
+    final argument = this.argument as String;
+    return reportDataProvider(ref, argument);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(IReportDataProvider value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<IReportDataProvider>(value),
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is ReportDataProviderProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$reportDataProviderHash() =>
+    r'4df8083c00b2547736774bb458fe7f069ec661fb';
+
+final class ReportDataProviderFamily extends $Family
+    with $FunctionalFamilyOverride<IReportDataProvider, String> {
+  const ReportDataProviderFamily._()
+    : super(
+        retry: null,
+        name: r'reportDataProviderProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  ReportDataProviderProvider call(String projectId) =>
+      ReportDataProviderProvider._(argument: projectId, from: this);
+
+  @override
+  String toString() => r'reportDataProviderProvider';
+}
+
+@ProviderFor(testingReportDataProvider)
+const testingReportDataProviderProvider = TestingReportDataProviderFamily._();
+
+final class TestingReportDataProviderProvider
+    extends
+        $FunctionalProvider<
+          IReportDataProvider,
+          IReportDataProvider,
+          IReportDataProvider
+        >
+    with $Provider<IReportDataProvider> {
+  const TestingReportDataProviderProvider._({
+    required TestingReportDataProviderFamily super.from,
+    required String super.argument,
+  }) : super(
+         retry: null,
+         name: r'testingReportDataProviderProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$testingReportDataProviderHash();
+
+  @override
+  String toString() {
+    return r'testingReportDataProviderProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $ProviderElement<IReportDataProvider> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  IReportDataProvider create(Ref ref) {
+    final argument = this.argument as String;
+    return testingReportDataProvider(ref, argument);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(IReportDataProvider value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<IReportDataProvider>(value),
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is TestingReportDataProviderProvider &&
+        other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$testingReportDataProviderHash() =>
+    r'd87933d68df8664bbcef7cc05f3045336f4ab40f';
+
+final class TestingReportDataProviderFamily extends $Family
+    with $FunctionalFamilyOverride<IReportDataProvider, String> {
+  const TestingReportDataProviderFamily._()
+    : super(
+        retry: null,
+        name: r'testingReportDataProviderProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  TestingReportDataProviderProvider call(String projectId) =>
+      TestingReportDataProviderProvider._(argument: projectId, from: this);
+
+  @override
+  String toString() => r'testingReportDataProviderProvider';
+}
+
 @ProviderFor(testingProjectDataProvider)
 const testingProjectDataProviderProvider =
     TestingProjectDataProviderProvider._();

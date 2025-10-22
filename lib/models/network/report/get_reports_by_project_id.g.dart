@@ -8,26 +8,23 @@ part of 'get_reports_by_project_id.dart';
 
 GetReportsByProjectIdRequest _$GetReportsByProjectIdRequestFromJson(
   Map<String, dynamic> json,
-) => GetReportsByProjectIdRequest(projectId: json['ProjectId'] as String);
+) => GetReportsByProjectIdRequest(projectId: json['projectId'] as String);
 
 Map<String, dynamic> _$GetReportsByProjectIdRequestToJson(
   GetReportsByProjectIdRequest instance,
-) => <String, dynamic>{'ProjectId': instance.projectId};
+) => <String, dynamic>{'projectId': instance.projectId};
 
 GetReportsByProjectIdResponse _$GetReportsByProjectIdResponseFromJson(
   Map<String, dynamic> json,
 ) => GetReportsByProjectIdResponse(
-  id: json['Id'] as String,
-  name: json['Name'] as String,
-  description: json['Description'] as String,
-  submissionDate: DateTime.parse(json['SubmissionDate'] as String),
+  data: (json['data'] as List<dynamic>)
+      .map((e) => Report.fromJson(e as Map<String, dynamic>))
+      .toList(),
+  metadata: PaginatedMetadata.fromJson(
+    json['metadata'] as Map<String, dynamic>,
+  ),
 );
 
 Map<String, dynamic> _$GetReportsByProjectIdResponseToJson(
   GetReportsByProjectIdResponse instance,
-) => <String, dynamic>{
-  'Id': instance.id,
-  'Name': instance.name,
-  'Description': instance.description,
-  'SubmissionDate': instance.submissionDate.toIso8601String(),
-};
+) => <String, dynamic>{'metadata': instance.metadata, 'data': instance.data};

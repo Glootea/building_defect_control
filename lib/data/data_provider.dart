@@ -3,6 +3,9 @@ import 'package:control/models/models.dart';
 import 'package:control/models/network/project/create_project.dart';
 import 'package:control/models/network/project/get_project_by_id.dart';
 import 'package:control/models/network/project/get_projects.dart';
+import 'package:control/models/network/report/create_report.dart';
+import 'package:control/models/network/report/get_report_by_id.dart';
+import 'package:control/models/network/report/get_reports_by_project_id.dart';
 import 'package:control/models/network/user/create_user.dart';
 import 'package:control/models/network/user/login_user.dart';
 import 'package:control/models/user.dart';
@@ -117,8 +120,45 @@ class ProjectDataProvider implements IProjectDataProvider {
 
   @override
   Future<GetProjectsResponse> getProjects(GetProjectsRequest request) async {
-    final response = await dio.get("api/projects", data: request.toJson());
+    final response = await dio.get(
+      "api/projects",
+      queryParameters: request.queryParams,
+    );
     final data = GetProjectsResponse.fromJson(response.data);
     return data;
+  }
+}
+
+class ReportDataProvider implements IReportDataProvider {
+  final Dio dio;
+  @override
+  final String projectId;
+
+  const ReportDataProvider(this.dio, this.projectId);
+
+  @override
+  Future<CreateReportResponse> createReport(CreateReportRequest request) async {
+    final response = await dio.post(
+      '/api/projects/$projectId/reports',
+      data: request.toJson(),
+    );
+    return CreateReportResponse.fromJson(response.data);
+  }
+
+  @override
+  Future<GetReportByIdResponse> getReportById(String reportId) async {
+    final response = await dio.get('api/projects/$projectId/reports/$reportId');
+    return GetReportByIdResponse.fromJson(response.data);
+  }
+
+  @override
+  Future<GetReportsByProjectIdResponse> getReportByProjectId(
+    GetReportsByProjectIdRequest request,
+  ) async {
+    final response = await dio.get(
+      'api/projects/$projectId/reports',
+      queryParameters: request.queryParams,
+    );
+    return GetReportsByProjectIdResponse.fromJson(response.data);
   }
 }

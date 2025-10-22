@@ -769,7 +769,7 @@ case _:
 /// @nodoc
 mixin _$Project {
 
- String get id; String get name; List<Defect> get defects;
+ String get id; String get name; List<Report> get reports;
 /// Create a copy of Project
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -780,16 +780,16 @@ $ProjectCopyWith<Project> get copyWith => _$ProjectCopyWithImpl<Project>(this as
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Project&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&const DeepCollectionEquality().equals(other.defects, defects));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Project&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&const DeepCollectionEquality().equals(other.reports, reports));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,const DeepCollectionEquality().hash(defects));
+int get hashCode => Object.hash(runtimeType,id,name,const DeepCollectionEquality().hash(reports));
 
 @override
 String toString() {
-  return 'Project(id: $id, name: $name, defects: $defects)';
+  return 'Project(id: $id, name: $name, reports: $reports)';
 }
 
 
@@ -800,7 +800,7 @@ abstract mixin class $ProjectCopyWith<$Res>  {
   factory $ProjectCopyWith(Project value, $Res Function(Project) _then) = _$ProjectCopyWithImpl;
 @useResult
 $Res call({
- String id, String name, List<Defect> defects
+ String id, String name, List<Report> reports
 });
 
 
@@ -817,12 +817,12 @@ class _$ProjectCopyWithImpl<$Res>
 
 /// Create a copy of Project
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? defects = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? reports = null,}) {
   return _then(Project(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as String,defects: null == defects ? _self.defects : defects // ignore: cast_nullable_to_non_nullable
-as List<Defect>,
+as String,reports: null == reports ? _self.reports : reports // ignore: cast_nullable_to_non_nullable
+as List<Report>,
   ));
 }
 
@@ -957,7 +957,7 @@ case _:
 /// @nodoc
 mixin _$Report {
 
- String get id; String get projectId; String get name; String get description; DateTime get submissionDate;
+ String get id; String get name; String get description; DateTime get submissionDate;
 /// Create a copy of Report
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -968,16 +968,16 @@ $ReportCopyWith<Report> get copyWith => _$ReportCopyWithImpl<Report>(this as Rep
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Report&&(identical(other.id, id) || other.id == id)&&(identical(other.projectId, projectId) || other.projectId == projectId)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.submissionDate, submissionDate) || other.submissionDate == submissionDate));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Report&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.submissionDate, submissionDate) || other.submissionDate == submissionDate));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,projectId,name,description,submissionDate);
+int get hashCode => Object.hash(runtimeType,id,name,description,submissionDate);
 
 @override
 String toString() {
-  return 'Report(id: $id, projectId: $projectId, name: $name, description: $description, submissionDate: $submissionDate)';
+  return 'Report(id: $id, name: $name, description: $description, submissionDate: $submissionDate)';
 }
 
 
@@ -988,7 +988,7 @@ abstract mixin class $ReportCopyWith<$Res>  {
   factory $ReportCopyWith(Report value, $Res Function(Report) _then) = _$ReportCopyWithImpl;
 @useResult
 $Res call({
- String id, String projectId, String name, String description, DateTime submissionDate
+ String id, String name, String description, DateTime submissionDate
 });
 
 
@@ -1005,10 +1005,9 @@ class _$ReportCopyWithImpl<$Res>
 
 /// Create a copy of Report
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? projectId = null,Object? name = null,Object? description = null,Object? submissionDate = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? description = null,Object? submissionDate = null,}) {
   return _then(Report(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as String,projectId: null == projectId ? _self.projectId : projectId // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String,submissionDate: null == submissionDate ? _self.submissionDate : submissionDate // ignore: cast_nullable_to_non_nullable

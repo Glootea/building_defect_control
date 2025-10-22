@@ -6,10 +6,11 @@ part 'paginated_response.freezed.dart';
 /// Do not use directly, instead create specific models for each endpoint that utilize this structure.
 @JsonSerializable()
 class PaginatedResponse {
+  /// [Data] must be iterable of specific type
   final dynamic data;
   final PaginatedMetadata metadata;
 
-  PaginatedResponse({required this.data, required this.metadata});
+  const PaginatedResponse({required this.data, required this.metadata});
 
   Map<String, dynamic> toJson() => _$PaginatedResponseToJson(this);
   factory PaginatedResponse.fromJson(Map<String, dynamic> json) =>

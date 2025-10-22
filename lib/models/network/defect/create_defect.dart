@@ -3,11 +3,9 @@ part 'create_defect.g.dart';
 
 @JsonSerializable()
 class CreateDefectRequest {
-  @JsonKey(name: 'Name')
   final String name;
-  @JsonKey(name: 'Description')
   final String description;
-  @JsonKey(name: 'Class')
+  @JsonKey(name: 'class')
   final String clazz;
 
   const CreateDefectRequest({

@@ -8,15 +8,15 @@ part of 'create_defect.dart';
 
 CreateDefectRequest _$CreateDefectRequestFromJson(Map<String, dynamic> json) =>
     CreateDefectRequest(
-      name: json['Name'] as String,
-      description: json['Description'] as String,
-      clazz: json['Class'] as String,
+      name: json['name'] as String,
+      description: json['description'] as String,
+      clazz: json['class'] as String,
     );
 
 Map<String, dynamic> _$CreateDefectRequestToJson(
   CreateDefectRequest instance,
 ) => <String, dynamic>{
-  'Name': instance.name,
-  'Description': instance.description,
-  'Class': instance.clazz,
+  'name': instance.name,
+  'description': instance.description,
+  'class': instance.clazz,
 };

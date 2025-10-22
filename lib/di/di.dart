@@ -52,6 +52,20 @@ IProjectDataProvider projectDataProvider(Ref ref) {
 }
 
 @riverpod
+IReportDataProvider reportDataProvider(Ref ref, String projectId) {
+  final dio = ref.watch(dioClientProvider);
+  return ReportDataProvider(dio, projectId);
+}
+
+@riverpod
+IReportDataProvider testingReportDataProvider(Ref ref, String projectId) {
+  return TestingReportDataProvider(
+    ref.watch(testingDataStorageProvider),
+    projectId,
+  );
+}
+
+@riverpod
 IProjectDataProvider testingProjectDataProvider(Ref ref) {
   return TestingProjectDataProvider(ref.watch(testingDataStorageProvider));
 }

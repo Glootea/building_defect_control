@@ -71,20 +71,19 @@ Map<String, dynamic> _$ProjectShallowToJson(ProjectShallow instance) =>
 Project _$ProjectFromJson(Map<String, dynamic> json) => Project(
   id: json['id'] as String,
   name: json['name'] as String,
-  defects: (json['defects'] as List<dynamic>)
-      .map((e) => Defect.fromJson(e as Map<String, dynamic>))
+  reports: (json['reports'] as List<dynamic>)
+      .map((e) => Report.fromJson(e as Map<String, dynamic>))
       .toList(),
 );
 
 Map<String, dynamic> _$ProjectToJson(Project instance) => <String, dynamic>{
   'id': instance.id,
   'name': instance.name,
-  'defects': instance.defects,
+  'reports': instance.reports,
 };
 
 Report _$ReportFromJson(Map<String, dynamic> json) => Report(
   id: json['id'] as String,
-  projectId: json['projectId'] as String,
   name: json['name'] as String,
   description: json['description'] as String,
   submissionDate: DateTime.parse(json['submissionDate'] as String),
@@ -92,7 +91,6 @@ Report _$ReportFromJson(Map<String, dynamic> json) => Report(
 
 Map<String, dynamic> _$ReportToJson(Report instance) => <String, dynamic>{
   'id': instance.id,
-  'projectId': instance.projectId,
   'name': instance.name,
   'description': instance.description,
   'submissionDate': instance.submissionDate.toIso8601String(),

@@ -1,6 +1,6 @@
 import 'package:control/screens/auth_screen.dart';
 import 'package:control/screens/profile_screen.dart';
-import 'package:control/screens/project_details_screen.dart';
+import 'package:control/screens/reports_screen.dart';
 import 'package:control/screens/project_list_screen.dart';
 import 'package:control/screens/defect_details_screen.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +10,7 @@ part 'navigation.g.dart';
 
 @TypedGoRoute<ProjectsListRoute>(
   path: '/projects',
-  routes: [TypedGoRoute<ProjectDetailsRoute>(path: _projectDetailsPath)],
+  routes: [TypedGoRoute<ProjectReportsRoute>(path: _projectDetailsPath)],
 )
 @immutable
 class ProjectsListRoute extends GoRouteData with $ProjectsListRoute {
@@ -22,13 +22,13 @@ class ProjectsListRoute extends GoRouteData with $ProjectsListRoute {
 
 const String _projectDetailsPath = '/project/:projectId';
 
-@TypedGoRoute<ProjectDetailsRoute>(
+@TypedGoRoute<ProjectReportsRoute>(
   path: _projectDetailsPath,
   routes: [TypedGoRoute<DefectDetailsRoute>(path: _defectDetailsPath)],
 )
 @immutable
-class ProjectDetailsRoute extends GoRouteData with $ProjectDetailsRoute {
-  const ProjectDetailsRoute({
+class ProjectReportsRoute extends GoRouteData with $ProjectReportsRoute {
+  const ProjectReportsRoute({
     required this.projectId,
     required this.projectName,
   });
@@ -37,7 +37,7 @@ class ProjectDetailsRoute extends GoRouteData with $ProjectDetailsRoute {
   final String projectName;
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return ProjectDetailsScreen(projectId: projectId, projectName: projectName);
+    return ReportListScreen(projectId: projectId, projectName: projectName);
   }
 }
 

@@ -8,21 +8,21 @@ part of 'create_report.dart';
 
 CreateReportRequest _$CreateReportRequestFromJson(Map<String, dynamic> json) =>
     CreateReportRequest(
-      name: json['Name'] as String,
-      description: json['Description'] as String,
+      name: json['name'] as String,
+      description: json['description'] as String,
     );
 
 Map<String, dynamic> _$CreateReportRequestToJson(
   CreateReportRequest instance,
 ) => <String, dynamic>{
-  'Name': instance.name,
-  'Description': instance.description,
+  'name': instance.name,
+  'description': instance.description,
 };
 
 CreateReportResponse _$CreateReportResponseFromJson(
   Map<String, dynamic> json,
-) => CreateReportResponse(id: json['Id'] as String);
+) => CreateReportResponse(id: json['id'] as String);
 
 Map<String, dynamic> _$CreateReportResponseToJson(
   CreateReportResponse instance,
-) => <String, dynamic>{'Id': instance.id};
+) => <String, dynamic>{'id': instance.id};

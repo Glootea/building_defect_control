@@ -4,15 +4,19 @@ import 'package:control/models/network/pagination/paginated_response.dart';
 import 'package:control/models/network/project/create_project.dart';
 import 'package:control/models/network/project/get_project_by_id.dart';
 import 'package:control/models/network/project/get_projects.dart';
+import 'package:control/models/network/report/create_report.dart';
+import 'package:control/models/network/report/get_report_by_id.dart';
+import 'package:control/models/network/report/get_reports_by_project_id.dart';
 import 'package:control/models/network/user/create_user.dart';
 import 'package:control/models/user.dart';
 import 'package:uuid/uuid.dart';
 
 class TestingDataProvider implements IDataProvider {
   final Uuid _uuid = Uuid();
+  late final _projectId = _uuid.v7();
 
-  late final _projects = [
-    Project(id: _uuid.v7(), name: 'Create a new app', defects: _defects),
+  late final List<Project> _projects = [
+    Project(id: _projectId, name: 'Create a new app', reports: _reports),
   ];
 
   late final _defects = [
@@ -31,6 +35,22 @@ class TestingDataProvider implements IDataProvider {
       classification: 'Critical',
     ),
   ];
+
+  late final List<Report> _reports = [
+    Report(
+      id: _uuid.v7(),
+      name: 'Sample Report 1',
+      description: 'This is a sample defect description and elimination',
+      submissionDate: DateTime.now().subtract(const Duration(days: 2)),
+    ),
+    Report(
+      id: _uuid.v7(),
+      name: 'Sample Report 2',
+      description: 'This is a sample defect description',
+      submissionDate: DateTime.now().subtract(const Duration(days: 5)),
+    ),
+  ];
+
   @override
   Future<List<Defect>> getDefects(String projectId) async {
     await _simulateDelay();
@@ -172,7 +192,7 @@ class TestingProjectDataProvider implements IProjectDataProvider {
     CreateProjectRequest request,
   ) async {
     final newId = Uuid().v7();
-    storage.projects.add(Project(id: newId, name: request.name, defects: []));
+    storage.projects.add(Project(id: newId, name: request.name, reports: []));
     await _simulateDelay();
     return Future.value(CreateProjectResponse(id: newId));
   }
@@ -249,12 +269,108 @@ class TestingProjectDataProvider implements IProjectDataProvider {
   }
 }
 
+class TestingReportDataProvider implements IReportDataProvider {
+  final TestingDataStorage storage;
+  @override
+  final String projectId;
+
+  const TestingReportDataProvider(this.storage, this.projectId);
+
+  @override
+  Future<CreateReportResponse> createReport(CreateReportRequest request) async {
+    final newId = Uuid().v7();
+    storage.reports.add(
+      Report(
+        id: newId,
+        name: request.name,
+        description: request.description,
+        submissionDate: DateTime.now(),
+      ),
+    );
+    await _simulateDelay();
+    return Future.value(CreateReportResponse(id: newId));
+  }
+
+  @override
+  Future<GetReportByIdResponse> getReportById(String reportId) async {
+    final report = storage.reports.firstWhere(
+      (report) => report.id == reportId,
+    );
+    await _simulateDelay();
+    return Future.value(
+      GetReportByIdResponse(
+        id: report.id,
+        name: report.name,
+        description: report.description,
+        submissionDate: report.submissionDate,
+      ),
+    );
+  }
+
+  @override
+  Future<GetReportsByProjectIdResponse> getReportByProjectId(
+    GetReportsByProjectIdRequest request,
+  ) async {
+    if (request.name == 'multipage') {
+      final pagination = request.pagination;
+      if (pagination == null) {
+        throw Exception(
+          'Pagination parameters are required for multipage test',
+        );
+      }
+      final currentPage = pagination.pageNumber;
+      final pageSize = pagination.pageSize;
+      final allReports = storage.generatedReports;
+      final pagedReports = allReports
+          .skip((currentPage - 1) * pageSize)
+          .take(pageSize)
+          .toList();
+      final totalCount = allReports.length;
+      final totalPages = (totalCount / pageSize).ceil();
+      return Future.value(
+        GetReportsByProjectIdResponse(
+          data: pagedReports.toList(),
+          metadata: PaginatedMetadata(
+            currentPage: currentPage,
+            pageSize: pageSize,
+            totalCount: totalCount,
+            totalPages: totalPages,
+            hasPrevious: currentPage > 1,
+            hasNext: currentPage < totalPages,
+          ),
+        ),
+      );
+    }
+    final reports = storage.reports.where((project) {
+      final query = request.name;
+      if (query == null || query.isEmpty) {
+        return true;
+      }
+      return project.name.toLowerCase().contains(query.toLowerCase());
+    }).toList();
+    return Future.value(
+      GetReportsByProjectIdResponse(
+        data: reports,
+        metadata: PaginatedMetadata(
+          currentPage: 1,
+          pageSize: reports.length,
+          totalCount: reports.length,
+          totalPages: 1,
+          hasPrevious: false,
+          hasNext: false,
+        ),
+      ),
+    );
+  }
+}
+
 class TestingDataStorage {
+  late final _projectId = Uuid().v7();
   late final List<Project> projects = [
-    Project(id: Uuid().v7(), name: 'Sample Project', defects: [...defects]),
-    Project(id: Uuid().v7(), name: 'Sample Project 2', defects: [...defects]),
-    Project(id: Uuid().v7(), name: 'Sample Project 3', defects: [...defects]),
-    Project(id: Uuid().v7(), name: 'Sample Project 4', defects: [...defects]),
+    Project(id: _projectId, name: 'Sample Project', reports: [...reports]),
+    Project(id: Uuid().v7(), name: 'Sample Project 2', reports: [...reports]),
+    Project(id: Uuid().v7(), name: 'Sample Project 3', reports: [...reports]),
+    Project(id: Uuid().v7(), name: 'Sample Project 4', reports: [...reports]),
   ];
 
   late final List<Project> generatedProjects = List.generate(
@@ -262,32 +378,40 @@ class TestingDataStorage {
     (index) => Project(
       id: Uuid().v7(),
       name: 'Generated Project ${index + 1}',
-      defects: [...defects],
+      reports: [...reports],
     ),
   );
 
-  final List<Defect> defects = [
-    Defect(
+  late final List<Report> generatedReports = List.generate(
+    100,
+    (index) => Report(
       id: Uuid().v7(),
-      name: 'Sample Defect 1',
-      description: 'This is a sample defect description and elimination',
-      status: DefectStatus.closed,
-      classification: 'Minor',
+      name: 'Generated Project ${index + 1}',
+      description: 'This is a generated report description',
+      submissionDate: DateTime.now().subtract(Duration(days: index)),
     ),
-    Defect(
+  );
+
+  late final List<Report> reports = [
+    Report(
       id: Uuid().v7(),
-      name: 'Sample Defect 2',
-      description: 'This is another sample defect description.',
-      status: DefectStatus.inProgress,
-      classification: 'Major',
+      name: 'Sample Report 1',
+      description: 'This is a sample defect description and elimination',
+      submissionDate: DateTime.now().subtract(const Duration(days: 2)),
+    ),
+    Report(
+      id: Uuid().v7(),
+      name: 'Sample Report 2',
+      description: 'This is a sample defect description',
+      submissionDate: DateTime.now().subtract(const Duration(days: 5)),
     ),
   ];
 
   late final List<DefectElimination> eliminations = [
-    if (defects.isNotEmpty)
+    if (reports.isNotEmpty)
       DefectElimination(
         id: Uuid().v7(),
-        defectId: defects[0].id,
+        defectId: reports[0].id,
         startDate: DateTime.now(),
         endDate: DateTime.now().add(const Duration(days: 1)),
         priority: Priority.high,
