@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:dio/browser.dart' show BrowserHttpClientAdapter, DioForBrowser;
 import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'network.g.dart';
@@ -24,9 +25,9 @@ class DioClient extends _$DioClient {
       baseUrl: baseUrl,
       contentType: "application/json",
     );
-
+    final adapter = BrowserHttpClientAdapter(withCredentials: true);
     final dio = Dio(options);
-
+    dio.httpClientAdapter = adapter;
     if (useNetworkLogging) {
       dio.interceptors.add(
         LogInterceptor(
