@@ -43,12 +43,13 @@ class _RiverpodScreenState<T> extends State<RiverpodScreen<T>> {
 
     final duration = const Duration(milliseconds: 500);
     return AnimatedCrossFade(
-      // alignment: Alignment.bottomCenter,
-      firstChild: CircularProgressIndicator(),
-      secondChild: widget.child(widget.state.value as T),
       crossFadeState: widget.state.isLoading
           ? CrossFadeState.showFirst
           : CrossFadeState.showSecond,
+      firstChild: CircularProgressIndicator(),
+      secondChild: (widget.state.isLoading)
+          ? const SizedBox.shrink()
+          : widget.child(widget.state.value as T),
       duration: duration,
     );
   }

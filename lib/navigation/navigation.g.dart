@@ -9,6 +9,7 @@ part of 'navigation.dart';
 List<RouteBase> get $appRoutes => [
   $projectsListRoute,
   $projectReportsRoute,
+  $reportDetailsRoute,
   $defectDetailsRoute,
   $authRoute,
   $profileRoute,
@@ -99,6 +100,39 @@ mixin $DefectDetailsRoute on GoRouteData {
   String get location => GoRouteData.$location(
     '/defect/${Uri.encodeComponent(_self.defectId)}',
     queryParams: {'defect-name': _self.defectName},
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $reportDetailsRoute => GoRouteData.$route(
+  path: '/project/:projectId/report/:reportId',
+  factory: $ReportDetailsRoute._fromState,
+);
+
+mixin $ReportDetailsRoute on GoRouteData {
+  static ReportDetailsRoute _fromState(GoRouterState state) =>
+      ReportDetailsRoute(
+        projectId: state.pathParameters['projectId']!,
+        reportId: state.pathParameters['reportId']!,
+      );
+
+  ReportDetailsRoute get _self => this as ReportDetailsRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/project/${Uri.encodeComponent(_self.projectId)}/report/${Uri.encodeComponent(_self.reportId)}',
   );
 
   @override

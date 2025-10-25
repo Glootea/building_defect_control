@@ -6,53 +6,6 @@ part 'models.g.dart';
 
 @JsonSerializable()
 @freezed
-class Defect with _$Defect {
-  const Defect({
-    required this.id,
-    required this.name,
-    required this.description,
-    required this.classification,
-    required this.status,
-  });
-
-  factory Defect.fromJson(Map<String, Object?> json) => _$DefectFromJson(json);
-
-  Map<String, dynamic> toJson() => _$DefectToJson(this);
-
-  final String id;
-  final String name;
-  final String classification;
-  final String description;
-  final DefectStatus status;
-}
-
-@JsonSerializable()
-@freezed
-class DefectElimination with _$DefectElimination {
-  const DefectElimination({
-    required this.id,
-    required this.defectId,
-    required this.startDate,
-    required this.endDate,
-    required this.priority,
-  });
-
-  factory DefectElimination.fromJson(Map<String, Object?> json) =>
-      _$DefectEliminationFromJson(json);
-
-  Map<String, dynamic> toJson() => _$DefectEliminationToJson(this);
-
-  final String id;
-  final String defectId;
-  final DateTime startDate;
-  final DateTime endDate;
-  final Priority priority;
-}
-
-enum DefectStatus { open, inProgress, onReview, resolved, closed }
-
-@JsonSerializable()
-@freezed
 class Role with _$Role {
   const Role({required this.id, required this.name});
 
@@ -82,6 +35,7 @@ class ProjectShallow with _$ProjectShallow {
 
 @JsonSerializable()
 @freezed
+@Deprecated("No longer used, use ProjectShallow instead")
 class Project with _$Project {
   const Project({required this.id, required this.name, required this.reports});
 
@@ -131,3 +85,51 @@ class ReportAttachment with _$ReportAttachment {
   final String reportId;
   final String dataFileLink;
 }
+
+@JsonSerializable()
+@freezed
+class Defect with _$Defect {
+  const Defect({
+    required this.id,
+    required this.name,
+    required this.description,
+    required this.classification,
+    required this.status,
+  });
+
+  factory Defect.fromJson(Map<String, Object?> json) => _$DefectFromJson(json);
+
+  Map<String, dynamic> toJson() => _$DefectToJson(this);
+
+  final String id;
+  final String name;
+  @JsonKey(name: 'class')
+  final String classification;
+  final String description;
+  final DefectStatus status;
+}
+
+@JsonSerializable()
+@freezed
+class DefectElimination with _$DefectElimination {
+  const DefectElimination({
+    required this.id,
+    required this.defectId,
+    required this.startDate,
+    required this.endDate,
+    required this.priority,
+  });
+
+  factory DefectElimination.fromJson(Map<String, Object?> json) =>
+      _$DefectEliminationFromJson(json);
+
+  Map<String, dynamic> toJson() => _$DefectEliminationToJson(this);
+
+  final String id;
+  final String defectId;
+  final DateTime startDate;
+  final DateTime endDate;
+  final Priority priority;
+}
+
+enum DefectStatus { open, inProgress, onReview, resolved, closed }

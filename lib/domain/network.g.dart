@@ -40,7 +40,7 @@ final class DioClientProvider extends $NotifierProvider<DioClient, Dio> {
   }
 }
 
-String _$dioClientHash() => r'930807c0327785597456fe96bfded97388d316bc';
+String _$dioClientHash() => r'beca97f62c7d190bdd305dcaab58cb5a6be9f753';
 
 abstract class _$DioClient extends $Notifier<Dio> {
   Dio build();

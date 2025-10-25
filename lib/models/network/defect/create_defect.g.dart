@@ -20,3 +20,11 @@ Map<String, dynamic> _$CreateDefectRequestToJson(
   'description': instance.description,
   'class': instance.clazz,
 };
+
+CreateDefectResponse _$CreateDefectResponseFromJson(
+  Map<String, dynamic> json,
+) => CreateDefectResponse(id: json['id'] as String);
+
+Map<String, dynamic> _$CreateDefectResponseToJson(
+  CreateDefectResponse instance,
+) => <String, dynamic>{'id': instance.id};

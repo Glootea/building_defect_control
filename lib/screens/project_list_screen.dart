@@ -48,12 +48,17 @@ class _ProjectListScreenState extends ConsumerState<ProjectListScreen> {
           ),
         ],
       ),
-      body: PaginatedGrid<ProjectListPageState, ProjectShallow>(
-        dataFetcher: (ref, page) {
-          currentPage = page;
-          return ref.watch(projectListScreenProvider(page, currentQuery));
-        },
-        builder: (data) => ProjectCard(project: data, key: ObjectKey(data.id)),
+      body: CustomScrollView(
+        slivers: [
+          PaginatedGrid<ProjectListPageState, ProjectShallow>(
+            dataFetcher: (ref, page) {
+              currentPage = page;
+              return ref.watch(projectListScreenProvider(page, currentQuery));
+            },
+            builder: (data) =>
+                ProjectCard(project: data, key: ObjectKey(data.id)),
+          ),
+        ],
       ),
 
       floatingActionButton: FloatingActionButton(

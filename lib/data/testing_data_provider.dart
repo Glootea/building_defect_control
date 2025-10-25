@@ -1,5 +1,10 @@
+import 'dart:math';
+
 import 'package:control/data/idata_provider.dart';
 import 'package:control/models/models.dart';
+import 'package:control/models/network/defect/create_defect.dart';
+import 'package:control/models/network/defect/get_defect_by_id.dart';
+import 'package:control/models/network/defect/get_defects_by_report_id.dart';
 import 'package:control/models/network/pagination/paginated_response.dart';
 import 'package:control/models/network/project/create_project.dart';
 import 'package:control/models/network/project/get_project_by_id.dart';
@@ -364,6 +369,107 @@ class TestingReportDataProvider implements IReportDataProvider {
   }
 }
 
+class TestingDefectDataProvider implements IDefectDataProvider {
+  final TestingDataStorage storage;
+  @override
+  final String reportId;
+
+  const TestingDefectDataProvider(this.storage, this.reportId);
+
+  @override
+  Future<CreateDefectResponse> createDefect(CreateDefectRequest request) async {
+    final newId = Uuid().v7();
+    storage.defects.add(
+      Defect(
+        id: newId,
+        name: request.name,
+        description: request.description,
+        classification: request.clazz,
+        status: DefectStatus.open,
+      ),
+    );
+    await _simulateDelay();
+    return Future.value(CreateDefectResponse(id: newId));
+  }
+
+  @override
+  Future<GetDefectByIdResponse> getDefectById(
+    GetDefectByIdRequest request,
+  ) async {
+    final defect = storage.defects.first;
+
+    // .firstWhere(
+    //   (report) => report.id == reportId,
+    // );
+    await _simulateDelay();
+    return Future.value(
+      GetDefectByIdResponse(
+        id: defect.id,
+        name: defect.name,
+        description: defect.description,
+        status: defect.status,
+        clazz: defect.classification,
+      ),
+    );
+  }
+
+  @override
+  Future<GetDefectsByReportIdResponse> getDefectsByReportId(
+    GetDefectsByReportIdRequest request,
+  ) async {
+    if (request.name == 'multipage') {
+      final pagination = request.pagination;
+      if (pagination == null) {
+        throw Exception(
+          'Pagination parameters are required for multipage test',
+        );
+      }
+      final currentPage = pagination.pageNumber;
+      final pageSize = pagination.pageSize;
+      final allDefects = storage.generatedDefects;
+      final pagedReports = allDefects
+          .skip((currentPage - 1) * pageSize)
+          .take(pageSize)
+          .toList();
+      final totalCount = allDefects.length;
+      final totalPages = (totalCount / pageSize).ceil();
+      return Future.value(
+        GetDefectsByReportIdResponse(
+          data: pagedReports.toList(),
+          metadata: PaginatedMetadata(
+            currentPage: currentPage,
+            pageSize: pageSize,
+            totalCount: totalCount,
+            totalPages: totalPages,
+            hasPrevious: currentPage > 1,
+            hasNext: currentPage < totalPages,
+          ),
+        ),
+      );
+    }
+    final reports = storage.defects.where((project) {
+      final query = request.name;
+      if (query == null || query.isEmpty) {
+        return true;
+      }
+      return project.name.toLowerCase().contains(query.toLowerCase());
+    }).toList();
+    return Future.value(
+      GetDefectsByReportIdResponse(
+        data: reports,
+        metadata: PaginatedMetadata(
+          currentPage: 1,
+          pageSize: reports.length,
+          totalCount: reports.length,
+          totalPages: 1,
+          hasPrevious: false,
+          hasNext: false,
+        ),
+      ),
+    );
+  }
+}
+
 class TestingDataStorage {
   late final _projectId = Uuid().v7();
   late final List<Project> projects = [
@@ -392,6 +498,18 @@ class TestingDataStorage {
     ),
   );
 
+  late final _random = Random();
+  late final List<Defect> generatedDefects = List.generate(
+    100,
+    (index) => Defect(
+      id: Uuid().v7(),
+      name: 'Generated Project ${index + 1}',
+      description: 'This is a generated report description',
+      classification: 'Classification ${index % 5} ',
+      status: DefectStatus.values[_random.nextInt(DefectStatus.values.length)],
+    ),
+  );
+
   late final List<Report> reports = [
     Report(
       id: Uuid().v7(),
@@ -404,6 +522,23 @@ class TestingDataStorage {
       name: 'Sample Report 2',
       description: 'This is a sample defect description',
       submissionDate: DateTime.now().subtract(const Duration(days: 5)),
+    ),
+  ];
+
+  late final List<Defect> defects = [
+    Defect(
+      id: Uuid().v7(),
+      name: 'UI Bug',
+      description: 'Button not aligned properly',
+      status: DefectStatus.open,
+      classification: 'Minor',
+    ),
+    Defect(
+      id: Uuid().v7(),
+      name: 'Crash on Load',
+      description: 'App crashes when loading data',
+      status: DefectStatus.inProgress,
+      classification: 'Critical',
     ),
   ];
 

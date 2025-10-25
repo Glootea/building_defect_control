@@ -628,3 +628,172 @@ final class TestingDataStorageProvider
 
 String _$testingDataStorageHash() =>
     r'ca76349930993ae7f733a614c38773ef24ef2ad4';
+
+@ProviderFor(defectDataProvider)
+const defectDataProviderProvider = DefectDataProviderFamily._();
+
+final class DefectDataProviderProvider
+    extends
+        $FunctionalProvider<
+          IDefectDataProvider,
+          IDefectDataProvider,
+          IDefectDataProvider
+        >
+    with $Provider<IDefectDataProvider> {
+  const DefectDataProviderProvider._({
+    required DefectDataProviderFamily super.from,
+    required String super.argument,
+  }) : super(
+         retry: null,
+         name: r'defectDataProviderProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$defectDataProviderHash();
+
+  @override
+  String toString() {
+    return r'defectDataProviderProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $ProviderElement<IDefectDataProvider> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  IDefectDataProvider create(Ref ref) {
+    final argument = this.argument as String;
+    return defectDataProvider(ref, argument);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(IDefectDataProvider value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<IDefectDataProvider>(value),
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is DefectDataProviderProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$defectDataProviderHash() =>
+    r'194df2d1f63ba2d9123b7f5029b73b3f17b3dfc7';
+
+final class DefectDataProviderFamily extends $Family
+    with $FunctionalFamilyOverride<IDefectDataProvider, String> {
+  const DefectDataProviderFamily._()
+    : super(
+        retry: null,
+        name: r'defectDataProviderProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  DefectDataProviderProvider call(String reportId) =>
+      DefectDataProviderProvider._(argument: reportId, from: this);
+
+  @override
+  String toString() => r'defectDataProviderProvider';
+}
+
+@ProviderFor(testingDefectDataProvider)
+const testingDefectDataProviderProvider = TestingDefectDataProviderFamily._();
+
+final class TestingDefectDataProviderProvider
+    extends
+        $FunctionalProvider<
+          IDefectDataProvider,
+          IDefectDataProvider,
+          IDefectDataProvider
+        >
+    with $Provider<IDefectDataProvider> {
+  const TestingDefectDataProviderProvider._({
+    required TestingDefectDataProviderFamily super.from,
+    required String super.argument,
+  }) : super(
+         retry: null,
+         name: r'testingDefectDataProviderProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$testingDefectDataProviderHash();
+
+  @override
+  String toString() {
+    return r'testingDefectDataProviderProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $ProviderElement<IDefectDataProvider> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  IDefectDataProvider create(Ref ref) {
+    final argument = this.argument as String;
+    return testingDefectDataProvider(ref, argument);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(IDefectDataProvider value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<IDefectDataProvider>(value),
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is TestingDefectDataProviderProvider &&
+        other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$testingDefectDataProviderHash() =>
+    r'efcf7551a1e495995104799f57892d1ff65ed586';
+
+final class TestingDefectDataProviderFamily extends $Family
+    with $FunctionalFamilyOverride<IDefectDataProvider, String> {
+  const TestingDefectDataProviderFamily._()
+    : super(
+        retry: null,
+        name: r'testingDefectDataProviderProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  TestingDefectDataProviderProvider call(String reportId) =>
+      TestingDefectDataProviderProvider._(argument: reportId, from: this);
+
+  @override
+  String toString() => r'testingDefectDataProviderProvider';
+}

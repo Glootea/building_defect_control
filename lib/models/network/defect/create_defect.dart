@@ -19,3 +19,15 @@ class CreateDefectRequest {
 
   Map<String, dynamic> toJson() => _$CreateDefectRequestToJson(this);
 }
+
+@JsonSerializable()
+class CreateDefectResponse {
+  final String id;
+
+  const CreateDefectResponse({required this.id});
+
+  factory CreateDefectResponse.fromJson(Map<String, Object?> json) =>
+      _$CreateDefectResponseFromJson(json);
+
+  Map<String, dynamic> toJson() => _$CreateDefectResponseToJson(this);
+}

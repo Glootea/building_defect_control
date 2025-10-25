@@ -6,6 +6,14 @@ part of 'get_defects_by_report_id.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+GetDefectsByReportIdRequest _$GetDefectsByReportIdRequestFromJson(
+  Map<String, dynamic> json,
+) => GetDefectsByReportIdRequest();
+
+Map<String, dynamic> _$GetDefectsByReportIdRequestToJson(
+  GetDefectsByReportIdRequest instance,
+) => <String, dynamic>{};
+
 GetDefectsByReportIdResponse _$GetDefectsByReportIdResponseFromJson(
   Map<String, dynamic> json,
 ) => GetDefectsByReportIdResponse(

@@ -1,5 +1,8 @@
 import 'package:control/data/idata_provider.dart';
 import 'package:control/models/models.dart';
+import 'package:control/models/network/defect/create_defect.dart';
+import 'package:control/models/network/defect/get_defect_by_id.dart';
+import 'package:control/models/network/defect/get_defects_by_report_id.dart';
 import 'package:control/models/network/project/create_project.dart';
 import 'package:control/models/network/project/get_project_by_id.dart';
 import 'package:control/models/network/project/get_projects.dart';
@@ -160,5 +163,41 @@ class ReportDataProvider implements IReportDataProvider {
       queryParameters: request.queryParams,
     );
     return GetReportsByProjectIdResponse.fromJson(response.data);
+  }
+}
+
+class DefectDataProvider implements IDefectDataProvider {
+  @override
+  final String reportId;
+  final Dio dio;
+
+  const DefectDataProvider({required this.dio, required this.reportId});
+  @override
+  Future<CreateDefectResponse> createDefect(CreateDefectRequest request) async {
+    final response = await dio.post(
+      'api/reports/$reportId/defects',
+      data: request.toJson(),
+    );
+    return Future.value(CreateDefectResponse.fromJson(response.data));
+  }
+
+  @override
+  Future<GetDefectByIdResponse> getDefectById(
+    GetDefectByIdRequest request,
+  ) async {
+    final defectId = request.defectId;
+    final response = await dio.get('api/reports/$reportId/defects/$defectId');
+    return GetDefectByIdResponse.fromJson(response.data);
+  }
+
+  @override
+  Future<GetDefectsByReportIdResponse> getDefectsByReportId(
+    GetDefectsByReportIdRequest request,
+  ) async {
+    final response = await dio.get(
+      'api/reports/$reportId/defects',
+      queryParameters: request.queryParams,
+    );
+    return GetDefectsByReportIdResponse.fromJson(response.data);
   }
 }

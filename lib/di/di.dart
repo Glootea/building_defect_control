@@ -57,7 +57,7 @@ IReportDataProvider reportDataProvider(Ref ref, String projectId) {
   return ReportDataProvider(dio, projectId);
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 IReportDataProvider testingReportDataProvider(Ref ref, String projectId) {
   return TestingReportDataProvider(
     ref.watch(testingDataStorageProvider),
@@ -72,5 +72,21 @@ IProjectDataProvider testingProjectDataProvider(Ref ref) {
 
 @Riverpod(keepAlive: true)
 TestingDataStorage testingDataStorage(Ref ref) {
-  return TestingDataStorage();
+  final value = TestingDataStorage();
+  print("Initialized TestingDataStorage at ${value.hashCode}");
+  return value;
+}
+
+@riverpod
+IDefectDataProvider defectDataProvider(Ref ref, String reportId) {
+  final dio = ref.watch(dioClientProvider);
+  return DefectDataProvider(dio: dio, reportId: reportId);
+}
+
+@riverpod
+IDefectDataProvider testingDefectDataProvider(Ref ref, String reportId) {
+  return TestingDefectDataProvider(
+    ref.watch(testingDataStorageProvider),
+    reportId,
+  );
 }

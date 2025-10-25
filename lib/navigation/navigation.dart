@@ -1,5 +1,6 @@
 import 'package:control/screens/auth_screen.dart';
 import 'package:control/screens/profile_screen.dart';
+import 'package:control/screens/report_details_screen.dart';
 import 'package:control/screens/reports_screen.dart';
 import 'package:control/screens/project_list_screen.dart';
 import 'package:control/screens/defect_details_screen.dart';
@@ -38,6 +39,21 @@ class ProjectReportsRoute extends GoRouteData with $ProjectReportsRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return ReportListScreen(projectId: projectId, projectName: projectName);
+  }
+}
+
+const String _reportDetails = '/project/:projectId/report/:reportId';
+
+@TypedGoRoute<ReportDetailsRoute>(path: _reportDetails, routes: [])
+@immutable
+class ReportDetailsRoute extends GoRouteData with $ReportDetailsRoute {
+  const ReportDetailsRoute({required this.projectId, required this.reportId});
+  final String projectId;
+  final String reportId;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return ReportDetailsScreen(projectId: projectId, reportId: reportId);
   }
 }
 

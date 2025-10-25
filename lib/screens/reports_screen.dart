@@ -43,18 +43,26 @@ class _ProjectListScreenState extends ConsumerState<ReportListScreen> {
           ],
         ),
       ),
-      body: PaginatedGrid<ReportListPageState, Report>(
-        dataFetcher: (ref, page) {
-          currentPage = page;
-          return ref.watch(
-            reportListScreenProvider(widget.projectId, page, currentQuery),
-          );
-        },
-        builder: (data) => ReportCard(report: data, key: ObjectKey(data.id)),
+      body: CustomScrollView(
+        slivers: [
+          PaginatedGrid<ReportListPageState, Report>(
+            dataFetcher: (ref, page) {
+              currentPage = page;
+              return ref.watch(
+                reportListScreenProvider(widget.projectId, page, currentQuery),
+              );
+            },
+            builder: (data) => ReportCard(
+              report: data,
+              projectId: widget.projectId,
+              key: ObjectKey(data.id),
+            ),
+          ),
+        ],
       ),
 
       floatingActionButton: FloatingActionButton(
-        onPressed: () => _createNewProject(
+        onPressed: () => _createNewDefect(
           context,
           ref,
           widget.projectId,
@@ -66,7 +74,7 @@ class _ProjectListScreenState extends ConsumerState<ReportListScreen> {
     );
   }
 
-  Future<void> _createNewProject(
+  Future<void> _createNewDefect(
     BuildContext context,
     WidgetRef ref,
     String projectId,
@@ -79,7 +87,7 @@ class _ProjectListScreenState extends ConsumerState<ReportListScreen> {
         onSubmitted: (name, description) async {
           if (name == null || description == null) return;
 
-          final id = await ref
+          final createdReportId = await ref
               .watch(
                 reportListScreenProvider(
                   projectId,
@@ -89,12 +97,12 @@ class _ProjectListScreenState extends ConsumerState<ReportListScreen> {
               )
               .createReport(name, description);
 
-          if (!context.mounted || id == null) return;
+          if (!context.mounted || createdReportId == null) return;
 
-          /* ProjectReportsRoute(
-            projectId: id,
-            projectName: name,
-          ).push(context);  TODO: Fix navigation */
+          ReportDetailsRoute(
+            projectId: projectId,
+            reportId: createdReportId,
+          ).push(context);
         },
       ),
     );
@@ -102,16 +110,22 @@ class _ProjectListScreenState extends ConsumerState<ReportListScreen> {
 }
 
 class ReportCard extends StatelessWidget {
-  const ReportCard({super.key, required this.report});
+  const ReportCard({super.key, required this.report, required this.projectId});
 
   final Report report;
+  final String projectId;
 
   @override
   Widget build(BuildContext context) {
     return Card(
       clipBehavior: Clip.hardEdge,
       child: InkWell(
-        onTap: () {}, // TODO: Navigate to report details
+        onTap: () {
+          ReportDetailsRoute(
+            projectId: projectId,
+            reportId: report.id,
+          ).push(context);
+        },
         child: ListTile(
           title: Hero(
             tag: report.id,
@@ -119,14 +133,20 @@ class ReportCard extends StatelessWidget {
               type: MaterialType.transparency,
               child: Text(
                 report.name,
-                style: Theme.of(context).textTheme.titleMedium,
+                style: Theme.of(context).textTheme.titleLarge,
               ),
             ),
           ),
           subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(report.submissionDate.toShortDateString()),
+              Row(
+                spacing: 8,
+                children: [
+                  Icon(Icons.calendar_month_outlined),
+                  Text(report.submissionDate.toShortDateString()),
+                ],
+              ),
               Text(report.description),
             ],
           ),

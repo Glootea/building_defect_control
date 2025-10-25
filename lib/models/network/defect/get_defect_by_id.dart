@@ -3,6 +3,18 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'get_defect_by_id.g.dart';
 
 @JsonSerializable()
+class GetDefectByIdRequest {
+  final String defectId;
+
+  const GetDefectByIdRequest({required this.defectId});
+
+  factory GetDefectByIdRequest.fromJson(Map<String, Object?> json) =>
+      _$GetDefectByIdRequestFromJson(json);
+
+  Map<String, dynamic> toJson() => _$GetDefectByIdRequestToJson(this);
+}
+
+@JsonSerializable()
 class GetDefectByIdResponse {
   final String id;
   final String name;

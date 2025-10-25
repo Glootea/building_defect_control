@@ -1,4 +1,3 @@
-import 'package:control/data/testing_data_provider.dart';
 import 'package:control/di/di.dart';
 import 'package:control/navigation/guard.dart';
 import 'package:control/utils/riverpod_logger.dart';
@@ -36,13 +35,15 @@ class ControlApp extends StatelessWidget {
                 (ref) => ref.watch(testingUserDataProviderProvider),
               ),
               projectDataProviderProvider.overrideWith(
-                (ref) => testingProjectDataProvider(ref),
+                (ref) => ref.watch(testingProjectDataProviderProvider),
               ),
               reportDataProviderProvider.overrideWith(
-                (ref, args) => TestingReportDataProvider(
-                  ref.watch(testingDataStorageProvider),
-                  args,
-                ),
+                (ref, args) =>
+                    ref.watch(testingReportDataProviderProvider(args)),
+              ),
+              defectDataProviderProvider.overrideWith(
+                (ref, args) =>
+                    ref.watch(testingDefectDataProviderProvider(args)),
               ),
             ]
           : [],
