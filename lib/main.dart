@@ -23,7 +23,7 @@ class ControlApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ProviderScope(
-      observers: [if (kDebugMode) Logger()],
+      observers: [if (kDebugMode || isTesting) Logger()],
       retry: (retryCount, error) =>
           null, // TODO: maybe retry on timeout, non wrong data errors
       overrides: isTesting
