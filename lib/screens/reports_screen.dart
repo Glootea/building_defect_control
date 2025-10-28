@@ -46,17 +46,33 @@ class _ProjectListScreenState extends ConsumerState<ReportListScreen> {
       body: CustomScrollView(
         slivers: [
           PaginatedGrid<ReportListPageState, Report>(
+            title: 'Reports',
+
             dataFetcher: (ref, page) {
               currentPage = page;
               return ref.watch(
                 reportListScreenProvider(widget.projectId, page, currentQuery),
               );
             },
-            builder: (data) => ReportCard(
+            columns: ['Name', 'Submission Date', 'Description'],
+            cardBuilder: (data) => ReportCard(
               report: data,
               projectId: widget.projectId,
               key: ObjectKey(data.id),
             ),
+            tableRowBuilder: (data) => Row(
+              children: [
+                Expanded(child: Text(data.name)),
+                Expanded(child: Text(data.submissionDate.toShortDateString())),
+                Expanded(child: Text(data.description)),
+              ],
+            ),
+            onClick: (data) => () {
+              ReportDetailsRoute(
+                projectId: widget.projectId,
+                reportId: data.id,
+              ).push(context);
+            },
           ),
         ],
       ),
@@ -117,40 +133,29 @@ class ReportCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      clipBehavior: Clip.hardEdge,
-      child: InkWell(
-        onTap: () {
-          ReportDetailsRoute(
-            projectId: projectId,
-            reportId: report.id,
-          ).push(context);
-        },
-        child: ListTile(
-          title: Hero(
-            tag: report.id,
-            child: Material(
-              type: MaterialType.transparency,
-              child: Text(
-                report.name,
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-            ),
-          ),
-          subtitle: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                spacing: 8,
-                children: [
-                  Icon(Icons.calendar_month_outlined),
-                  Text(report.submissionDate.toShortDateString()),
-                ],
-              ),
-              Text(report.description),
-            ],
+    return ListTile(
+      title: Hero(
+        tag: report.id,
+        child: Material(
+          type: MaterialType.transparency,
+          child: Text(
+            report.name,
+            style: Theme.of(context).textTheme.titleLarge,
           ),
         ),
+      ),
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            spacing: 8,
+            children: [
+              Icon(Icons.calendar_month_outlined),
+              Text(report.submissionDate.toShortDateString()),
+            ],
+          ),
+          Text(report.description),
+        ],
       ),
     );
   }

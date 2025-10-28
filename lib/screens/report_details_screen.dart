@@ -33,9 +33,19 @@ class ReportDetailsScreen extends StatelessWidget {
         ),
       ),
       PaginatedGrid<GetDefectsByReportIdResponse, Defect>(
+        title: 'Defects',
+        columns: ['Name', 'Classification', 'Status'],
+        tableRowBuilder: (data) => Row(
+          children: [
+            Expanded(child: Text(data.name)),
+            Expanded(child: Text(data.classification)),
+            Expanded(child: Text(data.status.name)),
+          ],
+        ),
         dataFetcher: (ref, page) =>
             ref.watch(getDefectsProvider(page, reportId: reportId)),
-        builder: (data) => DefectCard(defect: data),
+        cardBuilder: (data) => DefectCard(defect: data),
+        onClick: (data) {},
         key: GlobalKey(),
       ),
     ];
@@ -141,21 +151,18 @@ class DefectCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      clipBehavior: Clip.hardEdge,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Wrap(
-          spacing: 8,
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Wrap(
+        spacing: 8,
 
-          children: [
-            Text(defect.name, style: Theme.of(context).textTheme.titleLarge),
+        children: [
+          Text(defect.name, style: Theme.of(context).textTheme.titleLarge),
 
-            Text(defect.description),
-            Text("Classification: ${defect.classification}"),
-            Text("Status: ${defect.status}"),
-          ],
-        ),
+          Text(defect.description),
+          Text("Classification: ${defect.classification}"),
+          Text("Status: ${defect.status}"),
+        ],
       ),
     );
   }

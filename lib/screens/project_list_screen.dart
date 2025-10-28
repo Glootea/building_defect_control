@@ -51,12 +51,20 @@ class _ProjectListScreenState extends ConsumerState<ProjectListScreen> {
       body: CustomScrollView(
         slivers: [
           PaginatedGrid<ProjectListPageState, ProjectShallow>(
+            title: 'Projects',
             dataFetcher: (ref, page) {
               currentPage = page;
               return ref.watch(projectListScreenProvider(page, currentQuery));
             },
-            builder: (data) =>
+            cardBuilder: (data) =>
                 ProjectCard(project: data, key: ObjectKey(data.id)),
+            columns: ['Project Name'],
+            tableRowBuilder: (data) =>
+                Row(children: [Expanded(child: Text(data.name))]),
+            onClick: (project) => ProjectReportsRoute(
+              projectId: project.id,
+              projectName: project.name,
+            ).push(context),
           ),
         ],
       ),
@@ -101,21 +109,12 @@ class ProjectCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      clipBehavior: Clip.hardEdge,
-      child: InkWell(
-        onTap: () => ProjectReportsRoute(
-          projectId: project.id,
-          projectName: project.name,
-        ).push(context),
-        child: ListTile(
-          title: Hero(
-            tag: project.id,
-            child: Material(
-              type: MaterialType.transparency,
-              child: Text(project.name),
-            ),
-          ),
+    return ListTile(
+      title: Hero(
+        tag: project.id,
+        child: Material(
+          type: MaterialType.transparency,
+          child: Text(project.name),
         ),
       ),
     );

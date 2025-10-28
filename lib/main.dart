@@ -52,7 +52,7 @@ class ControlApp extends StatelessWidget {
           final router = widgetRef.watch(routerProvider);
           return MaterialApp.router(
             title: 'Control App',
-            theme: ThemeData(primarySwatch: Colors.blue),
+            theme: ThemeData(primarySwatch: Colors.blue, useMaterial3: true),
             routerConfig: router,
           );
         },
