@@ -73,19 +73,16 @@ class _ProjectListScreenState extends ConsumerState<ReportListScreen> {
                 reportId: data.id,
               ).push(context);
             },
+            onCreateNewItem: () => _createNewDefect(
+              context,
+              ref,
+              widget.projectId,
+              currentPage,
+              currentQuery,
+            ),
+            filterOverlay: Column(children: [TextField()]),
           ),
         ],
-      ),
-
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _createNewDefect(
-          context,
-          ref,
-          widget.projectId,
-          currentPage,
-          currentQuery,
-        ),
-        child: Icon(Icons.add),
       ),
     );
   }

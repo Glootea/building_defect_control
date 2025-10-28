@@ -65,14 +65,14 @@ class _ProjectListScreenState extends ConsumerState<ProjectListScreen> {
               projectId: project.id,
               projectName: project.name,
             ).push(context),
+            onCreateNewItem: () =>
+                _createNewProject(context, ref, currentPage, currentQuery),
+            filterOverlay: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [Text('Name'), TextField()],
+            ),
           ),
         ],
-      ),
-
-      floatingActionButton: FloatingActionButton(
-        onPressed: () =>
-            _createNewProject(context, ref, currentPage, currentQuery),
-        child: Icon(Icons.add),
       ),
     );
   }

@@ -46,6 +46,8 @@ class ReportDetailsScreen extends StatelessWidget {
             ref.watch(getDefectsProvider(page, reportId: reportId)),
         cardBuilder: (data) => DefectCard(defect: data),
         onClick: (data) {},
+        onCreateNewItem: () {},
+        filterOverlay: Column(children: [TextField()]),
         key: GlobalKey(),
       ),
     ];
