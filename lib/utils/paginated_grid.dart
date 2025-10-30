@@ -16,7 +16,7 @@ class PaginatedGrid<PaginatedValueType extends PaginatedResponse, ValueDataType>
   final List<Widget> Function(ValueDataType data) tableRowBuilder;
   final void Function(ValueDataType data) onClick;
   final void Function()? onCreateNewItem;
-  final InMemoryResizableRowStorage resizableRowStorage;
+  final ResizableRowStorage resizableRowStorage;
 
   /// Has width of 300
   final Widget filterOverlay;
@@ -50,6 +50,36 @@ class _PaginatedGridState<
     extends State<PaginatedGrid<PaginatedValueType, ValueDataType>> {
   bool isListLayout = true;
 
+  Widget? itemLoader({
+    required WidgetRef ref,
+    required int index,
+    required Widget Function(ValueDataType data) builder,
+  }) {
+    final page = index ~/ defaultPageSize + 1;
+    final indexInPage = index % defaultPageSize;
+    final responseAsync = widget.dataFetcher(ref, page);
+
+    return responseAsync.when(
+      error: (err, stack) => Text(err.toString()),
+      loading: () => null,
+      data: (response) {
+        if (index >= response.metadata.totalCount) {
+          return null;
+        }
+
+        final data = response.data[indexInPage];
+
+        return builder(data);
+      },
+    );
+  }
+
+  @override
+  void didChangeDependencies() {
+    isListLayout = MediaQuery.sizeOf(context).width > 600;
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
     final padding = const EdgeInsets.symmetric(horizontal: 16);
@@ -67,157 +97,207 @@ class _PaginatedGridState<
               ),
             ),
             SliverPadding(padding: EdgeInsets.only(top: 8)),
-            SliverCrossAxisGroup(
-              slivers: [
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: padding,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Flexible(
-                          child: _ViewSelectionToggle(
-                            isListLayout: isListLayout,
-                            onLayoutChanged: (value) => setState(() {
-                              isListLayout = value;
-                            }),
-                          ),
-                        ),
-                        Flexible(
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              _FilterButton(
-                                filterOverlay: widget.filterOverlay,
-                              ),
-                              if (widget.onCreateNewItem != null)
-                                Flexible(
-                                  child: FilledButton.icon(
-                                    onPressed: widget.onCreateNewItem,
-                                    label: const Text(
-                                      'New',
-                                      maxLines: 1,
-                                      overflow: TextOverflow.clip,
-                                    ),
-                                    iconAlignment: IconAlignment.end,
-                                    icon: Icon(Icons.add_outlined),
-                                    style: ButtonStyle(
-                                      padding: WidgetStatePropertyAll(
-                                        const EdgeInsets.all(12),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
+            _Header(
+              filterOverlay: widget.filterOverlay,
+              onCreateNewItem: widget.onCreateNewItem,
+              isListLayout: isListLayout,
+              onLayoutChanged: (value) {
+                setState(() {
+                  isListLayout = value;
+                });
+              },
             ),
-            isListLayout
-                ? FutureBuilder(
-                    key: GlobalKey(),
-                    future: widget.resizableRowStorage.getFractions(
-                      widget.title,
-                    ),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return SliverToBoxAdapter(
-                          child: const CircularProgressIndicator(),
-                        );
-                      }
-                      final listenables = List.generate(
-                        widget.columns.length,
-                        (index) => ValueNotifier(
-                          snapshot.data?[index] ?? (1 / widget.columns.length),
-                        ),
-                      );
-                      return SliverList.separated(
-                        separatorBuilder: (context, index) =>
-                            Divider(indent: 16, endIndent: 16),
-                        itemBuilder: (context, index) {
-                          return Consumer(
-                            builder: (context, ref, child) {
-                              final page = index ~/ defaultPageSize + 1;
-                              final indexInPage = index % defaultPageSize;
-                              final responseAsync = widget.dataFetcher(
-                                ref,
-                                page,
-                              );
+            SliverPadding(
+              padding: padding,
+              sliver: isListLayout
+                  ? _ListLayout<ValueDataType>(
+                      resizableRowStorage: widget.resizableRowStorage,
+                      title: widget.title,
+                      columns: widget.columns,
+                      tableRowBuilder: widget.tableRowBuilder,
+                      onClick: widget.onClick,
+                      itemLoader: itemLoader,
+                    )
+                  : SliverGrid.builder(
+                      key: GlobalKey(),
+                      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                        maxCrossAxisExtent: 200,
+                      ),
 
-                              return responseAsync.when(
-                                error: (err, stack) => Text(err.toString()),
-                                loading: () =>
-                                    const SizedBox(height: 100, width: 100),
-                                data: (response) {
-                                  if (index >= response.metadata.totalCount) {
-                                    return SizedBox();
-                                  }
+                      itemBuilder: (context, index) {
+                        return itemLoader(
+                          ref: ref,
+                          index: index,
 
-                                  // TODO: handle not enough elements to fill the page -> not loading next
-                                  final data = response.data[indexInPage];
-
-                                  return ResizableRowBuilder(
-                                    id: widget.title,
-                                    storage: InMemoryResizableRowStorage(),
-                                    onTap: () => widget.onClick(data),
-                                    listenables: listenables,
-                                    children: widget.tableRowBuilder(data),
-                                    onResize: () =>
-                                        widget.resizableRowStorage.setFractions(
-                                          widget.title,
-                                          listenables
-                                              .map((e) => e.value)
-                                              .toList(),
-                                        ),
-                                  );
-                                },
-                              );
-                            },
-                          );
-                        },
-                      );
-                    },
-                  )
-                : SliverGrid.builder(
-                    key: GlobalKey(),
-                    gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                      maxCrossAxisExtent: 200,
-                    ),
-
-                    itemBuilder: (context, index) {
-                      final page = index ~/ defaultPageSize + 1;
-                      final indexInPage = index % defaultPageSize;
-                      final responseAsync = widget.dataFetcher(ref, page);
-
-                      return responseAsync.when(
-                        error: (err, stack) => Text(err.toString()),
-                        loading: () => const SizedBox(height: 100, width: 100),
-                        data: (response) {
-                          if (index >= response.metadata.totalCount) {
-                            return null;
-                          }
-
-                          // TODO: handle not enough elements to fill the page -> not loading next
-                          final data = response.data[indexInPage];
-
-                          return Card(
+                          builder: (data) => Card(
                             clipBehavior: Clip.hardEdge,
                             child: InkWell(
                               onTap: () => widget.onClick(data),
                               child: widget.cardBuilder(data),
                             ),
-                          );
-                        },
-                      );
-                    },
-                  ),
+                          ),
+                        );
+                      },
+                    ),
+            ),
           ],
         );
       },
+    );
+  }
+}
+
+class _ListLayout<ValueDataType> extends StatelessWidget {
+  final ResizableRowStorage resizableRowStorage;
+  final String title;
+  final List<String> columns;
+  final void Function(ValueDataType data) onClick;
+  final Widget? Function({
+    required WidgetRef ref,
+    required int index,
+    required Widget Function(ValueDataType) builder,
+  })
+  itemLoader;
+  final List<Widget> Function(ValueDataType data) tableRowBuilder;
+
+  const _ListLayout({
+    super.key,
+    required this.resizableRowStorage,
+    required this.title,
+    required this.columns,
+    required this.tableRowBuilder,
+    required this.onClick,
+    required this.itemLoader,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: resizableRowStorage.getFractions(title),
+      builder: (context, snapshot) {
+        final listenables = List.generate(
+          columns.length,
+          (index) =>
+              ValueNotifier(snapshot.data?[index] ?? (1 / columns.length)),
+        );
+        return Consumer(
+          child: Divider(indent: 16, endIndent: 16),
+          builder: (context, ref, child) {
+            return SliverList.separated(
+              separatorBuilder: (context, index) => child,
+              itemBuilder: (context, index) {
+                if (index == 0) {
+                  return ResizableRowBuilder(
+                    key: ValueKey(title + index.toString()),
+                    id: title,
+                    storage: InMemoryResizableRowStorage(),
+                    onTap: null,
+                    listenables: listenables,
+                    children: columns
+                        .map(
+                          (e) => Text(
+                            e,
+                            style: Theme.of(context).textTheme.bodyLarge
+                                ?.copyWith(fontWeight: FontWeight.bold),
+                          ),
+                        )
+                        .toList(),
+                    onResize: () => resizableRowStorage.setFractions(
+                      title,
+                      listenables.map((e) => e.value).toList(),
+                    ),
+                  );
+                }
+                return itemLoader(
+                  ref: ref,
+                  index: index - 1,
+
+                  builder: (data) => ResizableRowBuilder(
+                    key: ValueKey(title + index.toString()),
+                    id: title,
+                    storage: InMemoryResizableRowStorage(),
+                    onTap: () => onClick(data),
+                    listenables: listenables,
+                    children: tableRowBuilder(data),
+                    onResize: () => resizableRowStorage.setFractions(
+                      title,
+                      listenables.map((e) => e.value).toList(),
+                    ),
+                  ),
+                );
+              },
+            );
+          },
+        );
+      },
+    );
+  }
+}
+
+class _Header extends StatelessWidget {
+  final EdgeInsets padding = const EdgeInsets.symmetric(
+    horizontal: 16,
+    vertical: 8,
+  );
+  final Widget filterOverlay;
+  final void Function()? onCreateNewItem;
+
+  final bool isListLayout;
+  final void Function(bool isListLayout) onLayoutChanged;
+  const _Header({
+    required this.filterOverlay,
+    required this.onCreateNewItem,
+    required this.isListLayout,
+    required this.onLayoutChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverCrossAxisGroup(
+      slivers: [
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: padding,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Flexible(
+                  child: _ViewSelectionToggle(
+                    isListLayout: isListLayout,
+                    onLayoutChanged: (value) => onLayoutChanged(value),
+                  ),
+                ),
+                Flexible(
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      _FilterButton(filterOverlay: filterOverlay),
+                      if (onCreateNewItem != null)
+                        Flexible(
+                          child: FilledButton.icon(
+                            onPressed: onCreateNewItem,
+                            label: const Text(
+                              'New',
+                              maxLines: 1,
+                              overflow: TextOverflow.clip,
+                            ),
+                            iconAlignment: IconAlignment.end,
+                            icon: Icon(Icons.add_outlined),
+                            style: ButtonStyle(
+                              padding: WidgetStatePropertyAll(
+                                const EdgeInsets.all(12),
+                              ),
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

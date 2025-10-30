@@ -1,12 +1,15 @@
+import 'dart:developer';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class ResizableRowBuilder extends StatefulWidget {
   final List<Widget> children;
-  final List<ValueNotifier<double>>? listenables;
+  final List<ValueNotifier<double>> listenables;
   final void Function() onResize;
   final String id;
-  final void Function() onTap;
+  final void Function()? onTap;
   final ResizableRowStorage storage;
   const ResizableRowBuilder({
     super.key,
@@ -23,97 +26,88 @@ class ResizableRowBuilder extends StatefulWidget {
 }
 
 class _ResizableRowBuilderState extends State<ResizableRowBuilder> {
-  @override
-  Widget build(BuildContext context) {
-    return _ResizableRowBuilder(
-      listenables: widget.listenables!,
-      onResize: widget.onResize,
-      children: widget.children,
+  (double clampedNewValue, double carryOver) _calculateWidthUpdate({
+    required double deltaFraction,
+    required ValueListenable<double> listenable,
+    required double width,
+  }) {
+    final movedFraction = deltaFraction / width;
+    final current = listenable.value;
+    final newValue = current + movedFraction;
+    final clampedNewValue = clampDouble(
+      newValue,
+      0.1,
+      1 - 0.1 * (widget.listenables.length - 1),
     );
+    final diff = ((clampedNewValue - current) * width);
+
+    return (clampedNewValue, diff);
   }
-}
 
-class _ResizableRowBuilder extends StatefulWidget {
-  final List<ValueNotifier<double>> listenables;
-  final List<Widget> children;
-  final void Function() onResize;
+  void _onDragUpdate({
+    required double deltaFraction,
+    required int index,
+    required double width,
+  }) {
+    for (
+      int i = index - 1;
+      (deltaFraction > 0)
+          ? (i < widget.listenables.length && deltaFraction > 0)
+          : (i >= 0 && deltaFraction < 0);
+      (deltaFraction > 0) ? i++ : i--
+    ) {
+      final (clampedNewValue, carryOver) = _calculateWidthUpdate(
+        deltaFraction: deltaFraction,
+        listenable: widget.listenables[i],
+        width: width,
+      );
 
-  const _ResizableRowBuilder({
-    required this.listenables,
-    required this.children,
-    required this.onResize,
-  });
+      widget.listenables[i].value = clampedNewValue;
+      deltaFraction -= carryOver;
+    }
 
-  @override
-  State<_ResizableRowBuilder> createState() => __ResizableRowBuilderState();
-}
+    widget.onResize();
+  }
 
-class __ResizableRowBuilderState extends State<_ResizableRowBuilder> {
+  List<Widget> buildChildren(double width) {
+    final iconSize = (Theme.of(context).iconTheme.size ?? 24) / 1.5;
+    return List.generate(widget.listenables.length, (index) {
+      return [
+        (index != 0)
+            ? _ResizableRowDivider(
+                totalWidth: width,
+                onDragUpdate: (deltaFraction) {
+                  _onDragUpdate(
+                    deltaFraction: deltaFraction,
+                    index: index,
+                    width: width,
+                  );
+                },
+              )
+            : (widget.onTap != null)
+            ? IconButton(
+                onPressed: widget.onTap,
+                icon: Icon(Icons.open_in_new_outlined, size: iconSize),
+              )
+            : SizedBox(width: iconSize * 2.5),
+        ListenableBuilder(
+          listenable: widget.listenables[index],
+          builder: (context, _) => SizedBox(
+            width: widget.listenables[index].value * width,
+            child: widget.children[index],
+          ),
+        ),
+      ];
+    }).expand((e) => e).toList();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final _ = MediaQuery.sizeOf(context).width;
     return LayoutBuilder(
       builder: (context, constraints) {
         final width = constraints.maxWidth;
-        return Row(
-          children: List.generate(widget.listenables.length, (index) {
-            return [
-              if (index != 0)
-                _ResizableRowDivider(
-                  totalWidth: width,
-                  onDragUpdate: (deltaFraction) {
-                    if (deltaFraction > 0) {
-                      for (
-                        int i = index - 1;
-                        i < widget.listenables.length && deltaFraction > 0;
-                        i++
-                      ) {
-                        final movedFraction = deltaFraction / width;
-                        final current = widget.listenables[i].value;
-                        final newValue = current + movedFraction;
-                        final clampedNewValue = clampDouble(
-                          newValue,
-                          0.1,
-                          1 - 0.1 * (widget.listenables.length - 1),
-                        );
-                        widget.listenables[i].value = clampedNewValue;
-                        final diff = ((clampedNewValue - current) * width);
-                        deltaFraction -= diff;
-                        print('Carrying over deltaFraction: $deltaFraction');
-                      }
-                    } else {
-                      for (
-                        int i = index - 1;
-                        i >= 0 && deltaFraction < 0;
-                        i--
-                      ) {
-                        final movedFraction = deltaFraction / width;
-                        final current = widget.listenables[i].value;
-                        final newValue = current + movedFraction;
-                        final clampedNewValue = clampDouble(
-                          newValue,
-                          0.1,
-                          1 - 0.1 * (widget.listenables.length - 1),
-                        );
-                        widget.listenables[i].value = clampedNewValue;
-                        final diff = ((clampedNewValue - current) * width);
-
-                        deltaFraction -= diff;
-                        print('Carrying over deltaFraction: $deltaFraction');
-                      }
-                    }
-                    widget.onResize();
-                  },
-                ),
-              ListenableBuilder(
-                listenable: widget.listenables[index],
-                builder: (context, _) => SizedBox(
-                  width: widget.listenables[index].value * width,
-                  child: widget.children[index],
-                ),
-              ),
-            ];
-          }).expand((e) => e).toList(),
-        );
+        return Row(children: buildChildren(width));
       },
     );
   }
@@ -129,14 +123,45 @@ class InMemoryResizableRowStorage implements ResizableRowStorage {
 
   @override
   Future<List<double>?> getFractions(String id) async {
-    print('Getting fractions for $id: ${_storage[id]}');
+    log('Getting fractions for $id: ${_storage[id]}');
     return _storage[id];
   }
 
   @override
   Future<void> setFractions(String id, List<double> fractions) async {
-    print('Setting fractions for $id: $fractions');
+    log('Setting fractions for $id: $fractions');
     _storage[id] = fractions;
+  }
+}
+
+class SecureStorageResizableRowStorage implements ResizableRowStorage {
+  final FlutterSecureStorage secureStorage;
+  final String id;
+
+  SecureStorageResizableRowStorage({
+    required this.id,
+    required this.secureStorage,
+  });
+
+  @override
+  Future<List<double>?> getFractions(String id) async {
+    final str = await secureStorage.read(key: id);
+    if (str == null) return null;
+    return _stringToFractions(str);
+  }
+
+  @override
+  Future<void> setFractions(String id, List<double> fractions) async {
+    final str = _fractionsToString(fractions);
+    await secureStorage.write(key: id, value: str);
+  }
+
+  String _fractionsToString(List<double> fractions) {
+    return fractions.map((e) => e.toString()).join('^');
+  }
+
+  List<double> _stringToFractions(String str) {
+    return str.split('^').map((e) => double.parse(e)).toList();
   }
 }
 

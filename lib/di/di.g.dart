@@ -797,3 +797,87 @@ final class TestingDefectDataProviderFamily extends $Family
   @override
   String toString() => r'testingDefectDataProviderProvider';
 }
+
+@ProviderFor(resizableRowStorage)
+const resizableRowStorageProvider = ResizableRowStorageFamily._();
+
+final class ResizableRowStorageProvider
+    extends
+        $FunctionalProvider<
+          ResizableRowStorage,
+          ResizableRowStorage,
+          ResizableRowStorage
+        >
+    with $Provider<ResizableRowStorage> {
+  const ResizableRowStorageProvider._({
+    required ResizableRowStorageFamily super.from,
+    required String super.argument,
+  }) : super(
+         retry: null,
+         name: r'resizableRowStorageProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$resizableRowStorageHash();
+
+  @override
+  String toString() {
+    return r'resizableRowStorageProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $ProviderElement<ResizableRowStorage> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  ResizableRowStorage create(Ref ref) {
+    final argument = this.argument as String;
+    return resizableRowStorage(ref, argument);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(ResizableRowStorage value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<ResizableRowStorage>(value),
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is ResizableRowStorageProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$resizableRowStorageHash() =>
+    r'6950b641400acf36636726affecc8c7ab6893cc6';
+
+final class ResizableRowStorageFamily extends $Family
+    with $FunctionalFamilyOverride<ResizableRowStorage, String> {
+  const ResizableRowStorageFamily._()
+    : super(
+        retry: null,
+        name: r'resizableRowStorageProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  ResizableRowStorageProvider call(String id) =>
+      ResizableRowStorageProvider._(argument: id, from: this);
+
+  @override
+  String toString() => r'resizableRowStorageProvider';
+}

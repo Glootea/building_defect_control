@@ -1,10 +1,9 @@
+import 'package:control/di/di.dart';
 import 'package:control/domain/page_logic/report_list_screen.dart';
 import 'package:control/models/models.dart';
 import 'package:control/navigation/navigation.dart';
-import 'package:control/utils/collapsing_searchbar.dart';
 import 'package:control/utils/datetime_formatter.dart';
 import 'package:control/utils/paginated_grid.dart';
-import 'package:control/utils/resizable_row_builder.dart';
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -24,27 +23,20 @@ class ReportListScreen extends ConsumerStatefulWidget {
 
 class _ProjectListScreenState extends ConsumerState<ReportListScreen> {
   int currentPage = 1;
-  String currentQuery = '';
+
+  final TextEditingController searchController = TextEditingController(
+    text: '',
+  );
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          children: [
-            Text(
-              "Reports of ${widget.projectName}",
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-            CollapsingSearchbar(
-              onChanged: (query) {
-                setState(() {
-                  currentQuery = query;
-                });
-              },
-            ),
-          ],
-        ),
-      ),
       body: CustomScrollView(
         slivers: [
           PaginatedGrid<ReportListPageState, Report>(
@@ -53,16 +45,14 @@ class _ProjectListScreenState extends ConsumerState<ReportListScreen> {
             dataFetcher: (ref, page) {
               currentPage = page;
               return ref.watch(
-                reportListScreenProvider(widget.projectId, page, currentQuery),
+                reportListScreenProvider(
+                  widget.projectId,
+                  page,
+                  searchController.value.text,
+                ),
               );
             },
-            columns: [
-              'Name',
-              'Submission Date',
-              'Description',
-              'Col 4',
-              'Col 5',
-            ],
+            columns: ['Name', 'Submission Date', 'Description'],
             cardBuilder: (data) => ReportCard(
               report: data,
               projectId: widget.projectId,
@@ -72,8 +62,6 @@ class _ProjectListScreenState extends ConsumerState<ReportListScreen> {
               Text(data.name),
               Text(data.submissionDate.toShortDateString()),
               Text(data.description),
-              Text('Sample'),
-              Text('Test'),
             ],
 
             onClick: (data) => () {
@@ -87,10 +75,24 @@ class _ProjectListScreenState extends ConsumerState<ReportListScreen> {
               ref,
               widget.projectId,
               currentPage,
-              currentQuery,
+              searchController.value.text,
             ),
-            filterOverlay: Column(children: [TextField()]),
-            resizableRowStorage: InMemoryResizableRowStorage(),
+
+            filterOverlay: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Name'),
+                TextField(
+                  controller: searchController,
+                  onChanged: (value) {
+                    setState(() {});
+                  },
+                ),
+              ],
+            ),
+            resizableRowStorage: ref.watch(
+              resizableRowStorageProvider('reports'),
+            ),
           ),
         ],
       ),
