@@ -4,6 +4,7 @@ import 'package:control/models/models.dart';
 import 'package:control/navigation/navigation.dart';
 import 'package:control/utils/collapsing_searchbar.dart';
 import 'package:control/utils/paginated_grid.dart';
+import 'package:control/utils/resizable_row_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -71,6 +72,7 @@ class _ProjectListScreenState extends ConsumerState<ProjectListScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [Text('Name'), TextField()],
             ),
+            resizableRowStorage: InMemoryResizableRowStorage(),
           ),
         ],
       ),

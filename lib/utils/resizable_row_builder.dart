@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 
 class ResizableRowBuilder extends StatefulWidget {
   final List<Widget> children;
+  final List<ValueNotifier<double>>? listenables;
+  final void Function() onResize;
   final String id;
   final void Function() onTap;
   final ResizableRowStorage storage;
@@ -11,7 +13,9 @@ class ResizableRowBuilder extends StatefulWidget {
     required this.id,
     required this.storage,
     required this.children,
+    required this.listenables,
     required this.onTap,
+    required this.onResize,
   });
 
   @override
@@ -21,62 +25,37 @@ class ResizableRowBuilder extends StatefulWidget {
 class _ResizableRowBuilderState extends State<ResizableRowBuilder> {
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: FutureBuilder(
-        future: widget.storage.getFractions(widget.id),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const CircularProgressIndicator();
-          }
-          return _ResizableRowBuilder(
-            fractions:
-                snapshot.data ??
-                List.filled(
-                  widget.children.length,
-                  1.0 / widget.children.length,
-                ),
-            children: widget.children,
-          );
-        },
-      ),
+    return _ResizableRowBuilder(
+      listenables: widget.listenables!,
+      onResize: widget.onResize,
+      children: widget.children,
     );
   }
 }
 
 class _ResizableRowBuilder extends StatefulWidget {
-  final List<double> fractions;
+  final List<ValueNotifier<double>> listenables;
   final List<Widget> children;
+  final void Function() onResize;
 
-  const _ResizableRowBuilder({required this.fractions, required this.children});
+  const _ResizableRowBuilder({
+    required this.listenables,
+    required this.children,
+    required this.onResize,
+  });
 
   @override
   State<_ResizableRowBuilder> createState() => __ResizableRowBuilderState();
 }
 
 class __ResizableRowBuilderState extends State<_ResizableRowBuilder> {
-  late List<ValueNotifier<double>> listenables = List.generate(
-    widget.fractions.length,
-    (index) => ValueNotifier(widget.fractions[index]),
-    growable: false,
-  );
-
-  @override
-  void didUpdateWidget(covariant _ResizableRowBuilder oldWidget) {
-    listenables = List.generate(
-      widget.fractions.length,
-      (index) => ValueNotifier(widget.fractions[index]),
-      growable: false,
-    );
-    super.didUpdateWidget(oldWidget);
-  }
-
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
         final width = constraints.maxWidth;
         return Row(
-          children: List.generate(widget.children.length, (index) {
+          children: List.generate(widget.listenables.length, (index) {
             return [
               if (index != 0)
                 _ResizableRowDivider(
@@ -85,18 +64,18 @@ class __ResizableRowBuilderState extends State<_ResizableRowBuilder> {
                     if (deltaFraction > 0) {
                       for (
                         int i = index - 1;
-                        i < widget.fractions.length && deltaFraction > 0;
+                        i < widget.listenables.length && deltaFraction > 0;
                         i++
                       ) {
                         final movedFraction = deltaFraction / width;
-                        final current = listenables[i].value;
+                        final current = widget.listenables[i].value;
                         final newValue = current + movedFraction;
                         final clampedNewValue = clampDouble(
                           newValue,
                           0.1,
-                          1 - 0.1 * (widget.fractions.length - 1),
+                          1 - 0.1 * (widget.listenables.length - 1),
                         );
-                        listenables[i].value = clampedNewValue;
+                        widget.listenables[i].value = clampedNewValue;
                         final diff = ((clampedNewValue - current) * width);
                         deltaFraction -= diff;
                         print('Carrying over deltaFraction: $deltaFraction');
@@ -108,26 +87,27 @@ class __ResizableRowBuilderState extends State<_ResizableRowBuilder> {
                         i--
                       ) {
                         final movedFraction = deltaFraction / width;
-                        final current = listenables[i].value;
+                        final current = widget.listenables[i].value;
                         final newValue = current + movedFraction;
                         final clampedNewValue = clampDouble(
                           newValue,
                           0.1,
-                          1 - 0.1 * (widget.fractions.length - 1),
+                          1 - 0.1 * (widget.listenables.length - 1),
                         );
-                        listenables[i].value = clampedNewValue;
+                        widget.listenables[i].value = clampedNewValue;
                         final diff = ((clampedNewValue - current) * width);
 
                         deltaFraction -= diff;
                         print('Carrying over deltaFraction: $deltaFraction');
                       }
                     }
+                    widget.onResize();
                   },
                 ),
               ListenableBuilder(
-                listenable: listenables[index],
+                listenable: widget.listenables[index],
                 builder: (context, _) => SizedBox(
-                  width: listenables[index].value * width,
+                  width: widget.listenables[index].value * width,
                   child: widget.children[index],
                 ),
               ),
@@ -149,11 +129,13 @@ class InMemoryResizableRowStorage implements ResizableRowStorage {
 
   @override
   Future<List<double>?> getFractions(String id) async {
+    print('Getting fractions for $id: ${_storage[id]}');
     return _storage[id];
   }
 
   @override
   Future<void> setFractions(String id, List<double> fractions) async {
+    print('Setting fractions for $id: $fractions');
     _storage[id] = fractions;
   }
 }

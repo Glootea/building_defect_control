@@ -3,6 +3,7 @@ import 'package:control/domain/data_logic/reports.dart';
 import 'package:control/models/models.dart';
 import 'package:control/models/network/defect/get_defects_by_report_id.dart';
 import 'package:control/utils/paginated_grid.dart';
+import 'package:control/utils/resizable_row_builder.dart';
 import 'package:control/utils/riverpod_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -47,6 +48,7 @@ class ReportDetailsScreen extends StatelessWidget {
         onClick: (data) {},
         onCreateNewItem: () {},
         filterOverlay: Column(children: [TextField()]),
+        resizableRowStorage: InMemoryResizableRowStorage(),
         key: GlobalKey(),
       ),
     ];

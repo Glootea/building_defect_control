@@ -4,6 +4,7 @@ import 'package:control/navigation/navigation.dart';
 import 'package:control/utils/collapsing_searchbar.dart';
 import 'package:control/utils/datetime_formatter.dart';
 import 'package:control/utils/paginated_grid.dart';
+import 'package:control/utils/resizable_row_builder.dart';
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -55,7 +56,13 @@ class _ProjectListScreenState extends ConsumerState<ReportListScreen> {
                 reportListScreenProvider(widget.projectId, page, currentQuery),
               );
             },
-            columns: ['Name', 'Submission Date', 'Description'],
+            columns: [
+              'Name',
+              'Submission Date',
+              'Description',
+              'Col 4',
+              'Col 5',
+            ],
             cardBuilder: (data) => ReportCard(
               report: data,
               projectId: widget.projectId,
@@ -83,6 +90,7 @@ class _ProjectListScreenState extends ConsumerState<ReportListScreen> {
               currentQuery,
             ),
             filterOverlay: Column(children: [TextField()]),
+            resizableRowStorage: InMemoryResizableRowStorage(),
           ),
         ],
       ),

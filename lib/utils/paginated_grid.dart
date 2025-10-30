@@ -16,6 +16,7 @@ class PaginatedGrid<PaginatedValueType extends PaginatedResponse, ValueDataType>
   final List<Widget> Function(ValueDataType data) tableRowBuilder;
   final void Function(ValueDataType data) onClick;
   final void Function()? onCreateNewItem;
+  final InMemoryResizableRowStorage resizableRowStorage;
 
   /// Has width of 300
   final Widget filterOverlay;
@@ -30,6 +31,7 @@ class PaginatedGrid<PaginatedValueType extends PaginatedResponse, ValueDataType>
     required this.dataFetcher,
     required this.onClick,
     required this.filterOverlay,
+    required this.resizableRowStorage,
     this.onCreateNewItem,
     this.gridDelegate = const SliverGridDelegateWithMaxCrossAxisExtent(
       maxCrossAxisExtent: 200,
@@ -116,38 +118,69 @@ class _PaginatedGridState<
               ],
             ),
             isListLayout
-                ? SliverList.separated(
-                    separatorBuilder: (context, index) =>
-                        Divider(indent: 16, endIndent: 16),
-                    itemBuilder: (context, index) {
-                      final page = index ~/ defaultPageSize + 1;
-                      final indexInPage = index % defaultPageSize;
-                      final responseAsync = widget.dataFetcher(ref, page);
+                ? FutureBuilder(
+                    key: GlobalKey(),
+                    future: widget.resizableRowStorage.getFractions(
+                      widget.title,
+                    ),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return SliverToBoxAdapter(
+                          child: const CircularProgressIndicator(),
+                        );
+                      }
+                      final listenables = List.generate(
+                        widget.columns.length,
+                        (index) => ValueNotifier(
+                          snapshot.data?[index] ?? (1 / widget.columns.length),
+                        ),
+                      );
+                      return SliverList.separated(
+                        separatorBuilder: (context, index) =>
+                            Divider(indent: 16, endIndent: 16),
+                        itemBuilder: (context, index) {
+                          return Consumer(
+                            builder: (context, ref, child) {
+                              final page = index ~/ defaultPageSize + 1;
+                              final indexInPage = index % defaultPageSize;
+                              final responseAsync = widget.dataFetcher(
+                                ref,
+                                page,
+                              );
 
-                      return responseAsync.when(
-                        error: (err, stack) => Text(err.toString()),
-                        loading: () => const SizedBox(height: 100, width: 100),
-                        data: (response) {
-                          if (index >= response.metadata.totalCount) {
-                            return null;
-                          }
+                              return responseAsync.when(
+                                error: (err, stack) => Text(err.toString()),
+                                loading: () =>
+                                    const SizedBox(height: 100, width: 100),
+                                data: (response) {
+                                  if (index >= response.metadata.totalCount) {
+                                    return SizedBox();
+                                  }
 
-                          // TODO: handle not enough elements to fill the page -> not loading next
-                          final data = response.data[indexInPage];
+                                  // TODO: handle not enough elements to fill the page -> not loading next
+                                  final data = response.data[indexInPage];
 
-                          return SliverCrossAxisExpanded(
-                            flex: 1,
-                            sliver: ResizableRowBuilder(
-                              id: widget.title,
-                              storage: InMemoryResizableRowStorage(),
-                              onTap: () => widget.onClick(data),
-                              children: widget.tableRowBuilder(data),
-                            ),
+                                  return ResizableRowBuilder(
+                                    id: widget.title,
+                                    storage: InMemoryResizableRowStorage(),
+                                    onTap: () => widget.onClick(data),
+                                    listenables: listenables,
+                                    children: widget.tableRowBuilder(data),
+                                    onResize: () =>
+                                        widget.resizableRowStorage.setFractions(
+                                          widget.title,
+                                          listenables
+                                              .map((e) => e.value)
+                                              .toList(),
+                                        ),
+                                  );
+                                },
+                              );
+                            },
                           );
                         },
                       );
                     },
-                    key: GlobalKey(),
                   )
                 : SliverGrid.builder(
                     key: GlobalKey(),
