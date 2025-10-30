@@ -464,7 +464,7 @@ final class TestingReportDataProviderProvider
   }) : super(
          retry: null,
          name: r'testingReportDataProviderProvider',
-         isAutoDispose: true,
+         isAutoDispose: false,
          dependencies: null,
          $allTransitiveDependencies: null,
        );
@@ -512,7 +512,7 @@ final class TestingReportDataProviderProvider
 }
 
 String _$testingReportDataProviderHash() =>
-    r'd87933d68df8664bbcef7cc05f3045336f4ab40f';
+    r'3aaa65edb8ca00630ddef30864547bd585d3a0a3';
 
 final class TestingReportDataProviderFamily extends $Family
     with $FunctionalFamilyOverride<IReportDataProvider, String> {
@@ -522,7 +522,7 @@ final class TestingReportDataProviderFamily extends $Family
         name: r'testingReportDataProviderProvider',
         dependencies: null,
         $allTransitiveDependencies: null,
-        isAutoDispose: true,
+        isAutoDispose: false,
       );
 
   TestingReportDataProviderProvider call(String projectId) =>
@@ -627,7 +627,7 @@ final class TestingDataStorageProvider
 }
 
 String _$testingDataStorageHash() =>
-    r'ca76349930993ae7f733a614c38773ef24ef2ad4';
+    r'26716f4130b7c3b686dcc97d70c6fb895998d35b';
 
 @ProviderFor(defectDataProvider)
 const defectDataProviderProvider = DefectDataProviderFamily._();

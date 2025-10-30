@@ -35,13 +35,12 @@ class ReportDetailsScreen extends StatelessWidget {
       PaginatedGrid<GetDefectsByReportIdResponse, Defect>(
         title: 'Defects',
         columns: ['Name', 'Classification', 'Status'],
-        tableRowBuilder: (data) => Row(
-          children: [
-            Expanded(child: Text(data.name)),
-            Expanded(child: Text(data.classification)),
-            Expanded(child: Text(data.status.name)),
-          ],
-        ),
+        tableRowBuilder: (data) => [
+          Expanded(child: Text(data.name)),
+          Expanded(child: Text(data.classification)),
+          Expanded(child: Text(data.status.name)),
+        ],
+
         dataFetcher: (ref, page) =>
             ref.watch(getDefectsProvider(page, reportId: reportId)),
         cardBuilder: (data) => DefectCard(defect: data),

@@ -59,8 +59,8 @@ class _ProjectListScreenState extends ConsumerState<ProjectListScreen> {
             cardBuilder: (data) =>
                 ProjectCard(project: data, key: ObjectKey(data.id)),
             columns: ['Project Name'],
-            tableRowBuilder: (data) =>
-                Row(children: [Expanded(child: Text(data.name))]),
+            tableRowBuilder: (data) => [Text(data.name)],
+
             onClick: (project) => ProjectReportsRoute(
               projectId: project.id,
               projectName: project.name,

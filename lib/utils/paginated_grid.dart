@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:control/models/network/pagination/paginated_response.dart';
 import 'package:control/models/network/pagination/pagination_query_params.dart';
+import 'package:control/utils/resizable_row_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -12,7 +13,7 @@ class PaginatedGrid<PaginatedValueType extends PaginatedResponse, ValueDataType>
   final AsyncValue<PaginatedValueType> Function(WidgetRef ref, int page)
   dataFetcher;
   final Widget Function(ValueDataType data) cardBuilder;
-  final Widget Function(ValueDataType data) tableRowBuilder;
+  final List<Widget> Function(ValueDataType data) tableRowBuilder;
   final void Function(ValueDataType data) onClick;
   final void Function()? onCreateNewItem;
 
@@ -134,9 +135,14 @@ class _PaginatedGridState<
                           // TODO: handle not enough elements to fill the page -> not loading next
                           final data = response.data[indexInPage];
 
-                          return ListTile(
-                            onTap: () => widget.onClick(data),
-                            title: widget.tableRowBuilder(data),
+                          return SliverCrossAxisExpanded(
+                            flex: 1,
+                            sliver: ResizableRowBuilder(
+                              id: widget.title,
+                              storage: InMemoryResizableRowStorage(),
+                              onTap: () => widget.onClick(data),
+                              children: widget.tableRowBuilder(data),
+                            ),
                           );
                         },
                       );

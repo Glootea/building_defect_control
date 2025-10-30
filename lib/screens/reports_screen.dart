@@ -4,6 +4,7 @@ import 'package:control/navigation/navigation.dart';
 import 'package:control/utils/collapsing_searchbar.dart';
 import 'package:control/utils/datetime_formatter.dart';
 import 'package:control/utils/paginated_grid.dart';
+
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -60,13 +61,14 @@ class _ProjectListScreenState extends ConsumerState<ReportListScreen> {
               projectId: widget.projectId,
               key: ObjectKey(data.id),
             ),
-            tableRowBuilder: (data) => Row(
-              children: [
-                Expanded(child: Text(data.name)),
-                Expanded(child: Text(data.submissionDate.toShortDateString())),
-                Expanded(child: Text(data.description)),
-              ],
-            ),
+            tableRowBuilder: (data) => [
+              Text(data.name),
+              Text(data.submissionDate.toShortDateString()),
+              Text(data.description),
+              Text('Sample'),
+              Text('Test'),
+            ],
+
             onClick: (data) => () {
               ReportDetailsRoute(
                 projectId: widget.projectId,
