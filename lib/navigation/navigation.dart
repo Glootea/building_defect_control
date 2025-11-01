@@ -4,6 +4,7 @@ import 'package:control/screens/report_details_screen.dart';
 import 'package:control/screens/reports_screen.dart';
 import 'package:control/screens/project_list_screen.dart';
 import 'package:control/screens/defect_details_screen.dart';
+import 'package:control/utils/context_extentions.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -11,6 +12,7 @@ part 'navigation.g.dart';
 
 @TypedGoRoute<ProjectsListRoute>(
   path: '/projects',
+  name: RouteNames.project,
   routes: [TypedGoRoute<ProjectReportsRoute>(path: _projectDetailsPath)],
 )
 @immutable
@@ -25,6 +27,7 @@ const String _projectDetailsPath = '/project/:projectId';
 
 @TypedGoRoute<ProjectReportsRoute>(
   path: _projectDetailsPath,
+  name: RouteNames.reports,
   routes: [TypedGoRoute<DefectDetailsRoute>(path: _defectDetailsPath)],
 )
 @immutable
@@ -44,7 +47,11 @@ class ProjectReportsRoute extends GoRouteData with $ProjectReportsRoute {
 
 const String _reportDetails = '/project/:projectId/report/:reportId';
 
-@TypedGoRoute<ReportDetailsRoute>(path: _reportDetails, routes: [])
+@TypedGoRoute<ReportDetailsRoute>(
+  path: _reportDetails,
+  routes: [],
+  name: RouteNames.reportDetails,
+)
 @immutable
 class ReportDetailsRoute extends GoRouteData with $ReportDetailsRoute {
   const ReportDetailsRoute({required this.projectId, required this.reportId});
@@ -59,7 +66,11 @@ class ReportDetailsRoute extends GoRouteData with $ReportDetailsRoute {
 
 const String _defectDetailsPath = '/defect/:defectId';
 
-@TypedGoRoute<DefectDetailsRoute>(path: _defectDetailsPath, routes: [])
+@TypedGoRoute<DefectDetailsRoute>(
+  path: _defectDetailsPath,
+  routes: [],
+  name: RouteNames.defectDetails,
+)
 @immutable
 class DefectDetailsRoute extends GoRouteData with $DefectDetailsRoute {
   const DefectDetailsRoute({required this.defectId, required this.defectName});
@@ -72,7 +83,7 @@ class DefectDetailsRoute extends GoRouteData with $DefectDetailsRoute {
   }
 }
 
-@TypedGoRoute<AuthRoute>(path: '/auth', routes: [])
+@TypedGoRoute<AuthRoute>(path: '/auth', routes: [], name: RouteNames.auth)
 @immutable
 class AuthRoute extends GoRouteData with $AuthRoute {
   const AuthRoute();
@@ -83,7 +94,11 @@ class AuthRoute extends GoRouteData with $AuthRoute {
   }
 }
 
-@TypedGoRoute<ProfileRoute>(path: '/profile', routes: [])
+@TypedGoRoute<ProfileRoute>(
+  path: '/profile',
+  routes: [],
+  name: RouteNames.profile,
+)
 @immutable
 class ProfileRoute extends GoRouteData with $ProfileRoute {
   const ProfileRoute();
@@ -92,4 +107,27 @@ class ProfileRoute extends GoRouteData with $ProfileRoute {
   Widget build(BuildContext context, GoRouterState state) {
     return const ProfileScreen();
   }
+}
+
+class RouteNames {
+  static const project = 'projects';
+  static const profile = 'profile';
+  static const auth = 'auth';
+  static const projectDetails = 'projectDetails';
+  static const reports = 'reports';
+  static const reportDetails = 'reportDetails';
+  static const defectDetails = 'defectDetails';
+
+  static String translate(String? routeName, BuildContext context) =>
+      switch (routeName) {
+        project => context.translate.projectRouteName,
+        profile => context.translate.profileRouteName,
+        auth => context.translate.authRouteName,
+        projectDetails => context.translate.projectDetailsRouteName,
+        reports => context.translate.reportsRouteName,
+        reportDetails => context.translate.reportDetailsRouteName,
+        defectDetails => context.translate.defectDetailsRouteName,
+        null => throw Exception('Null route name for translation: $routeName'),
+        _ => throw Exception('Unknown route name for translation: $routeName'),
+      };
 }

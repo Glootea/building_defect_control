@@ -2,6 +2,8 @@ import 'package:control/domain/data_logic/defects.dart';
 import 'package:control/domain/data_logic/reports.dart';
 import 'package:control/models/models.dart';
 import 'package:control/models/network/defect/get_defects_by_report_id.dart';
+import 'package:control/utils/breadcrums.dart';
+import 'package:control/utils/context_extentions.dart';
 import 'package:control/utils/paginated_grid.dart';
 import 'package:control/utils/resizable_row_builder.dart';
 import 'package:control/utils/riverpod_screen.dart';
@@ -29,13 +31,17 @@ class ReportDetailsScreen extends StatelessWidget {
     final list = [
       SliverToBoxAdapter(
         child: Text(
-          'Defects',
+          context.translate.reportDetailsRouteName,
           style: Theme.of(context).textTheme.headlineMedium,
         ),
       ),
       PaginatedGrid<GetDefectsByReportIdResponse, Defect>(
-        title: 'Defects',
-        columns: ['Name', 'Classification', 'Status'],
+        title: context.translate.reportDetailsRouteName,
+        columns: [
+          context.translate.name,
+          context.translate.classification,
+          context.translate.status,
+        ],
         tableRowBuilder: (data) => [
           Expanded(child: Text(data.name)),
           Expanded(child: Text(data.classification)),
@@ -58,17 +64,34 @@ class ReportDetailsScreen extends StatelessWidget {
         child: LayoutBuilder(
           builder: (context, constraints) {
             if (constraints.maxWidth > 600) {
-              return Row(
-                spacing: 16,
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Expanded(child: reportDetailsPane),
-                  Expanded(child: CustomScrollView(slivers: list)),
+                  SizedBox(
+                    height: 32,
+                    child: CustomScrollView(
+                      scrollDirection: Axis.horizontal,
+                      slivers: const [Breadcrums()],
+                    ),
+                  ),
+                  Flexible(
+                    child: Row(
+                      spacing: 16,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(child: reportDetailsPane),
+                        Expanded(child: CustomScrollView(slivers: list)),
+                      ],
+                    ),
+                  ),
                 ],
               );
             } else {
               return CustomScrollView(
                 slivers: [
+                  const Breadcrums(),
                   SliverToBoxAdapter(child: reportDetailsPane),
                   ...list,
                 ],
@@ -118,21 +141,21 @@ class _ReportDetailsScreenState extends ConsumerState<ReportDetailsPane> {
             final separator = const SizedBox(height: 16, width: 16);
             final reportDetailsChildren = [
               Text(
-                "Report Details",
+                context.translate.reportDetailsRouteName,
                 style: Theme.of(context).textTheme.headlineLarge,
               ),
               const SizedBox(height: 16),
-              Text("Name", style: textStyle),
+              Text(context.translate.name, style: textStyle),
               TextField(controller: nameController, maxLines: 1),
               separator,
-              Text("Description", style: textStyle),
+              Text(context.translate.description, style: textStyle),
               TextField(controller: descriptionController, maxLines: null),
               const SizedBox(height: 8),
               Row(
                 spacing: 8,
                 children: [
                   Icon(Icons.calendar_month_outlined),
-                  Text("Submission Date: "),
+                  Text(context.translate.submissionDate),
                   Text("${submissionDate.toLocal()}".split(' ')[0]),
                 ],
               ),
@@ -163,8 +186,8 @@ class DefectCard extends StatelessWidget {
           Text(defect.name, style: Theme.of(context).textTheme.titleLarge),
 
           Text(defect.description),
-          Text("Classification: ${defect.classification}"),
-          Text("Status: ${defect.status}"),
+          Text("${context.translate.classification}: ${defect.classification}"),
+          Text("${context.translate.status}: ${defect.status}"),
         ],
       ),
     );

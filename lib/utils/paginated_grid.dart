@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:control/models/network/pagination/paginated_response.dart';
 import 'package:control/models/network/pagination/pagination_query_params.dart';
+import 'package:control/utils/context_extentions.dart';
 import 'package:control/utils/resizable_row_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -48,7 +49,7 @@ class _PaginatedGridState<
   ValueDataType
 >
     extends State<PaginatedGrid<PaginatedValueType, ValueDataType>> {
-  bool isListLayout = true;
+  bool? isListLayout;
 
   Widget? itemLoader({
     required WidgetRef ref,
@@ -75,72 +76,72 @@ class _PaginatedGridState<
   }
 
   @override
-  void didChangeDependencies() {
-    isListLayout = MediaQuery.sizeOf(context).width > 600;
-    super.didChangeDependencies();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final padding = const EdgeInsets.symmetric(horizontal: 16);
-    return Consumer(
-      builder: (context, ref, child) {
-        return SliverMainAxisGroup(
-          slivers: [
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: padding,
-                child: Text(
-                  widget.title,
-                  style: Theme.of(context).textTheme.headlineSmall,
-                ),
-              ),
-            ),
-            SliverPadding(padding: EdgeInsets.only(top: 8)),
-            _Header(
-              filterOverlay: widget.filterOverlay,
-              onCreateNewItem: widget.onCreateNewItem,
-              isListLayout: isListLayout,
-              onLayoutChanged: (value) {
-                setState(() {
-                  isListLayout = value;
-                });
-              },
-            ),
-            SliverPadding(
-              padding: padding,
-              sliver: isListLayout
-                  ? _ListLayout<ValueDataType>(
-                      resizableRowStorage: widget.resizableRowStorage,
-                      title: widget.title,
-                      columns: widget.columns,
-                      tableRowBuilder: widget.tableRowBuilder,
-                      onClick: widget.onClick,
-                      itemLoader: itemLoader,
-                    )
-                  : SliverGrid.builder(
-                      key: GlobalKey(),
-                      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                        maxCrossAxisExtent: 200,
-                      ),
-
-                      itemBuilder: (context, index) {
-                        return itemLoader(
-                          ref: ref,
-                          index: index,
-
-                          builder: (data) => Card(
-                            clipBehavior: Clip.hardEdge,
-                            child: InkWell(
-                              onTap: () => widget.onClick(data),
-                              child: widget.cardBuilder(data),
-                            ),
-                          ),
-                        );
-                      },
+    return SliverLayoutBuilder(
+      builder: (context, constraints) {
+        isListLayout ??= constraints.crossAxisExtent > 600;
+        return Consumer(
+          builder: (context, ref, child) {
+            return SliverMainAxisGroup(
+              slivers: [
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: padding,
+                    child: Text(
+                      widget.title,
+                      style: Theme.of(context).textTheme.headlineSmall,
                     ),
-            ),
-          ],
+                  ),
+                ),
+                SliverPadding(padding: EdgeInsets.only(top: 8)),
+                _Header(
+                  filterOverlay: widget.filterOverlay,
+                  onCreateNewItem: widget.onCreateNewItem,
+                  isListLayout: isListLayout!,
+                  onLayoutChanged: (value) {
+                    setState(() {
+                      isListLayout = value;
+                    });
+                  },
+                ),
+                SliverPadding(
+                  padding: padding,
+                  sliver: isListLayout!
+                      ? _ListLayout<ValueDataType>(
+                          resizableRowStorage: widget.resizableRowStorage,
+                          title: widget.title,
+                          columns: widget.columns,
+                          tableRowBuilder: widget.tableRowBuilder,
+                          onClick: widget.onClick,
+                          itemLoader: itemLoader,
+                        )
+                      : SliverGrid.builder(
+                          key: GlobalKey(),
+                          gridDelegate:
+                              SliverGridDelegateWithMaxCrossAxisExtent(
+                                maxCrossAxisExtent: 200,
+                              ),
+
+                          itemBuilder: (context, index) {
+                            return itemLoader(
+                              ref: ref,
+                              index: index,
+
+                              builder: (data) => Card(
+                                clipBehavior: Clip.hardEdge,
+                                child: InkWell(
+                                  onTap: () => widget.onClick(data),
+                                  child: widget.cardBuilder(data),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                ),
+              ],
+            );
+          },
         );
       },
     );
@@ -276,8 +277,8 @@ class _Header extends StatelessWidget {
                         Flexible(
                           child: FilledButton.icon(
                             onPressed: onCreateNewItem,
-                            label: const Text(
-                              'New',
+                            label: Text(
+                              context.translate.createNew,
                               maxLines: 1,
                               overflow: TextOverflow.clip,
                             ),
@@ -400,8 +401,8 @@ class _ViewSelectionToggle extends StatelessWidget {
               onPressed: () => onLayoutChanged(true),
               icon: Icon(Icons.view_list_outlined),
               label: Text(
-                "List View",
-                overflow: TextOverflow.ellipsis,
+                context.translate.listView,
+                overflow: TextOverflow.clip,
                 maxLines: 1,
               ),
               style: mapButtonStyle(true),
@@ -419,8 +420,8 @@ class _ViewSelectionToggle extends StatelessWidget {
               onPressed: () => onLayoutChanged(false),
               icon: Icon(Icons.view_module_outlined),
               label: Text(
-                "Grid View",
-                overflow: TextOverflow.ellipsis,
+                context.translate.gridView,
+                overflow: TextOverflow.clip,
                 maxLines: 1,
               ),
               style: mapButtonStyle(false),

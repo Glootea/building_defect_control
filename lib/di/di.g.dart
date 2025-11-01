@@ -881,3 +881,51 @@ final class ResizableRowStorageFamily extends $Family
   @override
   String toString() => r'resizableRowStorageProvider';
 }
+
+@ProviderFor(navigatorStackObserver)
+const navigatorStackObserverProvider = NavigatorStackObserverProvider._();
+
+final class NavigatorStackObserverProvider
+    extends
+        $FunctionalProvider<
+          ControlNavigatorObserver,
+          ControlNavigatorObserver,
+          ControlNavigatorObserver
+        >
+    with $Provider<ControlNavigatorObserver> {
+  const NavigatorStackObserverProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'navigatorStackObserverProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$navigatorStackObserverHash();
+
+  @$internal
+  @override
+  $ProviderElement<ControlNavigatorObserver> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  ControlNavigatorObserver create(Ref ref) {
+    return navigatorStackObserver(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(ControlNavigatorObserver value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<ControlNavigatorObserver>(value),
+    );
+  }
+}
+
+String _$navigatorStackObserverHash() =>
+    r'b779e45c0be7b8df8d8229f09188d03bbfa40835';

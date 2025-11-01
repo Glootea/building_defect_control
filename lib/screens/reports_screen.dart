@@ -2,6 +2,8 @@ import 'package:control/di/di.dart';
 import 'package:control/domain/page_logic/report_list_screen.dart';
 import 'package:control/models/models.dart';
 import 'package:control/navigation/navigation.dart';
+import 'package:control/utils/breadcrums.dart';
+import 'package:control/utils/context_extentions.dart';
 import 'package:control/utils/datetime_formatter.dart';
 import 'package:control/utils/paginated_grid.dart';
 
@@ -39,8 +41,9 @@ class _ProjectListScreenState extends ConsumerState<ReportListScreen> {
     return Scaffold(
       body: CustomScrollView(
         slivers: [
+          const Breadcrums(),
           PaginatedGrid<ReportListPageState, Report>(
-            title: 'Reports',
+            title: context.translate.reportsRouteName,
 
             dataFetcher: (ref, page) {
               currentPage = page;
@@ -52,7 +55,11 @@ class _ProjectListScreenState extends ConsumerState<ReportListScreen> {
                 ),
               );
             },
-            columns: ['Name', 'Submission Date', 'Description'],
+            columns: [
+              context.translate.name,
+              context.translate.submissionDate,
+              context.translate.description,
+            ],
             cardBuilder: (data) => ReportCard(
               report: data,
               projectId: widget.projectId,
@@ -64,7 +71,7 @@ class _ProjectListScreenState extends ConsumerState<ReportListScreen> {
               Text(data.description),
             ],
 
-            onClick: (data) => () {
+            onClick: (data) {
               ReportDetailsRoute(
                 projectId: widget.projectId,
                 reportId: data.id,
@@ -81,7 +88,7 @@ class _ProjectListScreenState extends ConsumerState<ReportListScreen> {
             filterOverlay: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Name'),
+                Text(context.translate.name),
                 TextField(
                   controller: searchController,
                   onChanged: (value) {
@@ -208,7 +215,7 @@ class _ReportCreationDialogState extends State<_ReportCreationDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       backgroundColor: Theme.of(context).colorScheme.surface,
-      title: Text('Create New Report'),
+      title: Text(context.translate.createNewReport),
       content: AnimatedSize(
         duration: const Duration(milliseconds: 300),
 
@@ -226,7 +233,7 @@ class _ReportCreationDialogState extends State<_ReportCreationDialog> {
                     autofocus: true,
                     focusNode: nameFocusNode,
                     decoration: InputDecoration(
-                      hintText: 'Enter report name',
+                      hintText: context.translate.enterReportName,
                       contentPadding: EdgeInsets.all(16),
                     ),
                     onChanged: (value) async {
@@ -237,7 +244,7 @@ class _ReportCreationDialogState extends State<_ReportCreationDialog> {
                   TextField(
                     focusNode: descriptionFocusNode,
                     decoration: InputDecoration(
-                      hintText: 'Enter report description',
+                      hintText: context.translate.enterReportDescription,
                       contentPadding: EdgeInsets.all(16),
                     ),
                     onChanged: (value) async {
@@ -254,11 +261,11 @@ class _ReportCreationDialogState extends State<_ReportCreationDialog> {
             if (!context.mounted) return;
             Navigator.of(context).pop();
           },
-          child: Text('Cancel'),
+          child: Text(context.translate.cancel),
         ),
         FilledButton(
           onPressed: () => _handleSubmit(context),
-          child: Text('Create'),
+          child: Text(context.translate.create),
         ),
       ],
     );

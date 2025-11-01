@@ -1,5 +1,6 @@
 import 'package:control/domain/user.dart';
 import 'package:control/models/user.dart';
+import 'package:control/utils/context_extentions.dart';
 import 'package:control/utils/riverpod_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -31,11 +32,13 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   '${user?.lastName ?? ''} ${user?.firstName ?? ''} ${user?.middleName ?? ''}',
                   style: Theme.of(context).textTheme.headlineSmall,
                 ),
-                Text('Position: ${user?.post ?? 'N/A'}'),
+                Text(
+                  '${context.translate.jobPosition}: ${user?.post ?? 'N/A'}',
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text('Email: '),
+                    Text('${context.translate.email}: '),
                     MouseRegion(
                       onEnter: (event) => setState(() {
                         showEmail = true;

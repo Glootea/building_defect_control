@@ -1,6 +1,7 @@
 import 'package:control/domain/defect_details.dart';
 import 'package:control/domain/defect_elimination.dart';
 import 'package:control/models/models.dart' as models;
+import 'package:control/utils/context_extentions.dart';
 import 'package:control/utils/datetime_formatter.dart';
 import 'package:control/utils/object_name_textfield_decoration.dart';
 import 'package:flutter/material.dart';
@@ -116,7 +117,9 @@ class _DefectDetailsBody extends HookConsumerWidget {
 
     if (defect.hasError) {
       return SliverToBoxAdapter(
-        child: Center(child: Text('Error: ${defect.error}')),
+        child: Center(
+          child: Text('${context.translate.error}: ${defect.error}'),
+        ),
       );
     }
     final defectState = defect.requireValue;
@@ -164,14 +167,14 @@ class _DefectDetailsBody extends HookConsumerWidget {
       Align(
         alignment: Alignment.centerLeft,
         child: Text(
-          'Defect Details',
+          context.translate.defectDetailsRouteName,
           style: Theme.of(context).textTheme.headlineSmall,
         ),
       ),
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Classification'),
+          Text(context.translate.classification),
           TextField(
             controller: classificationController,
             onSubmitted: (value) => onChangeClassification(value),
@@ -185,7 +188,7 @@ class _DefectDetailsBody extends HookConsumerWidget {
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Description'),
+          Text(context.translate.description),
           TextField(
             controller: descriptionController,
             maxLines: null,
@@ -200,7 +203,7 @@ class _DefectDetailsBody extends HookConsumerWidget {
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Status'),
+          Text(context.translate.status),
           DropdownMenu<models.DefectStatus>(
             expandedInsets: EdgeInsets.zero,
             initialSelection: defectState.status,
@@ -219,7 +222,7 @@ class _DefectDetailsBody extends HookConsumerWidget {
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Executor'),
+          Text(context.translate.executor),
           DropdownMenu(
             expandedInsets: EdgeInsets.zero,
 
@@ -261,7 +264,7 @@ class _DefectDetailsElimination extends HookConsumerWidget {
             child: Center(
               child: TextButton(
                 onPressed: eliminationProviderNotifier.createDefectElimination,
-                child: Text('Create elimination'),
+                child: Text(context.translate.createElimination),
               ),
             ),
           );
@@ -288,7 +291,7 @@ class _DefectDetailsElimination extends HookConsumerWidget {
       },
 
       error: (error, stacktrace) =>
-          SliverToBoxAdapter(child: Text('Error: $error')),
+          SliverToBoxAdapter(child: Text('${context.translate.error}: $error')),
       loading: () =>
           SliverToBoxAdapter(child: Center(child: CircularProgressIndicator())),
     );
@@ -307,7 +310,7 @@ class _DefectEliminationTitleRow extends StatelessWidget {
       spacing: 16,
       children: [
         Text(
-          'Defect Elimination',
+          context.translate.defectElimination,
           style: Theme.of(context).textTheme.headlineSmall,
         ),
         IconButton(
@@ -331,7 +334,7 @@ class _DefectEliminationStartDateButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return _DefectEliminationDateRow(
-      title: 'Start date: ',
+      title: context.translate.startDate,
       date: data.startDate,
       onTimeSelected: (selectedDate) =>
           eliminationProviderNotifier.updateDefect(startDate: selectedDate),
@@ -353,7 +356,7 @@ class _DefectEliminationEndDateButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return _DefectEliminationDateRow(
-      title: 'End date: ',
+      title: context.translate.endDate,
       date: data.endDate,
       onTimeSelected: (selectedDate) =>
           eliminationProviderNotifier.updateDefect(endDate: selectedDate),
