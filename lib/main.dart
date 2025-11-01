@@ -1,4 +1,5 @@
 import 'package:control/di/di.dart';
+import 'package:control/l10n/app_localizations.dart';
 import 'package:control/navigation/guard.dart';
 import 'package:control/utils/riverpod_logger.dart';
 import 'package:flutter/foundation.dart';
@@ -51,7 +52,6 @@ class ControlApp extends StatelessWidget {
         builder: (context, widgetRef, child) {
           final router = widgetRef.watch(routerProvider);
           return MaterialApp.router(
-            title: 'Control App',
             theme: ThemeData.light().copyWith(
               colorScheme: ColorScheme.fromSeed(
                 seedColor: Colors.lightBlueAccent,
@@ -59,6 +59,9 @@ class ControlApp extends StatelessWidget {
             ),
             routerConfig: router,
             color: Colors.blue,
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            locale: Locale('ru'),
           );
         },
       ),

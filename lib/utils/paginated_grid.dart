@@ -2,6 +2,8 @@ import 'dart:math';
 
 import 'package:control/models/network/pagination/paginated_response.dart';
 import 'package:control/models/network/pagination/pagination_query_params.dart';
+import 'package:control/utils/context_extentions.dart';
+import 'package:control/utils/resizable_row_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -12,9 +14,10 @@ class PaginatedGrid<PaginatedValueType extends PaginatedResponse, ValueDataType>
   final AsyncValue<PaginatedValueType> Function(WidgetRef ref, int page)
   dataFetcher;
   final Widget Function(ValueDataType data) cardBuilder;
-  final Widget Function(ValueDataType data) tableRowBuilder;
+  final List<Widget> Function(ValueDataType data) tableRowBuilder;
   final void Function(ValueDataType data) onClick;
   final void Function()? onCreateNewItem;
+  final ResizableRowStorage resizableRowStorage;
 
   /// Has width of 300
   final Widget filterOverlay;
@@ -29,6 +32,7 @@ class PaginatedGrid<PaginatedValueType extends PaginatedResponse, ValueDataType>
     required this.dataFetcher,
     required this.onClick,
     required this.filterOverlay,
+    required this.resizableRowStorage,
     this.onCreateNewItem,
     this.gridDelegate = const SliverGridDelegateWithMaxCrossAxisExtent(
       maxCrossAxisExtent: 200,
@@ -45,140 +49,256 @@ class _PaginatedGridState<
   ValueDataType
 >
     extends State<PaginatedGrid<PaginatedValueType, ValueDataType>> {
-  bool isListLayout = true;
+  bool? isListLayout;
+
+  Widget? itemLoader({
+    required WidgetRef ref,
+    required int index,
+    required Widget Function(ValueDataType data) builder,
+  }) {
+    final page = index ~/ defaultPageSize + 1;
+    final indexInPage = index % defaultPageSize;
+    final responseAsync = widget.dataFetcher(ref, page);
+
+    return responseAsync.when(
+      error: (err, stack) => Text(err.toString()),
+      loading: () => null,
+      data: (response) {
+        if (index >= response.metadata.totalCount) {
+          return null;
+        }
+
+        final data = response.data[indexInPage];
+
+        return builder(data);
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     final padding = const EdgeInsets.symmetric(horizontal: 16);
-    return Consumer(
-      builder: (context, ref, child) {
-        return SliverMainAxisGroup(
-          slivers: [
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: padding,
-                child: Text(
-                  widget.title,
-                  style: Theme.of(context).textTheme.headlineSmall,
-                ),
-              ),
-            ),
-            SliverPadding(padding: EdgeInsets.only(top: 8)),
-            SliverCrossAxisGroup(
+    return SliverLayoutBuilder(
+      builder: (context, constraints) {
+        isListLayout ??= constraints.crossAxisExtent > 600;
+        return Consumer(
+          builder: (context, ref, child) {
+            return SliverMainAxisGroup(
               slivers: [
                 SliverToBoxAdapter(
                   child: Padding(
                     padding: padding,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Flexible(
-                          child: _ViewSelectionToggle(
-                            isListLayout: isListLayout,
-                            onLayoutChanged: (value) => setState(() {
-                              isListLayout = value;
-                            }),
-                          ),
-                        ),
-                        Flexible(
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              _FilterButton(
-                                filterOverlay: widget.filterOverlay,
-                              ),
-                              if (widget.onCreateNewItem != null)
-                                Flexible(
-                                  child: FilledButton.icon(
-                                    onPressed: widget.onCreateNewItem,
-                                    label: const Text(
-                                      'New',
-                                      maxLines: 1,
-                                      overflow: TextOverflow.clip,
-                                    ),
-                                    iconAlignment: IconAlignment.end,
-                                    icon: Icon(Icons.add_outlined),
-                                    style: ButtonStyle(
-                                      padding: WidgetStatePropertyAll(
-                                        const EdgeInsets.all(12),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                            ],
-                          ),
-                        ),
-                      ],
+                    child: Text(
+                      widget.title,
+                      style: Theme.of(context).textTheme.headlineSmall,
                     ),
+                  ),
+                ),
+                SliverPadding(padding: EdgeInsets.only(top: 8)),
+                _Header(
+                  filterOverlay: widget.filterOverlay,
+                  onCreateNewItem: widget.onCreateNewItem,
+                  isListLayout: isListLayout!,
+                  onLayoutChanged: (value) {
+                    setState(() {
+                      isListLayout = value;
+                    });
+                  },
+                ),
+                SliverPadding(
+                  padding: padding,
+                  sliver: isListLayout!
+                      ? _ListLayout<ValueDataType>(
+                          resizableRowStorage: widget.resizableRowStorage,
+                          title: widget.title,
+                          columns: widget.columns,
+                          tableRowBuilder: widget.tableRowBuilder,
+                          onClick: widget.onClick,
+                          itemLoader: itemLoader,
+                        )
+                      : SliverGrid.builder(
+                          key: GlobalKey(),
+                          gridDelegate:
+                              SliverGridDelegateWithMaxCrossAxisExtent(
+                                maxCrossAxisExtent: 200,
+                              ),
+
+                          itemBuilder: (context, index) {
+                            return itemLoader(
+                              ref: ref,
+                              index: index,
+
+                              builder: (data) => Card(
+                                clipBehavior: Clip.hardEdge,
+                                child: InkWell(
+                                  onTap: () => widget.onClick(data),
+                                  child: widget.cardBuilder(data),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+}
+
+class _ListLayout<ValueDataType> extends StatelessWidget {
+  final ResizableRowStorage resizableRowStorage;
+  final String title;
+  final List<String> columns;
+  final void Function(ValueDataType data) onClick;
+  final Widget? Function({
+    required WidgetRef ref,
+    required int index,
+    required Widget Function(ValueDataType) builder,
+  })
+  itemLoader;
+  final List<Widget> Function(ValueDataType data) tableRowBuilder;
+
+  const _ListLayout({
+    super.key,
+    required this.resizableRowStorage,
+    required this.title,
+    required this.columns,
+    required this.tableRowBuilder,
+    required this.onClick,
+    required this.itemLoader,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: resizableRowStorage.getFractions(title),
+      builder: (context, snapshot) {
+        final listenables = List.generate(
+          columns.length,
+          (index) =>
+              ValueNotifier(snapshot.data?[index] ?? (1 / columns.length)),
+        );
+        return Consumer(
+          child: Divider(indent: 16, endIndent: 16),
+          builder: (context, ref, child) {
+            return SliverList.separated(
+              separatorBuilder: (context, index) => child,
+              itemBuilder: (context, index) {
+                if (index == 0) {
+                  return ResizableRowBuilder(
+                    key: ValueKey(title + index.toString()),
+                    id: title,
+                    storage: InMemoryResizableRowStorage(),
+                    onTap: null,
+                    listenables: listenables,
+                    children: columns
+                        .map(
+                          (e) => Text(
+                            e,
+                            style: Theme.of(context).textTheme.bodyLarge
+                                ?.copyWith(fontWeight: FontWeight.bold),
+                          ),
+                        )
+                        .toList(),
+                    onResize: () => resizableRowStorage.setFractions(
+                      title,
+                      listenables.map((e) => e.value).toList(),
+                    ),
+                  );
+                }
+                return itemLoader(
+                  ref: ref,
+                  index: index - 1,
+
+                  builder: (data) => ResizableRowBuilder(
+                    key: ValueKey(title + index.toString()),
+                    id: title,
+                    storage: InMemoryResizableRowStorage(),
+                    onTap: () => onClick(data),
+                    listenables: listenables,
+                    children: tableRowBuilder(data),
+                    onResize: () => resizableRowStorage.setFractions(
+                      title,
+                      listenables.map((e) => e.value).toList(),
+                    ),
+                  ),
+                );
+              },
+            );
+          },
+        );
+      },
+    );
+  }
+}
+
+class _Header extends StatelessWidget {
+  final EdgeInsets padding = const EdgeInsets.symmetric(
+    horizontal: 16,
+    vertical: 8,
+  );
+  final Widget filterOverlay;
+  final void Function()? onCreateNewItem;
+
+  final bool isListLayout;
+  final void Function(bool isListLayout) onLayoutChanged;
+  const _Header({
+    required this.filterOverlay,
+    required this.onCreateNewItem,
+    required this.isListLayout,
+    required this.onLayoutChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverCrossAxisGroup(
+      slivers: [
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: padding,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Flexible(
+                  child: _ViewSelectionToggle(
+                    isListLayout: isListLayout,
+                    onLayoutChanged: (value) => onLayoutChanged(value),
+                  ),
+                ),
+                Flexible(
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      _FilterButton(filterOverlay: filterOverlay),
+                      if (onCreateNewItem != null)
+                        Flexible(
+                          child: FilledButton.icon(
+                            onPressed: onCreateNewItem,
+                            label: Text(
+                              context.translate.createNew,
+                              maxLines: 1,
+                              overflow: TextOverflow.clip,
+                            ),
+                            iconAlignment: IconAlignment.end,
+                            icon: Icon(Icons.add_outlined),
+                            style: ButtonStyle(
+                              padding: WidgetStatePropertyAll(
+                                const EdgeInsets.all(12),
+                              ),
+                            ),
+                          ),
+                        ),
+                    ],
                   ),
                 ),
               ],
             ),
-            isListLayout
-                ? SliverList.separated(
-                    separatorBuilder: (context, index) =>
-                        Divider(indent: 16, endIndent: 16),
-                    itemBuilder: (context, index) {
-                      final page = index ~/ defaultPageSize + 1;
-                      final indexInPage = index % defaultPageSize;
-                      final responseAsync = widget.dataFetcher(ref, page);
-
-                      return responseAsync.when(
-                        error: (err, stack) => Text(err.toString()),
-                        loading: () => const SizedBox(height: 100, width: 100),
-                        data: (response) {
-                          if (index >= response.metadata.totalCount) {
-                            return null;
-                          }
-
-                          // TODO: handle not enough elements to fill the page -> not loading next
-                          final data = response.data[indexInPage];
-
-                          return ListTile(
-                            onTap: () => widget.onClick(data),
-                            title: widget.tableRowBuilder(data),
-                          );
-                        },
-                      );
-                    },
-                    key: GlobalKey(),
-                  )
-                : SliverGrid.builder(
-                    key: GlobalKey(),
-                    gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                      maxCrossAxisExtent: 200,
-                    ),
-
-                    itemBuilder: (context, index) {
-                      final page = index ~/ defaultPageSize + 1;
-                      final indexInPage = index % defaultPageSize;
-                      final responseAsync = widget.dataFetcher(ref, page);
-
-                      return responseAsync.when(
-                        error: (err, stack) => Text(err.toString()),
-                        loading: () => const SizedBox(height: 100, width: 100),
-                        data: (response) {
-                          if (index >= response.metadata.totalCount) {
-                            return null;
-                          }
-
-                          // TODO: handle not enough elements to fill the page -> not loading next
-                          final data = response.data[indexInPage];
-
-                          return Card(
-                            clipBehavior: Clip.hardEdge,
-                            child: InkWell(
-                              onTap: () => widget.onClick(data),
-                              child: widget.cardBuilder(data),
-                            ),
-                          );
-                        },
-                      );
-                    },
-                  ),
-          ],
-        );
-      },
+          ),
+        ),
+      ],
     );
   }
 }
@@ -281,8 +401,8 @@ class _ViewSelectionToggle extends StatelessWidget {
               onPressed: () => onLayoutChanged(true),
               icon: Icon(Icons.view_list_outlined),
               label: Text(
-                "List View",
-                overflow: TextOverflow.ellipsis,
+                context.translate.listView,
+                overflow: TextOverflow.clip,
                 maxLines: 1,
               ),
               style: mapButtonStyle(true),
@@ -300,8 +420,8 @@ class _ViewSelectionToggle extends StatelessWidget {
               onPressed: () => onLayoutChanged(false),
               icon: Icon(Icons.view_module_outlined),
               label: Text(
-                "Grid View",
-                overflow: TextOverflow.ellipsis,
+                context.translate.gridView,
+                overflow: TextOverflow.clip,
                 maxLines: 1,
               ),
               style: mapButtonStyle(false),

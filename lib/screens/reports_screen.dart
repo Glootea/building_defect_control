@@ -1,9 +1,12 @@
+import 'package:control/di/di.dart';
 import 'package:control/domain/page_logic/report_list_screen.dart';
 import 'package:control/models/models.dart';
 import 'package:control/navigation/navigation.dart';
-import 'package:control/utils/collapsing_searchbar.dart';
+import 'package:control/utils/breadcrums.dart';
+import 'package:control/utils/context_extentions.dart';
 import 'package:control/utils/datetime_formatter.dart';
 import 'package:control/utils/paginated_grid.dart';
+
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -22,52 +25,53 @@ class ReportListScreen extends ConsumerStatefulWidget {
 
 class _ProjectListScreenState extends ConsumerState<ReportListScreen> {
   int currentPage = 1;
-  String currentQuery = '';
+
+  final TextEditingController searchController = TextEditingController(
+    text: '',
+  );
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          children: [
-            Text(
-              "Reports of ${widget.projectName}",
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-            CollapsingSearchbar(
-              onChanged: (query) {
-                setState(() {
-                  currentQuery = query;
-                });
-              },
-            ),
-          ],
-        ),
-      ),
       body: CustomScrollView(
         slivers: [
+          const Breadcrums(),
           PaginatedGrid<ReportListPageState, Report>(
-            title: 'Reports',
+            title: context.translate.reportsRouteName,
 
             dataFetcher: (ref, page) {
               currentPage = page;
               return ref.watch(
-                reportListScreenProvider(widget.projectId, page, currentQuery),
+                reportListScreenProvider(
+                  widget.projectId,
+                  page,
+                  searchController.value.text,
+                ),
               );
             },
-            columns: ['Name', 'Submission Date', 'Description'],
+            columns: [
+              context.translate.name,
+              context.translate.submissionDate,
+              context.translate.description,
+            ],
             cardBuilder: (data) => ReportCard(
               report: data,
               projectId: widget.projectId,
               key: ObjectKey(data.id),
             ),
-            tableRowBuilder: (data) => Row(
-              children: [
-                Expanded(child: Text(data.name)),
-                Expanded(child: Text(data.submissionDate.toShortDateString())),
-                Expanded(child: Text(data.description)),
-              ],
-            ),
-            onClick: (data) => () {
+            tableRowBuilder: (data) => [
+              Text(data.name),
+              Text(data.submissionDate.toShortDateString()),
+              Text(data.description),
+            ],
+
+            onClick: (data) {
               ReportDetailsRoute(
                 projectId: widget.projectId,
                 reportId: data.id,
@@ -78,9 +82,24 @@ class _ProjectListScreenState extends ConsumerState<ReportListScreen> {
               ref,
               widget.projectId,
               currentPage,
-              currentQuery,
+              searchController.value.text,
             ),
-            filterOverlay: Column(children: [TextField()]),
+
+            filterOverlay: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(context.translate.name),
+                TextField(
+                  controller: searchController,
+                  onChanged: (value) {
+                    setState(() {});
+                  },
+                ),
+              ],
+            ),
+            resizableRowStorage: ref.watch(
+              resizableRowStorageProvider('reports'),
+            ),
           ),
         ],
       ),
@@ -196,7 +215,7 @@ class _ReportCreationDialogState extends State<_ReportCreationDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       backgroundColor: Theme.of(context).colorScheme.surface,
-      title: Text('Create New Report'),
+      title: Text(context.translate.createNewReport),
       content: AnimatedSize(
         duration: const Duration(milliseconds: 300),
 
@@ -214,7 +233,7 @@ class _ReportCreationDialogState extends State<_ReportCreationDialog> {
                     autofocus: true,
                     focusNode: nameFocusNode,
                     decoration: InputDecoration(
-                      hintText: 'Enter report name',
+                      hintText: context.translate.enterReportName,
                       contentPadding: EdgeInsets.all(16),
                     ),
                     onChanged: (value) async {
@@ -225,7 +244,7 @@ class _ReportCreationDialogState extends State<_ReportCreationDialog> {
                   TextField(
                     focusNode: descriptionFocusNode,
                     decoration: InputDecoration(
-                      hintText: 'Enter report description',
+                      hintText: context.translate.enterReportDescription,
                       contentPadding: EdgeInsets.all(16),
                     ),
                     onChanged: (value) async {
@@ -242,11 +261,11 @@ class _ReportCreationDialogState extends State<_ReportCreationDialog> {
             if (!context.mounted) return;
             Navigator.of(context).pop();
           },
-          child: Text('Cancel'),
+          child: Text(context.translate.cancel),
         ),
         FilledButton(
           onPressed: () => _handleSubmit(context),
-          child: Text('Create'),
+          child: Text(context.translate.create),
         ),
       ],
     );

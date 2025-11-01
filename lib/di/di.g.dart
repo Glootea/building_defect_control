@@ -464,7 +464,7 @@ final class TestingReportDataProviderProvider
   }) : super(
          retry: null,
          name: r'testingReportDataProviderProvider',
-         isAutoDispose: true,
+         isAutoDispose: false,
          dependencies: null,
          $allTransitiveDependencies: null,
        );
@@ -512,7 +512,7 @@ final class TestingReportDataProviderProvider
 }
 
 String _$testingReportDataProviderHash() =>
-    r'd87933d68df8664bbcef7cc05f3045336f4ab40f';
+    r'3aaa65edb8ca00630ddef30864547bd585d3a0a3';
 
 final class TestingReportDataProviderFamily extends $Family
     with $FunctionalFamilyOverride<IReportDataProvider, String> {
@@ -522,7 +522,7 @@ final class TestingReportDataProviderFamily extends $Family
         name: r'testingReportDataProviderProvider',
         dependencies: null,
         $allTransitiveDependencies: null,
-        isAutoDispose: true,
+        isAutoDispose: false,
       );
 
   TestingReportDataProviderProvider call(String projectId) =>
@@ -627,7 +627,7 @@ final class TestingDataStorageProvider
 }
 
 String _$testingDataStorageHash() =>
-    r'ca76349930993ae7f733a614c38773ef24ef2ad4';
+    r'26716f4130b7c3b686dcc97d70c6fb895998d35b';
 
 @ProviderFor(defectDataProvider)
 const defectDataProviderProvider = DefectDataProviderFamily._();
@@ -797,3 +797,135 @@ final class TestingDefectDataProviderFamily extends $Family
   @override
   String toString() => r'testingDefectDataProviderProvider';
 }
+
+@ProviderFor(resizableRowStorage)
+const resizableRowStorageProvider = ResizableRowStorageFamily._();
+
+final class ResizableRowStorageProvider
+    extends
+        $FunctionalProvider<
+          ResizableRowStorage,
+          ResizableRowStorage,
+          ResizableRowStorage
+        >
+    with $Provider<ResizableRowStorage> {
+  const ResizableRowStorageProvider._({
+    required ResizableRowStorageFamily super.from,
+    required String super.argument,
+  }) : super(
+         retry: null,
+         name: r'resizableRowStorageProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$resizableRowStorageHash();
+
+  @override
+  String toString() {
+    return r'resizableRowStorageProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $ProviderElement<ResizableRowStorage> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  ResizableRowStorage create(Ref ref) {
+    final argument = this.argument as String;
+    return resizableRowStorage(ref, argument);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(ResizableRowStorage value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<ResizableRowStorage>(value),
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is ResizableRowStorageProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$resizableRowStorageHash() =>
+    r'6950b641400acf36636726affecc8c7ab6893cc6';
+
+final class ResizableRowStorageFamily extends $Family
+    with $FunctionalFamilyOverride<ResizableRowStorage, String> {
+  const ResizableRowStorageFamily._()
+    : super(
+        retry: null,
+        name: r'resizableRowStorageProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  ResizableRowStorageProvider call(String id) =>
+      ResizableRowStorageProvider._(argument: id, from: this);
+
+  @override
+  String toString() => r'resizableRowStorageProvider';
+}
+
+@ProviderFor(navigatorStackObserver)
+const navigatorStackObserverProvider = NavigatorStackObserverProvider._();
+
+final class NavigatorStackObserverProvider
+    extends
+        $FunctionalProvider<
+          ControlNavigatorObserver,
+          ControlNavigatorObserver,
+          ControlNavigatorObserver
+        >
+    with $Provider<ControlNavigatorObserver> {
+  const NavigatorStackObserverProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'navigatorStackObserverProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$navigatorStackObserverHash();
+
+  @$internal
+  @override
+  $ProviderElement<ControlNavigatorObserver> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  ControlNavigatorObserver create(Ref ref) {
+    return navigatorStackObserver(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(ControlNavigatorObserver value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<ControlNavigatorObserver>(value),
+    );
+  }
+}
+
+String _$navigatorStackObserverHash() =>
+    r'b779e45c0be7b8df8d8229f09188d03bbfa40835';

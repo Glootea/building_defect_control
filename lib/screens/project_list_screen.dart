@@ -2,8 +2,11 @@ import 'package:control/domain/page_logic/project_list_screen.dart';
 import 'package:control/domain/user.dart';
 import 'package:control/models/models.dart';
 import 'package:control/navigation/navigation.dart';
+import 'package:control/utils/breadcrums.dart';
 import 'package:control/utils/collapsing_searchbar.dart';
+import 'package:control/utils/context_extentions.dart';
 import 'package:control/utils/paginated_grid.dart';
+import 'package:control/utils/resizable_row_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -23,7 +26,10 @@ class _ProjectListScreenState extends ConsumerState<ProjectListScreen> {
       appBar: AppBar(
         title: Row(
           children: [
-            Text("Projects", style: Theme.of(context).textTheme.headlineMedium),
+            Text(
+              context.translate.projectRouteName,
+              style: Theme.of(context).textTheme.headlineMedium,
+            ),
             CollapsingSearchbar(
               onChanged: (query) {
                 setState(() {
@@ -50,17 +56,18 @@ class _ProjectListScreenState extends ConsumerState<ProjectListScreen> {
       ),
       body: CustomScrollView(
         slivers: [
+          const Breadcrums(),
           PaginatedGrid<ProjectListPageState, ProjectShallow>(
-            title: 'Projects',
+            title: context.translate.projectRouteName,
             dataFetcher: (ref, page) {
               currentPage = page;
               return ref.watch(projectListScreenProvider(page, currentQuery));
             },
             cardBuilder: (data) =>
                 ProjectCard(project: data, key: ObjectKey(data.id)),
-            columns: ['Project Name'],
-            tableRowBuilder: (data) =>
-                Row(children: [Expanded(child: Text(data.name))]),
+            columns: [context.translate.name],
+            tableRowBuilder: (data) => [Text(data.name)],
+
             onClick: (project) => ProjectReportsRoute(
               projectId: project.id,
               projectName: project.name,
@@ -69,8 +76,9 @@ class _ProjectListScreenState extends ConsumerState<ProjectListScreen> {
                 _createNewProject(context, ref, currentPage, currentQuery),
             filterOverlay: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [Text('Name'), TextField()],
+              children: [Text(context.translate.name), TextField()],
             ),
+            resizableRowStorage: InMemoryResizableRowStorage(),
           ),
         ],
       ),

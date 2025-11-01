@@ -1,4 +1,5 @@
 import 'package:control/domain/page_logic/auth_screen.dart';
+import 'package:control/utils/context_extentions.dart';
 import 'package:control/utils/riverpod_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -45,23 +46,27 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                   children: [
                     TextFormField(
                       controller: loginTextController,
-                      decoration: const InputDecoration(labelText: 'Email'),
+                      decoration: InputDecoration(
+                        labelText: context.translate.email,
+                      ),
 
                       autofillHints: [AutofillHints.email],
                       validator: (value) => value == null || value.isEmpty
-                          ? 'Please enter your email'
+                          ? '${context.translate.pleaseEnter} ${context.translate.email.toLowerCase()}'
                           : null,
                     ),
                     const SizedBox(height: 16),
-                    // TODO: use focus to move to password field
+
                     TextFormField(
                       controller: passwordTextController,
-                      decoration: const InputDecoration(labelText: 'Password'),
+                      decoration: InputDecoration(
+                        labelText: context.translate.password,
+                      ),
 
                       autofillHints: [AutofillHints.password],
                       obscureText: true,
                       validator: (value) => value == null || value.isEmpty
-                          ? 'Please enter your password'
+                          ? '${context.translate.pleaseEnter} ${context.translate.password.toLowerCase()}'
                           : null,
                       onFieldSubmitted: (_) async {
                         submitForm();
@@ -74,7 +79,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
 
                         submitForm();
                       },
-                      child: const Text('Login'),
+                      child: Text(context.translate.login),
                     ),
                   ],
                 ),

@@ -17,6 +17,7 @@ List<RouteBase> get $appRoutes => [
 
 RouteBase get $projectsListRoute => GoRouteData.$route(
   path: '/projects',
+  name: 'projects',
   factory: $ProjectsListRoute._fromState,
   routes: [
     GoRouteData.$route(
@@ -78,6 +79,7 @@ mixin $ProjectReportsRoute on GoRouteData {
 
 RouteBase get $projectReportsRoute => GoRouteData.$route(
   path: '/project/:projectId',
+  name: 'reports',
   factory: $ProjectReportsRoute._fromState,
   routes: [
     GoRouteData.$route(
@@ -118,6 +120,7 @@ mixin $DefectDetailsRoute on GoRouteData {
 
 RouteBase get $reportDetailsRoute => GoRouteData.$route(
   path: '/project/:projectId/report/:reportId',
+  name: 'reportDetails',
   factory: $ReportDetailsRoute._fromState,
 );
 
@@ -151,11 +154,15 @@ mixin $ReportDetailsRoute on GoRouteData {
 
 RouteBase get $defectDetailsRoute => GoRouteData.$route(
   path: '/defect/:defectId',
+  name: 'defectDetails',
   factory: $DefectDetailsRoute._fromState,
 );
 
-RouteBase get $authRoute =>
-    GoRouteData.$route(path: '/auth', factory: $AuthRoute._fromState);
+RouteBase get $authRoute => GoRouteData.$route(
+  path: '/auth',
+  name: 'auth',
+  factory: $AuthRoute._fromState,
+);
 
 mixin $AuthRoute on GoRouteData {
   static AuthRoute _fromState(GoRouterState state) => const AuthRoute();
@@ -177,8 +184,11 @@ mixin $AuthRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-RouteBase get $profileRoute =>
-    GoRouteData.$route(path: '/profile', factory: $ProfileRoute._fromState);
+RouteBase get $profileRoute => GoRouteData.$route(
+  path: '/profile',
+  name: 'profile',
+  factory: $ProfileRoute._fromState,
+);
 
 mixin $ProfileRoute on GoRouteData {
   static ProfileRoute _fromState(GoRouterState state) => const ProfileRoute();
