@@ -1,8 +1,9 @@
-import 'package:control/data/idata_provider.dart';
+import 'package:control/data/provider/idata_provider.dart';
 import 'package:control/models/models.dart';
 import 'package:control/models/network/defect/create_defect.dart';
 import 'package:control/models/network/defect/get_defect_by_id.dart';
 import 'package:control/models/network/defect/get_defects_by_report_id.dart';
+import 'package:control/models/network/defect/patch_defect_by_id.dart';
 import 'package:control/models/network/project/create_project.dart';
 import 'package:control/models/network/project/get_project_by_id.dart';
 import 'package:control/models/network/project/get_projects.dart';
@@ -18,35 +19,6 @@ class DataProvider implements IDataProvider {
   const DataProvider(this.dio);
 
   final Dio dio;
-
-  @override
-  Future<List<Defect>> getDefects(String projectId) async {
-    return [];
-  }
-
-  @override
-  Future<Project> updateProject(Project project) {
-    // TODO: implement saveProjectName
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<Defect> getDefect(String defectId) {
-    // TODO: implement getDefect
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<Defect> updateDefect(Defect defect) {
-    // TODO: implement updateDefect
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<Project> getProject(String projectId) {
-    // TODO: implement getProject
-    throw UnimplementedError();
-  }
 
   @override
   Future<List<String>> getExecutors() async {
@@ -199,5 +171,18 @@ class DefectDataProvider implements IDefectDataProvider {
       queryParameters: request.queryParams,
     );
     return GetDefectsByReportIdResponse.fromJson(response.data);
+  }
+
+  @override
+  Future<PatchDefectByIdResponse> patchDefectById(
+    PatchDefectByIdRequest request,
+  ) async {
+    final reportId = request.reportId;
+    final defectId = request.defectId;
+    final response = await dio.patch(
+      'api/reports/$reportId/defects/$defectId',
+      data: request.toJson(),
+    );
+    return PatchDefectByIdResponse.fromJson(response.data);
   }
 }

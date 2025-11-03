@@ -1,7 +1,7 @@
 import 'package:control/di/di.dart';
-import 'package:control/domain/page_logic/report_list_screen.dart';
+import 'package:control/domain/component_logic/report_list_screen.dart';
 import 'package:control/models/models.dart';
-import 'package:control/navigation/navigation.dart';
+import 'package:control/navigation/routes.dart';
 import 'package:control/utils/breadcrums.dart';
 import 'package:control/utils/context_extentions.dart';
 import 'package:control/utils/datetime_formatter.dart';

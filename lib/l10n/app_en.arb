@@ -30,5 +30,6 @@
     "endDate": "End date",
     "listView": "List View",
     "gridView": "Grid View",
-    "createNew": "New"
+    "createNew": "New",
+    "defects": "Defects"
 }

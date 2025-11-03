@@ -1,4 +1,4 @@
-import 'package:control/domain/data_logic/projects.dart';
+import 'package:control/data/data_cache/projects.dart';
 import 'package:control/models/models.dart';
 import 'package:control/models/network/pagination/paginated_response.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';

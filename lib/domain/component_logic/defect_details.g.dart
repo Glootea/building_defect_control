@@ -16,7 +16,7 @@ final class DefectDetailsProvider
     extends $AsyncNotifierProvider<DefectDetails, Defect> {
   const DefectDetailsProvider._({
     required DefectDetailsFamily super.from,
-    required String super.argument,
+    required ({String defectId, String reportId}) super.argument,
   }) : super(
          retry: null,
          name: r'defectDetailsProvider',
@@ -32,7 +32,7 @@ final class DefectDetailsProvider
   String toString() {
     return r'defectDetailsProvider'
         ''
-        '($argument)';
+        '$argument';
   }
 
   @$internal
@@ -50,7 +50,7 @@ final class DefectDetailsProvider
   }
 }
 
-String _$defectDetailsHash() => r'37a7d9536e4407f478c60fb926f283f6a4a6c781';
+String _$defectDetailsHash() => r'451f1dc77d54375b0d7351a890846899e992f494';
 
 final class DefectDetailsFamily extends $Family
     with
@@ -59,7 +59,7 @@ final class DefectDetailsFamily extends $Family
           AsyncValue<Defect>,
           Defect,
           FutureOr<Defect>,
-          String
+          ({String defectId, String reportId})
         > {
   const DefectDetailsFamily._()
     : super(
@@ -70,22 +70,28 @@ final class DefectDetailsFamily extends $Family
         isAutoDispose: true,
       );
 
-  DefectDetailsProvider call(String defectId) =>
-      DefectDetailsProvider._(argument: defectId, from: this);
+  DefectDetailsProvider call({
+    required String defectId,
+    required String reportId,
+  }) => DefectDetailsProvider._(
+    argument: (defectId: defectId, reportId: reportId),
+    from: this,
+  );
 
   @override
   String toString() => r'defectDetailsProvider';
 }
 
 abstract class _$DefectDetails extends $AsyncNotifier<Defect> {
-  late final _$args = ref.$arg as String;
-  String get defectId => _$args;
+  late final _$args = ref.$arg as ({String defectId, String reportId});
+  String get defectId => _$args.defectId;
+  String get reportId => _$args.reportId;
 
-  FutureOr<Defect> build(String defectId);
+  FutureOr<Defect> build({required String defectId, required String reportId});
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build(_$args);
+    final created = build(defectId: _$args.defectId, reportId: _$args.reportId);
     final ref = this.ref as $Ref<AsyncValue<Defect>, Defect>;
     final element =
         ref.element

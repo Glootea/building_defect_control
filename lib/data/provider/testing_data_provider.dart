@@ -1,10 +1,11 @@
 import 'dart:math';
 
-import 'package:control/data/idata_provider.dart';
+import 'package:control/data/provider/idata_provider.dart';
 import 'package:control/models/models.dart';
 import 'package:control/models/network/defect/create_defect.dart';
 import 'package:control/models/network/defect/get_defect_by_id.dart';
 import 'package:control/models/network/defect/get_defects_by_report_id.dart';
+import 'package:control/models/network/defect/patch_defect_by_id.dart';
 import 'package:control/models/network/pagination/paginated_response.dart';
 import 'package:control/models/network/project/create_project.dart';
 import 'package:control/models/network/project/get_project_by_id.dart';
@@ -18,88 +19,6 @@ import 'package:uuid/uuid.dart';
 
 class TestingDataProvider implements IDataProvider {
   final Uuid _uuid = Uuid();
-  late final _projectId = _uuid.v7();
-
-  late final List<Project> _projects = [
-    Project(id: _projectId, name: 'Create a new app', reports: _reports),
-  ];
-
-  late final _defects = [
-    Defect(
-      id: _uuid.v7(),
-      name: 'UI Bug',
-      description: 'Button not aligned properly',
-      status: DefectStatus.open,
-      classification: 'Minor',
-    ),
-    Defect(
-      id: _uuid.v7(),
-      name: 'Crash on Load',
-      description: 'App crashes when loading data',
-      status: DefectStatus.inProgress,
-      classification: 'Critical',
-    ),
-  ];
-
-  late final List<Report> _reports = [
-    Report(
-      id: _uuid.v7(),
-      name: 'Sample Report 1',
-      description: 'This is a sample defect description and elimination',
-      submissionDate: DateTime.now().subtract(const Duration(days: 2)),
-    ),
-    Report(
-      id: _uuid.v7(),
-      name: 'Sample Report 2',
-      description: 'This is a sample defect description',
-      submissionDate: DateTime.now().subtract(const Duration(days: 5)),
-    ),
-  ];
-
-  @override
-  Future<List<Defect>> getDefects(String projectId) async {
-    await _simulateDelay();
-    return _defects;
-  }
-
-  @override
-  Future<Project> updateProject(Project project) async {
-    final index = _projects.indexWhere((p) => p.id == project.id);
-    if (index != -1) {
-      _projects[index] = project;
-    }
-
-    await _simulateDelay();
-    // Simulate saving the project name
-    return project;
-  }
-
-  @override
-  Future<Defect> getDefect(String defectId) async {
-    final defect = _defects.firstWhere((d) => d.id == defectId);
-    await _simulateDelay();
-    return defect;
-  }
-
-  @override
-  Future<Defect> updateDefect(Defect defect) async {
-    final index = _defects.indexWhere((d) => d.id == defect.id);
-    if (index != -1) {
-      print('Failed to find defect with id ${defect.id}');
-      _defects[index] = defect;
-    }
-    print('Updated defect: $defect');
-    await _simulateDelay();
-    return defect;
-  }
-
-  @override
-  Future<Project> getProject(String projectId) async {
-    final project = _projects.firstWhere((p) => p.id == projectId);
-
-    await _simulateDelay();
-    return project;
-  }
 
   final List<String> _executors = [
     'Alice Johnson',
@@ -396,11 +315,8 @@ class TestingDefectDataProvider implements IDefectDataProvider {
   Future<GetDefectByIdResponse> getDefectById(
     GetDefectByIdRequest request,
   ) async {
-    final defect = storage.defects.first;
+    final defect = storage.defects.where((e) => e.id == request.defectId).first;
 
-    // .firstWhere(
-    //   (report) => report.id == reportId,
-    // );
     await _simulateDelay();
     return Future.value(
       GetDefectByIdResponse(
@@ -465,6 +381,32 @@ class TestingDefectDataProvider implements IDefectDataProvider {
           hasPrevious: false,
           hasNext: false,
         ),
+      ),
+    );
+  }
+
+  @override
+  Future<PatchDefectByIdResponse> patchDefectById(
+    PatchDefectByIdRequest request,
+  ) {
+    final storedElement = storage.defects.firstWhere(
+      (defect) => defect.id == request.defectId,
+    );
+    storage.defects.remove(storedElement);
+    final updatedElement = storedElement.copyWith(
+      name: request.name ?? storedElement.name,
+      description: request.description ?? storedElement.description,
+      classification: request.classification ?? storedElement.classification,
+      status: request.status ?? storedElement.status,
+    );
+    storage.defects.add(updatedElement);
+    return Future.value(
+      PatchDefectByIdResponse(
+        id: updatedElement.id,
+        name: updatedElement.name,
+        description: updatedElement.description,
+        clazz: updatedElement.classification,
+        status: updatedElement.status,
       ),
     );
   }

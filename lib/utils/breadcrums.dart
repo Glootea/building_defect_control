@@ -1,5 +1,5 @@
 import 'package:control/di/di.dart';
-import 'package:control/navigation/navigation.dart';
+import 'package:control/navigation/routes.dart';
 import 'package:control/utils/context_extentions.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -21,6 +21,7 @@ class Breadcrums extends StatelessWidget {
             navigatorStackObserver.getStack(),
           );
           return SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
             child: IntrinsicHeight(
               child: Row(
                 children: [
@@ -58,7 +59,10 @@ class Breadcrums extends StatelessWidget {
     List<Route> navigatorStack,
     int index,
   ) => [
-    Transform.rotate(angle: math.pi / 6, child: VerticalDivider()),
+    Hero(
+      tag: 'divider$index',
+      child: Transform.rotate(angle: math.pi / 6, child: VerticalDivider()),
+    ),
     TextButton(
       onPressed: (index != navigatorStack.length - 1)
           ? () {
@@ -67,8 +71,17 @@ class Breadcrums extends StatelessWidget {
               );
             }
           : null,
-      child: Text(
-        RouteNames.translate(navigatorStack[index].settings.name, context),
+      child: Hero(
+        tag: navigatorStack[index].settings.name ?? index,
+        child: DefaultTextStyle(
+          style: DefaultTextStyle.of(context).style.copyWith(
+            color: Theme.of(context).colorScheme.primary,
+            fontWeight: FontWeight.w600,
+          ),
+          child: Text(
+            RouteNames.translate(navigatorStack[index].settings.name, context),
+          ),
+        ),
       ),
     ),
   ];

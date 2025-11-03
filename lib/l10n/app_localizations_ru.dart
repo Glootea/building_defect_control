@@ -21,7 +21,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get projectDetailsRouteName => 'Детали проекта';
 
   @override
-  String get reportsRouteName => 'Рапорт';
+  String get reportsRouteName => 'Рапорты';
 
   @override
   String get reportDetailsRouteName => 'Детали рапорта';
@@ -100,4 +100,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get createNew => 'Создать';
+
+  @override
+  String get defects => 'Дефекты';
 }

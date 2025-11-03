@@ -6,7 +6,13 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 class RiverpodScreen<T> extends StatefulWidget {
   final Widget Function(T data) child;
   final AsyncValue<T> state;
-  const RiverpodScreen({required this.child, required this.state, super.key});
+  final bool useSliver;
+  const RiverpodScreen({
+    required this.child,
+    required this.state,
+    this.useSliver = false,
+    super.key,
+  });
 
   @override
   State<RiverpodScreen<T>> createState() => _RiverpodScreenState<T>();
@@ -14,6 +20,31 @@ class RiverpodScreen<T> extends StatefulWidget {
 
 class _RiverpodScreenState<T> extends State<RiverpodScreen<T>> {
   Object? lastError;
+
+  final duration = const Duration(milliseconds: 500);
+  late final animationController = AnimationController(
+    vsync: Scaffold.of(context),
+    duration: duration,
+  );
+  late final animation = CurvedAnimation(
+    curve: Curves.easeInOut,
+    parent: animationController,
+  );
+
+  @override
+  void initState() {
+    animationController.forward();
+    super.initState();
+  }
+
+  @override
+  void didUpdateWidget(covariant RiverpodScreen<T> oldWidget) {
+    if (oldWidget.state.isLoading && !widget.state.isLoading) {
+      animationController.reset();
+      animationController.forward();
+    }
+    super.didUpdateWidget(oldWidget);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,13 +72,23 @@ class _RiverpodScreenState<T> extends State<RiverpodScreen<T>> {
 
     lastError = widget.state.error;
 
-    final duration = const Duration(milliseconds: 500);
+    if (widget.useSliver) {
+      return SliverFadeTransition(
+        opacity: Tween(begin: 0.0, end: 1.0).animate(animation),
+        sliver: (widget.state.isLoading)
+            ? const SliverFillRemaining(
+                child: Center(child: CircularProgressIndicator()),
+              )
+            : widget.child(widget.state.value as T),
+      );
+    }
     return AnimatedCrossFade(
+      alignment: Alignment.bottomCenter,
       crossFadeState: widget.state.isLoading
           ? CrossFadeState.showFirst
           : CrossFadeState.showSecond,
-      firstChild: CircularProgressIndicator(),
-      secondChild: (widget.state.isLoading)
+      firstChild: Center(child: CircularProgressIndicator()),
+      secondChild: (widget.state.value == null)
           ? const SizedBox.shrink()
           : widget.child(widget.state.value as T),
       duration: duration,

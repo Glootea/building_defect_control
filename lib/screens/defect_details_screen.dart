@@ -1,99 +1,51 @@
-import 'package:control/domain/defect_details.dart';
+import 'package:control/domain/component_logic/defect_details.dart';
 import 'package:control/domain/defect_elimination.dart';
 import 'package:control/models/models.dart' as models;
+import 'package:control/utils/breadcrums.dart';
 import 'package:control/utils/context_extentions.dart';
 import 'package:control/utils/datetime_formatter.dart';
-import 'package:control/utils/object_name_textfield_decoration.dart';
+import 'package:control/utils/riverpod_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class DefectDetailsScreen extends HookConsumerWidget {
   final String defectId;
+  final String reportId;
   final String defectName;
 
   const DefectDetailsScreen({
     super.key,
     required this.defectId,
     required this.defectName,
+    required this.reportId,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final defectProvider = ref.read(defectDetailsProvider(defectId).notifier);
-
     final bodyContent = [
-      _DefectDetailsBody(defectProvider, defectId),
-      _DefectDetailsElimination(defectId),
-    ];
-    return Scaffold(
-      appBar: AppBar(
-        title: _DefectDetailsAppBarTitle(
-          defectId: defectId,
-          defectName: defectName,
-        ),
+      _DefectDetailsBody(
+        defectId: defectId,
+        reportId: reportId,
+        key: GlobalKey(),
       ),
+      _DefectDetailsElimination(defectId, key: GlobalKey()),
+    ];
+    final breadcrumbs = Breadcrums(key: GlobalKey());
+    return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: LayoutBuilder(
           builder: (context, constraints) {
             return (constraints.maxWidth < 600)
-                ? CustomScrollView(slivers: bodyContent)
-                : Row(children: _getRowContent(bodyContent));
-          },
-        ),
-      ),
-    );
-  }
+                ? CustomScrollView(slivers: [breadcrumbs, ...bodyContent])
+                : CustomScrollView(
+                    slivers: [
+                      const Breadcrums(),
 
-  List<Widget> _getRowContent(List<Widget> bodyContent) {
-    return bodyContent.indexed
-        .map(
-          (e) => [
-            if (e.$1 != 0) const VerticalDivider(),
-            CustomScrollView(slivers: [e.$2]),
-          ],
-        )
-        .expand((e) => e)
-        .map((e) => (e is! VerticalDivider) ? Expanded(child: e) : e)
-        .toList();
-  }
-}
-
-class _DefectDetailsAppBarTitle extends HookConsumerWidget {
-  final String defectId;
-  final String defectName;
-
-  const _DefectDetailsAppBarTitle({
-    required this.defectId,
-    required this.defectName,
-  });
-
-  Future<void> onDefectNameSubmitted(
-    DefectDetails defectDetails,
-    String value,
-  ) async {
-    if (value == defectName || value.isEmpty) return;
-
-    await defectDetails.saveDefectName(defectId, value);
-  }
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final controller = useTextEditingController(text: defectName);
-    final defectDetails = ref.watch(defectDetailsProvider(defectId).notifier);
-
-    return Hero(
-      tag: defectId,
-      child: Material(
-        type: MaterialType.transparency,
-        child: TextField(
-          controller: controller,
-          decoration: objectNameTextFieldDecoration,
-          onSubmitted: (value) => onDefectNameSubmitted(defectDetails, value),
-          onTapOutside: (_) {
-            onDefectNameSubmitted(defectDetails, controller.text);
-            FocusScope.of(context).unfocus();
+                      SliverCrossAxisGroup(slivers: bodyContent),
+                    ],
+                  );
           },
         ),
       ),
@@ -102,153 +54,186 @@ class _DefectDetailsAppBarTitle extends HookConsumerWidget {
 }
 
 class _DefectDetailsBody extends HookConsumerWidget {
-  final DefectDetails defectDetails;
   final String defectId;
-  const _DefectDetailsBody(this.defectDetails, this.defectId);
+  final String reportId;
+  const _DefectDetailsBody({
+    required this.defectId,
+    required this.reportId,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final defect = ref.watch(defectDetailsProvider(defectId));
-    if (defect.isLoading) {
-      return SliverToBoxAdapter(
-        child: Center(child: CircularProgressIndicator()),
-      );
-    }
-
-    if (defect.hasError) {
-      return SliverToBoxAdapter(
-        child: Center(
-          child: Text('${context.translate.error}: ${defect.error}'),
-        ),
-      );
-    }
-    final defectState = defect.requireValue;
-
-    final classificationController = useTextEditingController(
-      text: defectState.classification,
+    final defectState = ref.watch(
+      defectDetailsProvider(defectId: defectId, reportId: reportId),
     );
-    final descriptionController = useTextEditingController(
-      text: defectState.description,
-    );
-    final executorController = useTextEditingController();
-    final executorList = useState(<String>[]);
+    return RiverpodScreen(
+      state: defectState,
+      useSliver: true,
+      child: (defect) {
+        return HookBuilder(
+          builder: (context) {
+            final defectProvider = ref.read(
+              defectDetailsProvider(
+                defectId: defectId,
+                reportId: reportId,
+              ).notifier,
+            );
 
-    Future<void> fetchExecutors() async {
-      final suggestions = await defectDetails.getExecutorsSuggestions(
-        executorController.text,
-      );
-      executorList.value = suggestions;
-    }
+            final nameController = useTextEditingController(text: defect.name);
+            final classificationController = useTextEditingController(
+              text: defect.classification,
+            );
+            final descriptionController = useTextEditingController(
+              text: defect.description,
+            );
+            final executorController = useTextEditingController();
+            final executorList = useState(<String>[]);
 
-    useEffect(() {
-      executorController.addListener(fetchExecutors);
-      fetchExecutors();
+            Future<void> fetchExecutors() async {
+              final suggestions = <String>[]; // TODO: fetch from API
+              executorList.value = suggestions;
+            }
 
-      return () => executorController.removeListener(fetchExecutors);
-    }, []);
+            useEffect(() {
+              executorController.addListener(fetchExecutors);
+              fetchExecutors();
 
-    Future<void> onChangeClassification(String value) async {
-      if (value == defectState.classification || value.isEmpty) return;
+              return () => executorController.removeListener(fetchExecutors);
+            }, []);
 
-      await defectDetails.updateDefect(
-        defectState.copyWith(classification: value),
-      );
-    }
+            Future<void> onChangeName(String value) async {
+              if (value == defect.name || value.isEmpty) return;
 
-    Future<void> onChangeDescription(String value) async {
-      if (value == defectState.description || value.isEmpty) return;
+              await defectProvider.updateDefect(defect.copyWith(name: value));
+            }
 
-      await defectDetails.updateDefect(
-        defectState.copyWith(description: value),
-      );
-    }
+            Future<void> onChangeClassification(String value) async {
+              if (value == defect.classification || value.isEmpty) return;
 
-    final items = [
-      Align(
-        alignment: Alignment.centerLeft,
-        child: Text(
-          context.translate.defectDetailsRouteName,
-          style: Theme.of(context).textTheme.headlineSmall,
-        ),
-      ),
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(context.translate.classification),
-          TextField(
-            controller: classificationController,
-            onSubmitted: (value) => onChangeClassification(value),
-            onTapOutside: (_) {
-              onChangeClassification(classificationController.text);
-              FocusScope.of(context).unfocus();
-            },
-          ),
-        ],
-      ),
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(context.translate.description),
-          TextField(
-            controller: descriptionController,
-            maxLines: null,
-            onSubmitted: (value) => onChangeDescription(value),
-            onTapOutside: (_) {
-              onChangeDescription(descriptionController.text);
-              FocusScope.of(context).unfocus();
-            },
-          ),
-        ],
-      ),
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(context.translate.status),
-          DropdownMenu<models.DefectStatus>(
-            expandedInsets: EdgeInsets.zero,
-            initialSelection: defectState.status,
-            enableFilter: true,
-            onSelected: (value) {
-              if (value == null || value == defectState.status) return;
-              defectDetails.updateDefect(defectState.copyWith(status: value));
-            },
-            dropdownMenuEntries: models.DefectStatus.values
-                .map((e) => DropdownMenuEntry(value: e, label: e.name))
-                .toList(),
-          ),
-        ],
-      ),
+              await defectProvider.updateDefect(
+                defect.copyWith(classification: value),
+              );
+            }
 
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(context.translate.executor),
-          DropdownMenu(
-            expandedInsets: EdgeInsets.zero,
+            Future<void> onChangeDescription(String value) async {
+              if (value == defect.description || value.isEmpty) return;
 
-            enableFilter: true,
-            controller: executorController,
+              await defectProvider.updateDefect(
+                defect.copyWith(description: value),
+              );
+            }
 
-            dropdownMenuEntries: executorList.value
-                .map((e) => DropdownMenuEntry(value: e, label: e))
-                .toList(),
-          ),
-        ],
-      ),
-    ];
+            final items = [
+              Align(
+                key: GlobalKey(),
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  context.translate.defectDetailsRouteName,
+                  style: Theme.of(context).textTheme.headlineSmall,
+                ),
+              ),
+              Column(
+                key: GlobalKey(),
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(context.translate.name),
+                  TextField(
+                    controller: nameController,
+                    onSubmitted: (value) => onChangeName(value),
+                    onTapOutside: (_) {
+                      onChangeName(nameController.text);
+                      FocusScope.of(context).unfocus();
+                    },
+                  ),
+                ],
+              ),
+              Column(
+                key: GlobalKey(),
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(context.translate.classification),
+                  TextField(
+                    controller: classificationController,
+                    onSubmitted: (value) => onChangeClassification(value),
+                    onTapOutside: (_) {
+                      onChangeClassification(classificationController.text);
+                      FocusScope.of(context).unfocus();
+                    },
+                  ),
+                ],
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(context.translate.description),
+                  TextField(
+                    controller: descriptionController,
+                    maxLines: null,
+                    onSubmitted: (value) => onChangeDescription(value),
+                    onTapOutside: (_) {
+                      onChangeDescription(descriptionController.text);
+                      FocusScope.of(context).unfocus();
+                    },
+                  ),
+                ],
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(context.translate.status),
+                  DropdownMenu<models.DefectStatus>(
+                    expandedInsets: EdgeInsets.zero,
+                    initialSelection: defect.status,
+                    enableFilter: true,
+                    onSelected: (value) {
+                      if (value == null || value == defect.status) return;
+                      defectProvider.updateDefect(
+                        defect.copyWith(status: value),
+                      );
+                    },
+                    dropdownMenuEntries: models.DefectStatus.values
+                        .map((e) => DropdownMenuEntry(value: e, label: e.name))
+                        .toList(),
+                  ),
+                ],
+              ),
 
-    return SliverList.separated(
-      itemCount: items.length,
-      itemBuilder: (context, index) => items[index],
-      separatorBuilder: (context, index) =>
-          (index != 0) ? const SizedBox(height: 8) : SizedBox(height: 16),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(context.translate.executor),
+                  DropdownMenu(
+                    expandedInsets: EdgeInsets.zero,
+                    key: GlobalKey(),
+                    enableFilter: true,
+                    controller: executorController,
+
+                    dropdownMenuEntries: executorList.value
+                        .map((e) => DropdownMenuEntry(value: e, label: e))
+                        .toList(),
+                  ),
+                ],
+              ),
+            ];
+
+            return SliverList.separated(
+              itemCount: items.length,
+              itemBuilder: (context, index) => items[index],
+              separatorBuilder: (context, index) => (index != 0)
+                  ? const SizedBox(height: 8)
+                  : SizedBox(height: 16),
+            );
+          },
+        );
+      },
     );
   }
 }
 
 class _DefectDetailsElimination extends HookConsumerWidget {
   final String defectId;
-  const _DefectDetailsElimination(this.defectId);
+  const _DefectDetailsElimination(this.defectId, {super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -256,12 +241,13 @@ class _DefectDetailsElimination extends HookConsumerWidget {
     final eliminationProviderNotifier = ref.read(
       defectEliminationProvider(defectId).notifier,
     );
-
-    return eliminationProvider.when(
-      data: (data) {
+    return RiverpodScreen(
+      useSliver: true,
+      state: eliminationProvider,
+      child: (data) {
         if (data == null) {
-          return SliverToBoxAdapter(
-            child: Center(
+          return SliverFillRemaining(
+            child: Align(
               child: TextButton(
                 onPressed: eliminationProviderNotifier.createDefectElimination,
                 child: Text(context.translate.createElimination),
@@ -269,6 +255,7 @@ class _DefectDetailsElimination extends HookConsumerWidget {
             ),
           );
         }
+
         final items = [
           _DefectEliminationTitleRow(
             eliminationProviderNotifier: eliminationProviderNotifier,
@@ -289,11 +276,6 @@ class _DefectDetailsElimination extends HookConsumerWidget {
               (index != 0) ? const SizedBox(height: 8) : SizedBox(height: 16),
         );
       },
-
-      error: (error, stacktrace) =>
-          SliverToBoxAdapter(child: Text('${context.translate.error}: $error')),
-      loading: () =>
-          SliverToBoxAdapter(child: Center(child: CircularProgressIndicator())),
     );
   }
 }

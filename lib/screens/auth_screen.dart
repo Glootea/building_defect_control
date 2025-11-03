@@ -1,4 +1,4 @@
-import 'package:control/domain/page_logic/auth_screen.dart';
+import 'package:control/domain/component_logic/auth_screen.dart';
 import 'package:control/utils/context_extentions.dart';
 import 'package:control/utils/riverpod_screen.dart';
 import 'package:flutter/material.dart';

@@ -100,4 +100,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get createNew => 'New';
+
+  @override
+  String get defects => 'Defects';
 }

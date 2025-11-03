@@ -283,6 +283,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'New'**
   String get createNew;
+
+  /// No description provided for @defects.
+  ///
+  /// In en, this message translates to:
+  /// **'Defects'**
+  String get defects;
 }
 
 class _AppLocalizationsDelegate

@@ -1,9 +1,8 @@
-import 'package:control/domain/page_logic/project_list_screen.dart';
+import 'package:control/domain/component_logic/project_list_screen.dart';
 import 'package:control/domain/user.dart';
 import 'package:control/models/models.dart';
-import 'package:control/navigation/navigation.dart';
+import 'package:control/navigation/routes.dart';
 import 'package:control/utils/breadcrums.dart';
-import 'package:control/utils/collapsing_searchbar.dart';
 import 'package:control/utils/context_extentions.dart';
 import 'package:control/utils/paginated_grid.dart';
 import 'package:control/utils/resizable_row_builder.dart';
@@ -23,40 +22,33 @@ class _ProjectListScreenState extends ConsumerState<ProjectListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          children: [
-            Text(
-              context.translate.projectRouteName,
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-            CollapsingSearchbar(
-              onChanged: (query) {
-                setState(() {
-                  currentQuery = query;
-                });
-              },
-            ),
-          ],
-        ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              ProfileRoute().push(context);
-            },
-            icon: Icon(Icons.person_outline),
-          ),
-          IconButton(
-            onPressed: () {
-              ref.read(userProvider.notifier).clearUser();
-            },
-            icon: Icon(Icons.logout),
-          ),
-        ],
-      ),
       body: CustomScrollView(
         slivers: [
-          const Breadcrums(),
+          SliverCrossAxisGroup(
+            slivers: [
+              const Breadcrums(),
+
+              SliverToBoxAdapter(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        ProfileRoute().push(context);
+                      },
+                      icon: Icon(Icons.person_outline),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        ref.read(userProvider.notifier).clearUser();
+                      },
+                      icon: Icon(Icons.logout),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
           PaginatedGrid<ProjectListPageState, ProjectShallow>(
             title: context.translate.projectRouteName,
             dataFetcher: (ref, page) {

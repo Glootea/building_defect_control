@@ -4,7 +4,7 @@ import 'dart:developer';
 
 import 'package:control/di/di.dart';
 import 'package:control/domain/user.dart';
-import 'package:control/navigation/navigation.dart';
+import 'package:control/navigation/routes.dart';
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -51,9 +51,15 @@ GoRouter _routeConfig({
   observers: observers,
 );
 
-class ControlNavigatorObserver extends NavigatorObserver {
+class ControlNavigatorObserver extends NavigatorObserver with ChangeNotifier {
   final _navigationStack = <Route>[];
   List<Route> getStack() => UnmodifiableListView(_navigationStack);
+
+  @override
+  void didChangeTop(Route topRoute, Route? previousTopRoute) {
+    notifyListeners();
+    super.didChangeTop(topRoute, previousTopRoute);
+  }
 
   @override
   void didPush(Route route, Route? previousRoute) {

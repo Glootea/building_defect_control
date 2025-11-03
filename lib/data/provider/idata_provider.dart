@@ -2,6 +2,7 @@ import 'package:control/models/models.dart';
 import 'package:control/models/network/defect/create_defect.dart';
 import 'package:control/models/network/defect/get_defect_by_id.dart';
 import 'package:control/models/network/defect/get_defects_by_report_id.dart';
+import 'package:control/models/network/defect/patch_defect_by_id.dart';
 import 'package:control/models/network/project/create_project.dart';
 import 'package:control/models/network/project/get_project_by_id.dart';
 import 'package:control/models/network/project/get_projects.dart';
@@ -15,11 +16,6 @@ import 'package:uuid/uuid.dart';
 // TODO: separate into separate providers for features (projects, defects, etc)
 @Deprecated("Use feature-specific data providers instead")
 abstract interface class IDataProvider {
-  Future<Project> getProject(String projectId);
-  Future<List<Defect>> getDefects(String projectId);
-  Future<Project> updateProject(Project project);
-  Future<Defect> getDefect(String defectId);
-  Future<Defect> updateDefect(Defect defect);
   Future<List<String>> getExecutors();
   Future<DefectElimination?> getDefectElimination(String defectId);
   Future<void> createDefectElimination(String defectId);
@@ -59,6 +55,9 @@ abstract class IDefectDataProvider {
   Future<GetDefectByIdResponse> getDefectById(GetDefectByIdRequest request);
   Future<GetDefectsByReportIdResponse> getDefectsByReportId(
     GetDefectsByReportIdRequest request,
+  );
+  Future<PatchDefectByIdResponse> patchDefectById(
+    PatchDefectByIdRequest request,
   );
 }
 

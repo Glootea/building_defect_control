@@ -1,14 +1,14 @@
 import 'package:control/screens/auth_screen.dart';
 import 'package:control/screens/profile_screen.dart';
 import 'package:control/screens/report_details_screen.dart';
-import 'package:control/screens/reports_screen.dart';
+import 'package:control/screens/report_list_screen.dart';
 import 'package:control/screens/project_list_screen.dart';
 import 'package:control/screens/defect_details_screen.dart';
 import 'package:control/utils/context_extentions.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-part 'navigation.g.dart';
+part 'routes.g.dart';
 
 @TypedGoRoute<ProjectsListRoute>(
   path: '/projects',
@@ -73,13 +73,22 @@ const String _defectDetailsPath = '/defect/:defectId';
 )
 @immutable
 class DefectDetailsRoute extends GoRouteData with $DefectDetailsRoute {
-  const DefectDetailsRoute({required this.defectId, required this.defectName});
+  const DefectDetailsRoute({
+    required this.defectId,
+    required this.defectName,
+    required this.reportId,
+  });
+  final String reportId;
   final String defectId;
   final String defectName;
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return DefectDetailsScreen(defectId: defectId, defectName: defectName);
+    return DefectDetailsScreen(
+      defectId: defectId,
+      defectName: defectName,
+      reportId: reportId,
+    );
   }
 }
 

@@ -4,7 +4,7 @@
     "profileRouteName": "Профиль",
     "authRouteName": "Авторизация",
     "projectDetailsRouteName": "Детали проекта",
-    "reportsRouteName": "Рапорт",
+    "reportsRouteName": "Рапорты",
     "reportDetailsRouteName": "Детали рапорта",
     "defectDetailsRouteName": "Детали дефекта",
     "createNewReport": "Создать новый рапорт",
@@ -30,5 +30,6 @@
     "endDate": "Дата окончания",
     "listView": "Таблица",
     "gridView": "Карточки",
-    "createNew": "Создать"
+    "createNew": "Создать",
+    "defects": "Дефекты"
 }

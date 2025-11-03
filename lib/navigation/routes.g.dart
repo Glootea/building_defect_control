@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'navigation.dart';
+part of 'routes.dart';
 
 // **************************************************************************
 // GoRouterGenerator
@@ -94,6 +94,7 @@ mixin $DefectDetailsRoute on GoRouteData {
       DefectDetailsRoute(
         defectId: state.pathParameters['defectId']!,
         defectName: state.uri.queryParameters['defect-name']!,
+        reportId: state.uri.queryParameters['report-id']!,
       );
 
   DefectDetailsRoute get _self => this as DefectDetailsRoute;
@@ -101,7 +102,7 @@ mixin $DefectDetailsRoute on GoRouteData {
   @override
   String get location => GoRouteData.$location(
     '/defect/${Uri.encodeComponent(_self.defectId)}',
-    queryParams: {'defect-name': _self.defectName},
+    queryParams: {'defect-name': _self.defectName, 'report-id': _self.reportId},
   );
 
   @override

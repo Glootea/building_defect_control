@@ -1,4 +1,4 @@
-import 'package:control/domain/data_logic/reports.dart';
+import 'package:control/data/data_cache/reports.dart';
 import 'package:control/models/models.dart';
 import 'package:control/models/network/pagination/paginated_response.dart';
 import 'package:control/models/network/report/create_report.dart';
