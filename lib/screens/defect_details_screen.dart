@@ -1,5 +1,5 @@
-import 'package:control/domain/component_logic/defect_details.dart';
-import 'package:control/domain/defect_elimination.dart';
+import 'package:control/domain/defect_details/defect_details.dart';
+import 'package:control/domain/defect_elimination/defect_elimination.dart';
 import 'package:control/models/models.dart' as models;
 import 'package:control/utils/breadcrums.dart';
 import 'package:control/utils/context_extentions.dart';
@@ -23,31 +23,35 @@ class DefectDetailsScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final padding = const EdgeInsets.all(16.0);
     final bodyContent = [
-      _DefectDetailsBody(
-        defectId: defectId,
-        reportId: reportId,
-        key: GlobalKey(),
+      SliverPadding(
+        padding: padding,
+        sliver: _DefectDetailsBody(
+          defectId: defectId,
+          reportId: reportId,
+          key: GlobalKey(),
+        ),
       ),
-      _DefectDetailsElimination(defectId, key: GlobalKey()),
+      SliverPadding(
+        padding: padding,
+        sliver: _DefectDetailsElimination(defectId, key: GlobalKey()),
+      ),
     ];
     final breadcrumbs = Breadcrums(key: GlobalKey());
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            return (constraints.maxWidth < 600)
-                ? CustomScrollView(slivers: [breadcrumbs, ...bodyContent])
-                : CustomScrollView(
-                    slivers: [
-                      const Breadcrums(),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          return (constraints.maxWidth < 600)
+              ? CustomScrollView(slivers: [breadcrumbs, ...bodyContent])
+              : CustomScrollView(
+                  slivers: [
+                    breadcrumbs,
 
-                      SliverCrossAxisGroup(slivers: bodyContent),
-                    ],
-                  );
-          },
-        ),
+                    SliverCrossAxisGroup(slivers: bodyContent),
+                  ],
+                );
+        },
       ),
     );
   }

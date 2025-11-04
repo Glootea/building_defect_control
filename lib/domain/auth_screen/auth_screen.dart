@@ -1,4 +1,4 @@
-import 'package:control/domain/user.dart';
+import 'package:control/domain/user/user.dart';
 import 'package:control/models/user.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

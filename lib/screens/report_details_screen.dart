@@ -1,5 +1,6 @@
-import 'package:control/data/data_cache/reports.dart';
-import 'package:control/domain/component_logic/report_details_screen.dart';
+import 'package:control/domain/defect_list/defect_list.dart';
+import 'package:control/domain/defect_list/defect_list.state.dart';
+import 'package:control/domain/report_details/report_details.dart';
 import 'package:control/models/models.dart';
 import 'package:control/navigation/routes.dart';
 import 'package:control/utils/breadcrums.dart';
@@ -135,7 +136,10 @@ class _ReportDetailsScreenState extends ConsumerState<ReportDetailsPane> {
   Widget build(BuildContext context) {
     return RiverpodScreen(
       state: ref.watch(
-        getReportByIdProvider(widget.projectId, widget.reportId),
+        reportDetailsProvider(
+          projectId: widget.projectId,
+          reportId: widget.reportId,
+        ),
       ),
       child: (data) {
         return Padding(

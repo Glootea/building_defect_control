@@ -1,5 +1,6 @@
 import 'package:control/di/di.dart';
-import 'package:control/domain/component_logic/report_list_screen.dart';
+import 'package:control/domain/report_list/report_list.dart';
+import 'package:control/domain/report_list/report_list.state.dart';
 import 'package:control/models/models.dart';
 import 'package:control/navigation/routes.dart';
 import 'package:control/utils/breadcrums.dart';
@@ -42,13 +43,13 @@ class _ProjectListScreenState extends ConsumerState<ReportListScreen> {
       body: CustomScrollView(
         slivers: [
           const Breadcrums(),
-          PaginatedGrid<ReportListPageState, Report>(
+          PaginatedGrid<ReportListState, Report>(
             title: context.translate.reportsRouteName,
 
             dataFetcher: (ref, page) {
               currentPage = page;
               return ref.watch(
-                reportListScreenProvider(
+                reportListProvider(
                   widget.projectId,
                   page,
                   searchController.value.text,
@@ -120,13 +121,7 @@ class _ProjectListScreenState extends ConsumerState<ReportListScreen> {
           if (name == null || description == null) return;
 
           final createdReportId = await ref
-              .watch(
-                reportListScreenProvider(
-                  projectId,
-                  page,
-                  currentQuery,
-                ).notifier,
-              )
+              .watch(reportListProvider(projectId, page, currentQuery).notifier)
               .createReport(name, description);
 
           if (!context.mounted || createdReportId == null) return;

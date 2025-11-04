@@ -1,4 +1,6 @@
-import 'package:riverpod/riverpod.dart';
+import 'dart:developer';
+
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 final class Logger extends ProviderObserver {
   @override
@@ -7,11 +9,8 @@ final class Logger extends ProviderObserver {
     Object? previousValue,
     Object? newValue,
   ) {
-    print('''
-{
-  "provider": "${context.provider}",
-  "newValue": "$newValue",
-  "mutation": "${context.mutation}"
-}''');
+    log(
+      "{provider: ${context.provider}, newValue: $newValue, mutation: ${context.mutation}}",
+    );
   }
 }

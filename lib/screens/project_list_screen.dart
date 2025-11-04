@@ -1,5 +1,6 @@
-import 'package:control/domain/component_logic/project_list_screen.dart';
-import 'package:control/domain/user.dart';
+import 'package:control/domain/project_list/project_list.dart';
+import 'package:control/domain/project_list/project_list.state.dart';
+import 'package:control/domain/user/user.dart';
 import 'package:control/models/models.dart';
 import 'package:control/navigation/routes.dart';
 import 'package:control/utils/breadcrums.dart';
@@ -49,11 +50,11 @@ class _ProjectListScreenState extends ConsumerState<ProjectListScreen> {
               ),
             ],
           ),
-          PaginatedGrid<ProjectListPageState, ProjectShallow>(
+          PaginatedGrid<ProjectListState, ProjectShallow>(
             title: context.translate.projectRouteName,
             dataFetcher: (ref, page) {
               currentPage = page;
-              return ref.watch(projectListScreenProvider(page, currentQuery));
+              return ref.watch(projectListProvider(page, currentQuery));
             },
             cardBuilder: (data) =>
                 ProjectCard(project: data, key: ObjectKey(data.id)),
@@ -90,7 +91,7 @@ class _ProjectListScreenState extends ConsumerState<ProjectListScreen> {
           if (name == null) return;
 
           final id = await ref
-              .watch(projectListScreenProvider(page, currentQuery).notifier)
+              .watch(projectListProvider(page, currentQuery).notifier)
               .createProject(name);
 
           if (!context.mounted || id == null) return;

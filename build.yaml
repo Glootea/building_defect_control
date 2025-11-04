@@ -9,7 +9,7 @@ targets:
         enabled: true
         generate_for:
           - "lib/models/**.dart"
-          - "lib/domain/page_logic/**.dart"
+          - "lib/domain/**.state.dart"
       riverpod_generator|riverpod_generator:
         enabled: true
         generate_for:
@@ -18,4 +18,4 @@ targets:
       go_router_builder|go_router_builder:
         enabled: true
         generate_for:
-          - "lib/navigation/**.dart"
+          - "lib/navigation/routes.dart"

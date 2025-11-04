@@ -35,22 +35,6 @@ class ProjectShallow with _$ProjectShallow {
 
 @JsonSerializable()
 @freezed
-@Deprecated("No longer used, use ProjectShallow instead")
-class Project with _$Project {
-  const Project({required this.id, required this.name, required this.reports});
-
-  factory Project.fromJson(Map<String, Object?> json) =>
-      _$ProjectFromJson(json);
-
-  Map<String, dynamic> toJson() => _$ProjectToJson(this);
-
-  final String id;
-  final String name;
-  final List<Report> reports;
-}
-
-@JsonSerializable()
-@freezed
 class Report with _$Report {
   const Report({
     required this.id,

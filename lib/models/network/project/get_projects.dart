@@ -36,10 +36,12 @@ class GetProjectsRequest extends PaginatedRequest {
 @JsonSerializable()
 class GetProjectsResponse extends PaginatedResponse {
   @override
-  final List<ProjectShallow> data;
+  List<ProjectShallow> get data => projects;
 
-  GetProjectsResponse({required this.data, required super.metadata})
-    : super(data: data);
+  final List<ProjectShallow> projects;
+
+  GetProjectsResponse({required this.projects, required super.metadata})
+    : super(data: projects);
 
   @override
   Map<String, dynamic> toJson() => _$GetProjectsResponseToJson(this);

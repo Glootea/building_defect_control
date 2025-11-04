@@ -103,4 +103,22 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get defects => 'Дефекты';
+
+  @override
+  String get badRequest => 'Неверный запрос при обращении к данным';
+
+  @override
+  String get unauthorized => 'Неавторизован';
+
+  @override
+  String get forbidden => 'Доступ к данным запрещен';
+
+  @override
+  String get notFound => 'Данные не найдены';
+
+  @override
+  String get internalServerError => 'Внутренняя ошибка сервера';
+
+  @override
+  String get unknownError => 'Произошла неизвестная ошибка';
 }

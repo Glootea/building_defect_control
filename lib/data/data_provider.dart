@@ -1,4 +1,4 @@
-import 'package:control/data/provider/idata_provider.dart';
+import 'package:control/data/idata_provider.dart';
 import 'package:control/models/models.dart';
 import 'package:control/models/network/defect/create_defect.dart';
 import 'package:control/models/network/defect/get_defect_by_id.dart';

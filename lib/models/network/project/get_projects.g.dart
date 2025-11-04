@@ -22,7 +22,7 @@ Map<String, dynamic> _$GetProjectsRequestToJson(GetProjectsRequest instance) =>
 
 GetProjectsResponse _$GetProjectsResponseFromJson(Map<String, dynamic> json) =>
     GetProjectsResponse(
-      data: (json['data'] as List<dynamic>)
+      projects: (json['projects'] as List<dynamic>)
           .map((e) => ProjectShallow.fromJson(e as Map<String, dynamic>))
           .toList(),
       metadata: PaginatedMetadata.fromJson(
@@ -32,4 +32,7 @@ GetProjectsResponse _$GetProjectsResponseFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$GetProjectsResponseToJson(
   GetProjectsResponse instance,
-) => <String, dynamic>{'metadata': instance.metadata, 'data': instance.data};
+) => <String, dynamic>{
+  'metadata': instance.metadata,
+  'projects': instance.projects,
+};

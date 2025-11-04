@@ -82,16 +82,11 @@ class _RiverpodScreenState<T> extends State<RiverpodScreen<T>> {
             : widget.child(widget.state.value as T),
       );
     }
-    return AnimatedCrossFade(
-      alignment: Alignment.bottomCenter,
-      crossFadeState: widget.state.isLoading
-          ? CrossFadeState.showFirst
-          : CrossFadeState.showSecond,
-      firstChild: Center(child: CircularProgressIndicator()),
-      secondChild: (widget.state.value == null)
-          ? const SizedBox.shrink()
+    return FadeTransition(
+      opacity: Tween(begin: 0.0, end: 1.0).animate(animation),
+      child: (widget.state.isLoading)
+          ? const Center(child: CircularProgressIndicator())
           : widget.child(widget.state.value as T),
-      duration: duration,
     );
   }
 }

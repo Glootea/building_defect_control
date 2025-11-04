@@ -1,3 +1,4 @@
+import 'package:control/utils/context_extentions.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/widgets.dart';
 
@@ -6,22 +7,21 @@ extension ControlExceptionFormat on DioException {
     if (response?.data['message'] != null &&
         (response?.data['message']?.isNotEmpty ?? false)) {
       return response!.data['message']!;
-    } // TODO: should be status message?
-
+    }
+    final translate = context.translate;
     switch (response?.statusCode) {
-      // TODO: localize
       case 400:
-        return 'Bad request';
+        return translate.badRequest;
       case 401:
-        return 'Unauthorized';
+        return translate.unauthorized;
       case 403:
-        return 'Forbidden';
+        return translate.forbidden;
       case 404:
-        return 'Not found';
+        return translate.notFound;
       case 500:
-        return 'Internal server error';
+        return translate.internalServerError;
       default:
-        return 'Unknown error';
+        return translate.unknownError;
     }
   }
 }

@@ -40,6 +40,9 @@ class PatchDefectByIdRequest {
   }
 
   Map<String, dynamic> toJson() => _$PatchDefectByIdRequestToJson(this);
+
+  factory PatchDefectByIdRequest.fromJson(Map<String, dynamic> json) =>
+      _$PatchDefectByIdRequestFromJson(json);
 }
 
 @JsonSerializable()

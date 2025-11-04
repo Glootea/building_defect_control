@@ -103,4 +103,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get defects => 'Defects';
+
+  @override
+  String get badRequest => 'Bad request';
+
+  @override
+  String get unauthorized => 'Unauthorized';
+
+  @override
+  String get forbidden => 'Forbidden';
+
+  @override
+  String get notFound => 'Not found';
+
+  @override
+  String get internalServerError => 'Internal server error';
+
+  @override
+  String get unknownError => 'Unknown error occurred';
 }

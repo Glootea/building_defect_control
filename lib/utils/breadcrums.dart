@@ -26,9 +26,12 @@ class Breadcrums extends StatelessWidget {
               child: Row(
                 children: [
                   if (visibleRoutes.length > 1)
-                    IconButton(
-                      onPressed: () => context.pop(),
-                      icon: Icon(Icons.arrow_back_outlined),
+                    Hero(
+                      tag: 'back_button',
+                      child: IconButton(
+                        onPressed: () => context.pop(),
+                        icon: Icon(Icons.arrow_back_outlined),
+                      ),
                     ),
 
                   ..._generateParts(context, visibleRoutes),

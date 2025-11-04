@@ -1,6 +1,6 @@
-import 'package:control/data/data_cache/defects.dart';
 import 'package:control/di/di.dart';
 import 'package:control/models/models.dart';
+import 'package:control/models/network/defect/get_defect_by_id.dart';
 import 'package:control/models/network/defect/patch_defect_by_id.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'defect_details.g.dart';
@@ -14,10 +14,10 @@ class DefectDetails extends _$DefectDetails {
     required String defectId,
     required String reportId,
   }) async {
-    final data = await ref.watch(
-      getDefectByIdProvider(defectId: defectId, reportId: reportId).future,
-    );
-    return data.toDefect();
+    final defectDataProvider = ref.read(defectDataProviderProvider(reportId));
+    final request = GetDefectByIdRequest(defectId: defectId);
+    final response = await defectDataProvider.getDefectById(request);
+    return response.toDefect();
   }
 
   Future<void> updateDefect(Defect defect) async {
@@ -31,5 +31,6 @@ class DefectDetails extends _$DefectDetails {
       status: defect.status,
     );
     await dataProvider.patchDefectById(request);
+    ref.invalidate(defectListUpdaterProvider);
   }
 }

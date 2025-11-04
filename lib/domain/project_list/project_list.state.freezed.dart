@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'report_list_screen.dart';
+part of 'project_list.state.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -12,40 +12,40 @@ part of 'report_list_screen.dart';
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
-mixin _$ReportListPageState {
+mixin _$ProjectListState {
 
- List<Report> get reports; String get searchQuery; PaginatedMetadata get metadata;
-/// Create a copy of ReportListPageState
+ List<ProjectShallow> get projects; String get searchQuery; PaginatedMetadata get metadata;
+/// Create a copy of ProjectListState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-$ReportListPageStateCopyWith<ReportListPageState> get copyWith => _$ReportListPageStateCopyWithImpl<ReportListPageState>(this as ReportListPageState, _$identity);
+$ProjectListStateCopyWith<ProjectListState> get copyWith => _$ProjectListStateCopyWithImpl<ProjectListState>(this as ProjectListState, _$identity);
 
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ReportListPageState&&const DeepCollectionEquality().equals(other.reports, reports)&&(identical(other.searchQuery, searchQuery) || other.searchQuery == searchQuery)&&(identical(other.metadata, metadata) || other.metadata == metadata));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProjectListState&&const DeepCollectionEquality().equals(other.projects, projects)&&(identical(other.searchQuery, searchQuery) || other.searchQuery == searchQuery)&&(identical(other.metadata, metadata) || other.metadata == metadata));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(reports),searchQuery,metadata);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(projects),searchQuery,metadata);
 
 @override
 String toString() {
-  return 'ReportListPageState(reports: $reports, searchQuery: $searchQuery, metadata: $metadata)';
+  return 'ProjectListState(projects: $projects, searchQuery: $searchQuery, metadata: $metadata)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class $ReportListPageStateCopyWith<$Res>  {
-  factory $ReportListPageStateCopyWith(ReportListPageState value, $Res Function(ReportListPageState) _then) = _$ReportListPageStateCopyWithImpl;
+abstract mixin class $ProjectListStateCopyWith<$Res>  {
+  factory $ProjectListStateCopyWith(ProjectListState value, $Res Function(ProjectListState) _then) = _$ProjectListStateCopyWithImpl;
 @useResult
 $Res call({
- List<Report> reports, String searchQuery, PaginatedMetadata metadata
+ List<ProjectShallow> projects, String searchQuery, PaginatedMetadata metadata
 });
 
 
@@ -53,19 +53,19 @@ $Res call({
 
 }
 /// @nodoc
-class _$ReportListPageStateCopyWithImpl<$Res>
-    implements $ReportListPageStateCopyWith<$Res> {
-  _$ReportListPageStateCopyWithImpl(this._self, this._then);
+class _$ProjectListStateCopyWithImpl<$Res>
+    implements $ProjectListStateCopyWith<$Res> {
+  _$ProjectListStateCopyWithImpl(this._self, this._then);
 
-  final ReportListPageState _self;
-  final $Res Function(ReportListPageState) _then;
+  final ProjectListState _self;
+  final $Res Function(ProjectListState) _then;
 
-/// Create a copy of ReportListPageState
+/// Create a copy of ProjectListState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? reports = null,Object? searchQuery = null,Object? metadata = null,}) {
-  return _then(ReportListPageState(
-reports: null == reports ? _self.reports : reports // ignore: cast_nullable_to_non_nullable
-as List<Report>,searchQuery: null == searchQuery ? _self.searchQuery : searchQuery // ignore: cast_nullable_to_non_nullable
+@pragma('vm:prefer-inline') @override $Res call({Object? projects = null,Object? searchQuery = null,Object? metadata = null,}) {
+  return _then(ProjectListState(
+projects: null == projects ? _self.projects : projects // ignore: cast_nullable_to_non_nullable
+as List<ProjectShallow>,searchQuery: null == searchQuery ? _self.searchQuery : searchQuery // ignore: cast_nullable_to_non_nullable
 as String,metadata: null == metadata ? _self.metadata : metadata // ignore: cast_nullable_to_non_nullable
 as PaginatedMetadata,
   ));
@@ -74,8 +74,8 @@ as PaginatedMetadata,
 }
 
 
-/// Adds pattern-matching-related methods to [ReportListPageState].
-extension ReportListPageStatePatterns on ReportListPageState {
+/// Adds pattern-matching-related methods to [ProjectListState].
+extension ProjectListStatePatterns on ProjectListState {
 /// A variant of `map` that fallback to returning `orElse`.
 ///
 /// It is equivalent to doing:

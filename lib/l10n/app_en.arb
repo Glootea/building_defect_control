@@ -31,5 +31,11 @@
     "listView": "List View",
     "gridView": "Grid View",
     "createNew": "New",
-    "defects": "Defects"
+    "defects": "Defects",
+    "badRequest": "Bad request",
+    "unauthorized": "Unauthorized",
+    "forbidden": "Forbidden",
+    "notFound": "Not found",
+    "internalServerError": "Internal server error",
+    "unknownError": "Unknown error occurred"
 }

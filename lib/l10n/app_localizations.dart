@@ -289,6 +289,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Defects'**
   String get defects;
+
+  /// No description provided for @badRequest.
+  ///
+  /// In en, this message translates to:
+  /// **'Bad request'**
+  String get badRequest;
+
+  /// No description provided for @unauthorized.
+  ///
+  /// In en, this message translates to:
+  /// **'Unauthorized'**
+  String get unauthorized;
+
+  /// No description provided for @forbidden.
+  ///
+  /// In en, this message translates to:
+  /// **'Forbidden'**
+  String get forbidden;
+
+  /// No description provided for @notFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Not found'**
+  String get notFound;
+
+  /// No description provided for @internalServerError.
+  ///
+  /// In en, this message translates to:
+  /// **'Internal server error'**
+  String get internalServerError;
+
+  /// No description provided for @unknownError.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown error occurred'**
+  String get unknownError;
 }
 
 class _AppLocalizationsDelegate

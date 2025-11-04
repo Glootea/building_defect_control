@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:control/data/provider/idata_provider.dart';
+import 'package:control/data/idata_provider.dart';
 import 'package:control/models/models.dart';
 import 'package:control/models/network/defect/create_defect.dart';
 import 'package:control/models/network/defect/get_defect_by_id.dart';
@@ -88,8 +88,9 @@ class TestingUserDataProvider implements IUserDataProvider {
   }
 
   @override
-  Future<(UserData, String)> loginUser(String email, String password) {
+  Future<(UserData, String)> loginUser(String email, String password) async {
     if (email == 'admin@admin.com' && password == 'admin') {
+      await _simulateDelay();
       return Future.value((
         UserData(
           firstName: 'Admin',
@@ -116,7 +117,7 @@ class TestingProjectDataProvider implements IProjectDataProvider {
     CreateProjectRequest request,
   ) async {
     final newId = Uuid().v7();
-    storage.projects.add(Project(id: newId, name: request.name, reports: []));
+    storage.projects.add(ProjectShallow(id: newId, name: request.name));
     await _simulateDelay();
     return Future.value(CreateProjectResponse(id: newId));
   }
@@ -151,7 +152,7 @@ class TestingProjectDataProvider implements IProjectDataProvider {
       final totalPages = (totalCount / pageSize).ceil();
       return Future.value(
         GetProjectsResponse(
-          data: pagedProjects
+          projects: pagedProjects
               .map(
                 (project) => ProjectShallow(id: project.id, name: project.name),
               )
@@ -179,7 +180,7 @@ class TestingProjectDataProvider implements IProjectDataProvider {
         .toList();
     return Future.value(
       GetProjectsResponse(
-        data: projects,
+        projects: projects,
         metadata: PaginatedMetadata(
           currentPage: 1,
           pageSize: projects.length,
@@ -414,20 +415,17 @@ class TestingDefectDataProvider implements IDefectDataProvider {
 
 class TestingDataStorage {
   late final _projectId = Uuid().v7();
-  late final List<Project> projects = [
-    Project(id: _projectId, name: 'Sample Project', reports: [...reports]),
-    Project(id: Uuid().v7(), name: 'Sample Project 2', reports: [...reports]),
-    Project(id: Uuid().v7(), name: 'Sample Project 3', reports: [...reports]),
-    Project(id: Uuid().v7(), name: 'Sample Project 4', reports: [...reports]),
+  late final List<ProjectShallow> projects = [
+    ProjectShallow(id: _projectId, name: 'Sample Project'),
+    ProjectShallow(id: Uuid().v7(), name: 'Sample Project 2'),
+    ProjectShallow(id: Uuid().v7(), name: 'Sample Project 3'),
+    ProjectShallow(id: Uuid().v7(), name: 'Sample Project 4'),
   ];
 
-  late final List<Project> generatedProjects = List.generate(
+  late final List<ProjectShallow> generatedProjects = List.generate(
     100,
-    (index) => Project(
-      id: Uuid().v7(),
-      name: 'Generated Project ${index + 1}',
-      reports: [...reports],
-    ),
+    (index) =>
+        ProjectShallow(id: Uuid().v7(), name: 'Generated Project ${index + 1}'),
   );
 
   late final List<Report> generatedReports = List.generate(

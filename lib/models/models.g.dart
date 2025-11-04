@@ -20,20 +20,6 @@ ProjectShallow _$ProjectShallowFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$ProjectShallowToJson(ProjectShallow instance) =>
     <String, dynamic>{'id': instance.id, 'name': instance.name};
 
-Project _$ProjectFromJson(Map<String, dynamic> json) => Project(
-  id: json['id'] as String,
-  name: json['name'] as String,
-  reports: (json['reports'] as List<dynamic>)
-      .map((e) => Report.fromJson(e as Map<String, dynamic>))
-      .toList(),
-);
-
-Map<String, dynamic> _$ProjectToJson(Project instance) => <String, dynamic>{
-  'id': instance.id,
-  'name': instance.name,
-  'reports': instance.reports,
-};
-
 Report _$ReportFromJson(Map<String, dynamic> json) => Report(
   id: json['id'] as String,
   name: json['name'] as String,

@@ -1,10 +1,11 @@
-import 'package:control/data/provider/data_provider.dart';
-import 'package:control/data/provider/idata_provider.dart';
-import 'package:control/domain/network.dart';
-import 'package:control/data/provider/testing_data_provider.dart';
-import 'package:control/domain/user_cache.dart';
+import 'package:control/data/data_provider.dart';
+import 'package:control/data/idata_provider.dart';
+import 'package:control/domain/network/network.dart';
+import 'package:control/data/testing_data_provider.dart';
+import 'package:control/domain/user/user_cache.dart';
 import 'package:control/navigation/guard.dart';
 import 'package:control/utils/resizable_row_builder.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -102,3 +103,7 @@ ResizableRowStorage resizableRowStorage(Ref ref, String id) {
 ControlNavigatorObserver navigatorStackObserver(Ref ref) {
   return ControlNavigatorObserver();
 }
+
+final projectListUpdaterProvider = Provider.autoDispose((_) => DateTime.now());
+final reportListUpdaterProvider = Provider.autoDispose((_) => DateTime.now());
+final defectListUpdaterProvider = Provider.autoDispose((_) => DateTime.now());

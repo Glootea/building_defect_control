@@ -3,7 +3,7 @@ import 'dart:collection';
 import 'dart:developer';
 
 import 'package:control/di/di.dart';
-import 'package:control/domain/user.dart';
+import 'package:control/domain/user/user.dart';
 import 'package:control/navigation/routes.dart';
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';

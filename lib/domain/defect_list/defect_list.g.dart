@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'report_details_screen.dart';
+part of 'defect_list.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -50,7 +50,7 @@ final class DefectListScreenProvider
   }
 }
 
-String _$defectListScreenHash() => r'886ec1d659cf7379cf045a5d154666da94c68348';
+String _$defectListScreenHash() => r'56297da5b6ee64e54efc1e635fcbbb8f55f66318';
 
 final class DefectListScreenFamily extends $Family
     with
