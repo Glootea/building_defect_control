@@ -7,9 +7,11 @@ import 'package:control/models/network/defect/patch_defect_by_id.dart';
 import 'package:control/models/network/project/create_project.dart';
 import 'package:control/models/network/project/get_project_by_id.dart';
 import 'package:control/models/network/project/get_projects.dart';
+import 'package:control/models/network/project/patch_project.dart';
 import 'package:control/models/network/report/create_report.dart';
 import 'package:control/models/network/report/get_report_by_id.dart';
 import 'package:control/models/network/report/get_reports_by_project_id.dart';
+import 'package:control/models/network/report/patch_report.dart';
 import 'package:control/models/network/user/create_user.dart';
 import 'package:control/models/network/user/login_user.dart';
 import 'package:control/models/user.dart';
@@ -102,6 +104,19 @@ class ProjectDataProvider implements IProjectDataProvider {
     final data = GetProjectsResponse.fromJson(response.data);
     return data;
   }
+
+  @override
+  Future<PatchProjectResponse> patchProject(PatchProjectRequest request) {
+    final projectId = request.projectId;
+    return dio
+        .patch('api/projects/$projectId', data: request.toJson())
+        .then((response) => PatchProjectResponse.fromJson(response.data));
+  }
+
+  @override
+  Future<void> deleteProject(String projectId) {
+    return dio.delete('api/projects/$projectId');
+  }
 }
 
 class ReportDataProvider implements IReportDataProvider {
@@ -135,6 +150,25 @@ class ReportDataProvider implements IReportDataProvider {
       queryParameters: request.queryParams,
     );
     return GetReportsByProjectIdResponse.fromJson(response.data);
+  }
+
+  @override
+  Future<PatchReportResponse> patchReport(PatchReportRequest request) {
+    final reportId = request.reportId;
+    return dio
+        .patch(
+          'api/projects/$projectId/reports/$reportId',
+          data: request.toJson(),
+        )
+        .then((response) => PatchReportResponse.fromJson(response.data));
+  }
+
+  @override
+  Future<void> deleteReport({
+    required String reportId,
+    required String projectId,
+  }) {
+    return dio.delete('api/projects/$projectId/reports/$reportId');
   }
 }
 
@@ -174,7 +208,7 @@ class DefectDataProvider implements IDefectDataProvider {
   }
 
   @override
-  Future<PatchDefectByIdResponse> patchDefectById(
+  Future<PatchDefectByIdResponse> patchDefect(
     PatchDefectByIdRequest request,
   ) async {
     final reportId = request.reportId;
@@ -184,5 +218,13 @@ class DefectDataProvider implements IDefectDataProvider {
       data: request.toJson(),
     );
     return PatchDefectByIdResponse.fromJson(response.data);
+  }
+
+  @override
+  Future<void> deleteDefect({
+    required String defectId,
+    required String reportId,
+  }) async {
+    await dio.delete('api/reports/$reportId/defects/$defectId');
   }
 }

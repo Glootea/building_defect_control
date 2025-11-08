@@ -1,12 +1,14 @@
+import 'package:control/di/di.dart';
 import 'package:control/domain/project_list/project_list.dart';
 import 'package:control/domain/project_list/project_list.state.dart';
 import 'package:control/domain/user/user.dart';
 import 'package:control/models/models.dart';
 import 'package:control/navigation/routes.dart';
+import 'package:control/query/query.dart';
+import 'package:control/query/query_mapper.dart';
 import 'package:control/utils/breadcrums.dart';
 import 'package:control/utils/context_extentions.dart';
 import 'package:control/utils/paginated_grid.dart';
-import 'package:control/utils/resizable_row_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -67,11 +69,22 @@ class _ProjectListScreenState extends ConsumerState<ProjectListScreen> {
             ).push(context),
             onCreateNewItem: () =>
                 _createNewProject(context, ref, currentPage, currentQuery),
-            filterOverlay: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [Text(context.translate.name), TextField()],
+            filterOverlay: QueryDialogBuilder(
+              queries: [
+                TextQuery(
+                  title: context.translate.name,
+                  onUpdate: (value) => (value != null)
+                      ? setState(() {
+                          currentQuery = value;
+                        })
+                      : null,
+                  value: currentQuery,
+                ),
+              ],
             ),
-            resizableRowStorage: InMemoryResizableRowStorage(),
+            resizableRowStorage: ref.watch(
+              resizableRowStorageProvider('projects'),
+            ),
           ),
         ],
       ),

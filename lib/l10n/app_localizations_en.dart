@@ -121,4 +121,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get unknownError => 'Unknown error occurred';
+
+  @override
+  String get filter => 'Filter';
+
+  @override
+  String get open => 'Open';
+
+  @override
+  String get inProgress => 'In Progress';
+
+  @override
+  String get resolved => 'Resolved';
+
+  @override
+  String get onReview => 'On Review';
+
+  @override
+  String get closed => 'Closed';
 }

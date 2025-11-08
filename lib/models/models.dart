@@ -54,20 +54,24 @@ class Report with _$Report {
 
 @JsonSerializable()
 @freezed
-class ReportAttachment with _$ReportAttachment {
-  const ReportAttachment({
+class DefectAttachment with _$DefectAttachment {
+  final String id;
+  final String defectId;
+  final int fileSize;
+  final String contentType;
+  final DateTime uploadDate;
+
+  const DefectAttachment({
     required this.id,
-    required this.reportId,
-    required this.dataFileLink,
+    required this.defectId,
+    required this.fileSize,
+    required this.contentType,
+    required this.uploadDate,
   });
 
-  factory ReportAttachment.fromJson(Map<String, Object?> json) =>
-      _$ReportAttachmentFromJson(json);
-  Map<String, dynamic> toJson() => _$ReportAttachmentToJson(this);
-
-  final String id;
-  final String reportId;
-  final String dataFileLink;
+  factory DefectAttachment.fromJson(Map<String, Object?> json) =>
+      _$DefectAttachmentFromJson(json);
+  Map<String, dynamic> toJson() => _$DefectAttachmentToJson(this);
 }
 
 @JsonSerializable()

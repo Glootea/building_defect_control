@@ -6,13 +6,17 @@ import 'package:control/models/network/defect/create_defect.dart';
 import 'package:control/models/network/defect/get_defect_by_id.dart';
 import 'package:control/models/network/defect/get_defects_by_report_id.dart';
 import 'package:control/models/network/defect/patch_defect_by_id.dart';
+import 'package:control/models/network/defect_attachments/create_defect_attachment.dart';
+import 'package:control/models/network/defect_attachments/get_defect_attachments.dart';
 import 'package:control/models/network/pagination/paginated_response.dart';
 import 'package:control/models/network/project/create_project.dart';
 import 'package:control/models/network/project/get_project_by_id.dart';
 import 'package:control/models/network/project/get_projects.dart';
+import 'package:control/models/network/project/patch_project.dart';
 import 'package:control/models/network/report/create_report.dart';
 import 'package:control/models/network/report/get_report_by_id.dart';
 import 'package:control/models/network/report/get_reports_by_project_id.dart';
+import 'package:control/models/network/report/patch_report.dart';
 import 'package:control/models/network/user/create_user.dart';
 import 'package:control/models/user.dart';
 import 'package:uuid/uuid.dart';
@@ -192,6 +196,25 @@ class TestingProjectDataProvider implements IProjectDataProvider {
       ),
     );
   }
+
+  @override
+  Future<void> deleteProject(String projectId) {
+    storage.projects.removeWhere((project) => project.id == projectId);
+    return _simulateDelay();
+  }
+
+  @override
+  Future<PatchProjectResponse> patchProject(PatchProjectRequest request) {
+    final storedElement = storage.projects.firstWhere(
+      (project) => project.id == request.projectId,
+    );
+    storage.projects.remove(storedElement);
+    final updatedElement = storedElement.copyWith(name: request.name);
+    storage.projects.add(updatedElement);
+    return Future.value(
+      PatchProjectResponse(id: updatedElement.id, name: updatedElement.name),
+    );
+  }
 }
 
 class TestingReportDataProvider implements IReportDataProvider {
@@ -284,6 +307,37 @@ class TestingReportDataProvider implements IReportDataProvider {
           hasPrevious: false,
           hasNext: false,
         ),
+      ),
+    );
+  }
+
+  @override
+  Future<void> deleteReport({
+    required String reportId,
+    required String projectId,
+  }) {
+    storage.reports.removeWhere((report) => report.id == reportId);
+    return _simulateDelay();
+  }
+
+  @override
+  Future<PatchReportResponse> patchReport(PatchReportRequest request) {
+    final storedElement = storage.reports.firstWhere(
+      (report) => report.id == request.reportId,
+    );
+    storage.reports.remove(storedElement);
+    final updatedElement = storedElement.copyWith(
+      name: request.name,
+      description: request.description,
+    );
+    storage.reports.add(updatedElement);
+    return Future.value(
+      PatchReportResponse(
+        id: updatedElement.id,
+        projectId: projectId,
+        name: updatedElement.name,
+        description: updatedElement.description,
+        submissionDate: updatedElement.submissionDate,
       ),
     );
   }
@@ -387,9 +441,7 @@ class TestingDefectDataProvider implements IDefectDataProvider {
   }
 
   @override
-  Future<PatchDefectByIdResponse> patchDefectById(
-    PatchDefectByIdRequest request,
-  ) {
+  Future<PatchDefectByIdResponse> patchDefect(PatchDefectByIdRequest request) {
     final storedElement = storage.defects.firstWhere(
       (defect) => defect.id == request.defectId,
     );
@@ -408,6 +460,62 @@ class TestingDefectDataProvider implements IDefectDataProvider {
         description: updatedElement.description,
         clazz: updatedElement.classification,
         status: updatedElement.status,
+      ),
+    );
+  }
+
+  @override
+  Future<void> deleteDefect({
+    required String defectId,
+    required String reportId,
+  }) {
+    storage.defects.removeWhere((defect) => defect.id == defectId);
+    return _simulateDelay();
+  }
+}
+
+class TestingDefectAttachmentDataProvider implements IDefectAttachmentProvider {
+  final TestingDataStorage storage;
+  @override
+  final String defectId;
+
+  const TestingDefectAttachmentDataProvider(this.storage, this.defectId);
+
+  @override
+  Future<CreateDefectAttachmentResponse> uploadDefectAttachment(
+    CreateDefectAttachmentRequest request,
+  ) {
+    return Future.value(
+      CreateDefectAttachmentResponse(
+        fileName: 'fileName${storage.attachments.length + 1}.ext',
+      ),
+    );
+  }
+
+  @override
+  Future<void> deleteDefectAttachment(String attachmentId) {
+    // storage.attachments.removeWhere((attachment) => attachment.id == attachmentId); TODO: fix on backend
+    return _simulateDelay();
+  }
+
+  @override
+  Future<GetDefectAttachmentsResponse> getDefectAttachments(
+    GetDefectAttachementsRequest request,
+  ) {
+    final attachments = storage.attachments
+        .where((attachment) => attachment.defectId == defectId)
+        .toList();
+    return Future.value(
+      GetDefectAttachmentsResponse(
+        data: attachments,
+        metadata: PaginatedMetadata(
+          currentPage: 1,
+          pageSize: attachments.length,
+          totalCount: attachments.length,
+          totalPages: 1,
+          hasPrevious: false,
+          hasNext: false,
+        ),
       ),
     );
   }
@@ -499,4 +607,6 @@ class TestingDataStorage {
     'Alice Johnson',
     'Bob Brown',
   ];
+
+  late final List<DefectAttachment> attachments = [];
 }

@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:control/di/di.dart';
 import 'package:control/models/network/pagination/paginated_response.dart';
 import 'package:control/models/network/pagination/pagination_query_params.dart';
 import 'package:control/utils/context_extentions.dart';
@@ -22,6 +23,7 @@ class PaginatedGrid<PaginatedValueType extends PaginatedResponse, ValueDataType>
   /// Has width of 300
   final Widget filterOverlay;
   final SliverGridDelegate gridDelegate;
+  // TODO: onDelete with delete button
 
   const PaginatedGrid({
     super.key,
@@ -185,13 +187,16 @@ class _ListLayout<ValueDataType> extends StatelessWidget {
           child: Divider(indent: 16, endIndent: 16),
           builder: (context, ref, child) {
             return SliverList.separated(
-              separatorBuilder: (context, index) => child,
+              findChildIndexCallback: (key) =>
+                  key is ValueKey<String> ? int.tryParse(key.value) : null,
+              separatorBuilder: (context, index) =>
+                  Divider(indent: 16, endIndent: 16),
               itemBuilder: (context, index) {
                 if (index == 0) {
                   return ResizableRowBuilder(
-                    key: ValueKey(title + index.toString()),
+                    key: ValueKey(index.toString()),
                     id: title,
-                    storage: InMemoryResizableRowStorage(),
+                    storage: ref.watch(resizableRowStorageProvider(title)),
                     onTap: null,
                     listenables: listenables,
                     children: columns
@@ -214,9 +219,9 @@ class _ListLayout<ValueDataType> extends StatelessWidget {
                   index: index - 1,
 
                   builder: (data) => ResizableRowBuilder(
-                    key: ValueKey(title + index.toString()),
+                    key: ValueKey(index.toString()),
                     id: title,
-                    storage: InMemoryResizableRowStorage(),
+                    storage: resizableRowStorage,
                     onTap: () => onClick(data),
                     listenables: listenables,
                     children: tableRowBuilder(data),

@@ -1,8 +1,11 @@
 import 'package:control/di/di.dart';
 import 'package:control/domain/report_list/report_list.dart';
 import 'package:control/domain/report_list/report_list.state.dart';
+import 'package:control/domain/report_list/report_list_query.dart';
 import 'package:control/models/models.dart';
 import 'package:control/navigation/routes.dart';
+import 'package:control/query/query.dart';
+import 'package:control/query/query_mapper.dart';
 import 'package:control/utils/breadcrums.dart';
 import 'package:control/utils/context_extentions.dart';
 import 'package:control/utils/datetime_formatter.dart';
@@ -26,16 +29,13 @@ class ReportListScreen extends ConsumerStatefulWidget {
 
 class _ProjectListScreenState extends ConsumerState<ReportListScreen> {
   int currentPage = 1;
-
-  final TextEditingController searchController = TextEditingController(
-    text: '',
+  ReportListQueryState queryState = ReportListQueryState(
+    name: '',
+    description: '',
   );
-
-  @override
-  void dispose() {
-    searchController.dispose();
-    super.dispose();
-  }
+  void updateQueryState(
+    ReportListQueryState Function(ReportListQueryState oldState) update,
+  ) => setState(() => queryState = update(queryState));
 
   @override
   Widget build(BuildContext context) {
@@ -49,11 +49,7 @@ class _ProjectListScreenState extends ConsumerState<ReportListScreen> {
             dataFetcher: (ref, page) {
               currentPage = page;
               return ref.watch(
-                reportListProvider(
-                  widget.projectId,
-                  page,
-                  searchController.value.text,
-                ),
+                reportListProvider(widget.projectId, page, queryState),
               );
             },
             columns: [
@@ -83,18 +79,24 @@ class _ProjectListScreenState extends ConsumerState<ReportListScreen> {
               ref,
               widget.projectId,
               currentPage,
-              searchController.value.text,
+              queryState,
             ),
 
-            filterOverlay: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(context.translate.name),
-                TextField(
-                  controller: searchController,
-                  onChanged: (value) {
-                    setState(() {});
-                  },
+            filterOverlay: QueryDialogBuilder(
+              queries: [
+                TextQuery(
+                  title: context.translate.name,
+                  value: queryState.name,
+                  onUpdate: (value) => updateQueryState(
+                    (oldState) => oldState.copyWith(name: value),
+                  ),
+                ),
+                TextQuery(
+                  title: context.translate.description,
+                  value: queryState.description,
+                  onUpdate: (value) => updateQueryState(
+                    (oldState) => oldState.copyWith(description: value),
+                  ),
                 ),
               ],
             ),
@@ -112,7 +114,7 @@ class _ProjectListScreenState extends ConsumerState<ReportListScreen> {
     WidgetRef ref,
     String projectId,
     int page,
-    String currentQuery,
+    ReportListQueryState queryState,
   ) async {
     await showDialog(
       context: context,
@@ -121,7 +123,7 @@ class _ProjectListScreenState extends ConsumerState<ReportListScreen> {
           if (name == null || description == null) return;
 
           final createdReportId = await ref
-              .watch(reportListProvider(projectId, page, currentQuery).notifier)
+              .watch(reportListProvider(projectId, page, queryState).notifier)
               .createReport(name, description);
 
           if (!context.mounted || createdReportId == null) return;

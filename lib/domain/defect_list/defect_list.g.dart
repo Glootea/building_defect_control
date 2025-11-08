@@ -16,7 +16,8 @@ final class DefectListScreenProvider
     extends $AsyncNotifierProvider<DefectListScreen, DefectListPageState> {
   const DefectListScreenProvider._({
     required DefectListScreenFamily super.from,
-    required ({int page, String query, String reportId}) super.argument,
+    required ({int page, ReportListQueryState query, String reportId})
+    super.argument,
   }) : super(
          retry: null,
          name: r'defectListScreenProvider',
@@ -50,7 +51,7 @@ final class DefectListScreenProvider
   }
 }
 
-String _$defectListScreenHash() => r'56297da5b6ee64e54efc1e635fcbbb8f55f66318';
+String _$defectListScreenHash() => r'09f0156dab6266a0af4b25c56c5c7521be21b236';
 
 final class DefectListScreenFamily extends $Family
     with
@@ -59,7 +60,7 @@ final class DefectListScreenFamily extends $Family
           AsyncValue<DefectListPageState>,
           DefectListPageState,
           FutureOr<DefectListPageState>,
-          ({int page, String query, String reportId})
+          ({int page, ReportListQueryState query, String reportId})
         > {
   const DefectListScreenFamily._()
     : super(
@@ -72,7 +73,7 @@ final class DefectListScreenFamily extends $Family
 
   DefectListScreenProvider call({
     required int page,
-    required String query,
+    required ReportListQueryState query,
     required String reportId,
   }) => DefectListScreenProvider._(
     argument: (page: page, query: query, reportId: reportId),
@@ -84,14 +85,15 @@ final class DefectListScreenFamily extends $Family
 }
 
 abstract class _$DefectListScreen extends $AsyncNotifier<DefectListPageState> {
-  late final _$args = ref.$arg as ({int page, String query, String reportId});
+  late final _$args =
+      ref.$arg as ({int page, ReportListQueryState query, String reportId});
   int get page => _$args.page;
-  String get query => _$args.query;
+  ReportListQueryState get query => _$args.query;
   String get reportId => _$args.reportId;
 
   FutureOr<DefectListPageState> build({
     required int page,
-    required String query,
+    required ReportListQueryState query,
     required String reportId,
   });
   @$mustCallSuper

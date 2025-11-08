@@ -576,40 +576,40 @@ case _:
 
 
 /// @nodoc
-mixin _$ReportAttachment {
+mixin _$DefectAttachment {
 
- String get id; String get reportId; String get dataFileLink;
-/// Create a copy of ReportAttachment
+ String get id; String get defectId; int get fileSize; String get contentType; DateTime get uploadDate;
+/// Create a copy of DefectAttachment
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-$ReportAttachmentCopyWith<ReportAttachment> get copyWith => _$ReportAttachmentCopyWithImpl<ReportAttachment>(this as ReportAttachment, _$identity);
+$DefectAttachmentCopyWith<DefectAttachment> get copyWith => _$DefectAttachmentCopyWithImpl<DefectAttachment>(this as DefectAttachment, _$identity);
 
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ReportAttachment&&(identical(other.id, id) || other.id == id)&&(identical(other.reportId, reportId) || other.reportId == reportId)&&(identical(other.dataFileLink, dataFileLink) || other.dataFileLink == dataFileLink));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DefectAttachment&&(identical(other.id, id) || other.id == id)&&(identical(other.defectId, defectId) || other.defectId == defectId)&&(identical(other.fileSize, fileSize) || other.fileSize == fileSize)&&(identical(other.contentType, contentType) || other.contentType == contentType)&&(identical(other.uploadDate, uploadDate) || other.uploadDate == uploadDate));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,reportId,dataFileLink);
+int get hashCode => Object.hash(runtimeType,id,defectId,fileSize,contentType,uploadDate);
 
 @override
 String toString() {
-  return 'ReportAttachment(id: $id, reportId: $reportId, dataFileLink: $dataFileLink)';
+  return 'DefectAttachment(id: $id, defectId: $defectId, fileSize: $fileSize, contentType: $contentType, uploadDate: $uploadDate)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class $ReportAttachmentCopyWith<$Res>  {
-  factory $ReportAttachmentCopyWith(ReportAttachment value, $Res Function(ReportAttachment) _then) = _$ReportAttachmentCopyWithImpl;
+abstract mixin class $DefectAttachmentCopyWith<$Res>  {
+  factory $DefectAttachmentCopyWith(DefectAttachment value, $Res Function(DefectAttachment) _then) = _$DefectAttachmentCopyWithImpl;
 @useResult
 $Res call({
- String id, String reportId, String dataFileLink
+ String id, String defectId, int fileSize, String contentType, DateTime uploadDate
 });
 
 
@@ -617,29 +617,31 @@ $Res call({
 
 }
 /// @nodoc
-class _$ReportAttachmentCopyWithImpl<$Res>
-    implements $ReportAttachmentCopyWith<$Res> {
-  _$ReportAttachmentCopyWithImpl(this._self, this._then);
+class _$DefectAttachmentCopyWithImpl<$Res>
+    implements $DefectAttachmentCopyWith<$Res> {
+  _$DefectAttachmentCopyWithImpl(this._self, this._then);
 
-  final ReportAttachment _self;
-  final $Res Function(ReportAttachment) _then;
+  final DefectAttachment _self;
+  final $Res Function(DefectAttachment) _then;
 
-/// Create a copy of ReportAttachment
+/// Create a copy of DefectAttachment
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? reportId = null,Object? dataFileLink = null,}) {
-  return _then(ReportAttachment(
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? defectId = null,Object? fileSize = null,Object? contentType = null,Object? uploadDate = null,}) {
+  return _then(DefectAttachment(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as String,reportId: null == reportId ? _self.reportId : reportId // ignore: cast_nullable_to_non_nullable
-as String,dataFileLink: null == dataFileLink ? _self.dataFileLink : dataFileLink // ignore: cast_nullable_to_non_nullable
-as String,
+as String,defectId: null == defectId ? _self.defectId : defectId // ignore: cast_nullable_to_non_nullable
+as String,fileSize: null == fileSize ? _self.fileSize : fileSize // ignore: cast_nullable_to_non_nullable
+as int,contentType: null == contentType ? _self.contentType : contentType // ignore: cast_nullable_to_non_nullable
+as String,uploadDate: null == uploadDate ? _self.uploadDate : uploadDate // ignore: cast_nullable_to_non_nullable
+as DateTime,
   ));
 }
 
 }
 
 
-/// Adds pattern-matching-related methods to [ReportAttachment].
-extension ReportAttachmentPatterns on ReportAttachment {
+/// Adds pattern-matching-related methods to [DefectAttachment].
+extension DefectAttachmentPatterns on DefectAttachment {
 /// A variant of `map` that fallback to returning `orElse`.
 ///
 /// It is equivalent to doing:

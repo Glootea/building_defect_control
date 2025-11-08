@@ -30,7 +30,7 @@ class DefectDetails extends _$DefectDetails {
       classification: defect.classification,
       status: defect.status,
     );
-    await dataProvider.patchDefectById(request);
+    await dataProvider.patchDefect(request);
     ref.invalidate(defectListUpdaterProvider);
   }
 }

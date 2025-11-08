@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$DefectListPageState {
 
- List<Defect> get defects; String get searchQuery; PaginatedMetadata get metadata;
+ List<Defect> get defects; PaginatedMetadata get metadata;
 /// Create a copy of DefectListPageState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $DefectListPageStateCopyWith<DefectListPageState> get copyWith => _$DefectListPa
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is DefectListPageState&&const DeepCollectionEquality().equals(other.defects, defects)&&(identical(other.searchQuery, searchQuery) || other.searchQuery == searchQuery)&&(identical(other.metadata, metadata) || other.metadata == metadata));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DefectListPageState&&const DeepCollectionEquality().equals(other.defects, defects)&&(identical(other.metadata, metadata) || other.metadata == metadata));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(defects),searchQuery,metadata);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(defects),metadata);
 
 @override
 String toString() {
-  return 'DefectListPageState(defects: $defects, searchQuery: $searchQuery, metadata: $metadata)';
+  return 'DefectListPageState(defects: $defects, metadata: $metadata)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $DefectListPageStateCopyWith<$Res>  {
   factory $DefectListPageStateCopyWith(DefectListPageState value, $Res Function(DefectListPageState) _then) = _$DefectListPageStateCopyWithImpl;
 @useResult
 $Res call({
- List<Defect> defects, String searchQuery, PaginatedMetadata metadata
+ List<Defect> defects, PaginatedMetadata metadata
 });
 
 
@@ -62,11 +62,10 @@ class _$DefectListPageStateCopyWithImpl<$Res>
 
 /// Create a copy of DefectListPageState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? defects = null,Object? searchQuery = null,Object? metadata = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? defects = null,Object? metadata = null,}) {
   return _then(DefectListPageState(
 defects: null == defects ? _self.defects : defects // ignore: cast_nullable_to_non_nullable
-as List<Defect>,searchQuery: null == searchQuery ? _self.searchQuery : searchQuery // ignore: cast_nullable_to_non_nullable
-as String,metadata: null == metadata ? _self.metadata : metadata // ignore: cast_nullable_to_non_nullable
+as List<Defect>,metadata: null == metadata ? _self.metadata : metadata // ignore: cast_nullable_to_non_nullable
 as PaginatedMetadata,
   ));
 }

@@ -325,6 +325,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Unknown error occurred'**
   String get unknownError;
+
+  /// No description provided for @filter.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter'**
+  String get filter;
+
+  /// No description provided for @open.
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get open;
+
+  /// No description provided for @inProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'In Progress'**
+  String get inProgress;
+
+  /// No description provided for @resolved.
+  ///
+  /// In en, this message translates to:
+  /// **'Resolved'**
+  String get resolved;
+
+  /// No description provided for @onReview.
+  ///
+  /// In en, this message translates to:
+  /// **'On Review'**
+  String get onReview;
+
+  /// No description provided for @closed.
+  ///
+  /// In en, this message translates to:
+  /// **'Closed'**
+  String get closed;
 }
 
 class _AppLocalizationsDelegate

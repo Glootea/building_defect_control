@@ -1,6 +1,7 @@
 import 'package:control/l10n/app_localizations.dart';
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
+import 'package:uuid/uuid.dart';
 
 extension Translation on BuildContext {
   AppLocalizations get translate => AppLocalizations.of(this)!;
@@ -16,4 +17,8 @@ extension Translation on BuildContext {
     }
     delegate.setNewRoutePath(config);
   }
+}
+
+extension UuidX on Uuid {
+  String generate() => v7();
 }

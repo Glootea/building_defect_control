@@ -121,4 +121,22 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get unknownError => 'Произошла неизвестная ошибка';
+
+  @override
+  String get filter => 'Фильтр';
+
+  @override
+  String get open => 'Открыто';
+
+  @override
+  String get inProgress => 'В работе';
+
+  @override
+  String get resolved => 'Решено';
+
+  @override
+  String get onReview => 'На проверке';
+
+  @override
+  String get closed => 'Закрыто';
 }

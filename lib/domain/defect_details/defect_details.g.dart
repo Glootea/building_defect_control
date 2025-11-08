@@ -50,7 +50,7 @@ final class DefectDetailsProvider
   }
 }
 
-String _$defectDetailsHash() => r'ad7ac9160aa8707bae5b03c5b28818f7414aa13c';
+String _$defectDetailsHash() => r'463282d9b42915c6513e0d24b934cffb7f2b7e44';
 
 final class DefectDetailsFamily extends $Family
     with

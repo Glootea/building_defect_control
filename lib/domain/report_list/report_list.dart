@@ -1,5 +1,6 @@
 import 'package:control/di/di.dart';
 import 'package:control/domain/report_list/report_list.state.dart';
+import 'package:control/domain/report_list/report_list_query.dart';
 import 'package:control/models/network/pagination/pagination_query_params.dart';
 import 'package:control/models/network/report/create_report.dart';
 import 'package:control/models/network/report/get_reports_by_project_id.dart';
@@ -16,7 +17,7 @@ class ReportList extends _$ReportList {
   Future<ReportListState> build(
     String projectId,
     int page,
-    String query,
+    ReportListQueryState query,
   ) async {
     _listenToItemUpdate(ref);
     final lastState = state;
@@ -24,7 +25,8 @@ class ReportList extends _$ReportList {
     final request = GetReportsByProjectIdRequest(
       pagination: PaginationQueryParams(pageNumber: page),
       projectId: projectId,
-      name: query,
+      name: query.name,
+      description: query.description,
     );
     final response = await reportsDataProvider.getReportByProjectId(request);
     return ReportListState(

@@ -3,15 +3,18 @@ import 'package:control/models/network/defect/create_defect.dart';
 import 'package:control/models/network/defect/get_defect_by_id.dart';
 import 'package:control/models/network/defect/get_defects_by_report_id.dart';
 import 'package:control/models/network/defect/patch_defect_by_id.dart';
+import 'package:control/models/network/defect_attachments/create_defect_attachment.dart';
+import 'package:control/models/network/defect_attachments/get_defect_attachments.dart';
 import 'package:control/models/network/project/create_project.dart';
 import 'package:control/models/network/project/get_project_by_id.dart';
 import 'package:control/models/network/project/get_projects.dart';
+import 'package:control/models/network/project/patch_project.dart';
 import 'package:control/models/network/report/create_report.dart';
 import 'package:control/models/network/report/get_report_by_id.dart';
 import 'package:control/models/network/report/get_reports_by_project_id.dart';
+import 'package:control/models/network/report/patch_report.dart';
 import 'package:control/models/network/user/create_user.dart';
 import 'package:control/models/user.dart';
-import 'package:uuid/uuid.dart';
 
 // TODO: separate into separate providers for features (projects, defects, etc)
 @Deprecated("Use feature-specific data providers instead")
@@ -32,6 +35,8 @@ abstract class IProjectDataProvider {
   Future<CreateProjectResponse> createProject(CreateProjectRequest request);
   Future<GetProjectByIdResponse> getProjectById(String projectId);
   Future<GetProjectsResponse> getProjects(GetProjectsRequest request);
+  Future<PatchProjectResponse> patchProject(PatchProjectRequest request);
+  Future<void> deleteProject(String projectId);
 }
 
 abstract class IReportDataProvider {
@@ -44,6 +49,11 @@ abstract class IReportDataProvider {
   Future<GetReportsByProjectIdResponse> getReportByProjectId(
     GetReportsByProjectIdRequest request,
   );
+  Future<PatchReportResponse> patchReport(PatchReportRequest request);
+  Future<void> deleteReport({
+    required String reportId,
+    required String projectId,
+  });
 }
 
 abstract class IDefectDataProvider {
@@ -56,11 +66,23 @@ abstract class IDefectDataProvider {
   Future<GetDefectsByReportIdResponse> getDefectsByReportId(
     GetDefectsByReportIdRequest request,
   );
-  Future<PatchDefectByIdResponse> patchDefectById(
-    PatchDefectByIdRequest request,
-  );
+  Future<PatchDefectByIdResponse> patchDefect(PatchDefectByIdRequest request);
+  Future<void> deleteDefect({
+    required String defectId,
+    required String reportId,
+  });
 }
 
-extension UuidX on Uuid {
-  String generate() => v7();
+abstract class IDefectAttachmentProvider {
+  final String defectId;
+
+  const IDefectAttachmentProvider(this.defectId);
+
+  Future<CreateDefectAttachmentResponse> uploadDefectAttachment(
+    CreateDefectAttachmentRequest request,
+  );
+  Future<GetDefectAttachmentsResponse> getDefectAttachments(
+    GetDefectAttachementsRequest request,
+  );
+  Future<void> deleteDefectAttachment(String attachmentId);
 }

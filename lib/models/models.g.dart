@@ -34,18 +34,22 @@ Map<String, dynamic> _$ReportToJson(Report instance) => <String, dynamic>{
   'submissionDate': instance.submissionDate.toIso8601String(),
 };
 
-ReportAttachment _$ReportAttachmentFromJson(Map<String, dynamic> json) =>
-    ReportAttachment(
+DefectAttachment _$DefectAttachmentFromJson(Map<String, dynamic> json) =>
+    DefectAttachment(
       id: json['id'] as String,
-      reportId: json['reportId'] as String,
-      dataFileLink: json['dataFileLink'] as String,
+      defectId: json['defectId'] as String,
+      fileSize: (json['fileSize'] as num).toInt(),
+      contentType: json['contentType'] as String,
+      uploadDate: DateTime.parse(json['uploadDate'] as String),
     );
 
-Map<String, dynamic> _$ReportAttachmentToJson(ReportAttachment instance) =>
+Map<String, dynamic> _$DefectAttachmentToJson(DefectAttachment instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'reportId': instance.reportId,
-      'dataFileLink': instance.dataFileLink,
+      'defectId': instance.defectId,
+      'fileSize': instance.fileSize,
+      'contentType': instance.contentType,
+      'uploadDate': instance.uploadDate.toIso8601String(),
     };
 
 Defect _$DefectFromJson(Map<String, dynamic> json) => Defect(

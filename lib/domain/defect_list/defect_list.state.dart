@@ -7,16 +7,10 @@ part 'defect_list.state.freezed.dart';
 class DefectListPageState
     with _$DefectListPageState
     implements PaginatedResponse {
-  const DefectListPageState({
-    required this.defects,
-    required this.searchQuery,
-    required this.metadata,
-  });
+  const DefectListPageState({required this.defects, required this.metadata});
 
   @override
   final List<Defect> defects;
-  @override
-  final String searchQuery;
   @override
   final PaginatedMetadata metadata;
 
