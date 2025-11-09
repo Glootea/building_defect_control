@@ -578,7 +578,7 @@ case _:
 /// @nodoc
 mixin _$DefectAttachment {
 
- String get id; String get defectId; int get fileSize; String get contentType; DateTime get uploadDate;
+ String get id; String get defectId; String get fileName; int get fileSize; String get contentType; DateTime get uploadDate;
 /// Create a copy of DefectAttachment
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -589,16 +589,16 @@ $DefectAttachmentCopyWith<DefectAttachment> get copyWith => _$DefectAttachmentCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is DefectAttachment&&(identical(other.id, id) || other.id == id)&&(identical(other.defectId, defectId) || other.defectId == defectId)&&(identical(other.fileSize, fileSize) || other.fileSize == fileSize)&&(identical(other.contentType, contentType) || other.contentType == contentType)&&(identical(other.uploadDate, uploadDate) || other.uploadDate == uploadDate));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DefectAttachment&&(identical(other.id, id) || other.id == id)&&(identical(other.defectId, defectId) || other.defectId == defectId)&&(identical(other.fileName, fileName) || other.fileName == fileName)&&(identical(other.fileSize, fileSize) || other.fileSize == fileSize)&&(identical(other.contentType, contentType) || other.contentType == contentType)&&(identical(other.uploadDate, uploadDate) || other.uploadDate == uploadDate));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,defectId,fileSize,contentType,uploadDate);
+int get hashCode => Object.hash(runtimeType,id,defectId,fileName,fileSize,contentType,uploadDate);
 
 @override
 String toString() {
-  return 'DefectAttachment(id: $id, defectId: $defectId, fileSize: $fileSize, contentType: $contentType, uploadDate: $uploadDate)';
+  return 'DefectAttachment(id: $id, defectId: $defectId, fileName: $fileName, fileSize: $fileSize, contentType: $contentType, uploadDate: $uploadDate)';
 }
 
 
@@ -609,7 +609,7 @@ abstract mixin class $DefectAttachmentCopyWith<$Res>  {
   factory $DefectAttachmentCopyWith(DefectAttachment value, $Res Function(DefectAttachment) _then) = _$DefectAttachmentCopyWithImpl;
 @useResult
 $Res call({
- String id, String defectId, int fileSize, String contentType, DateTime uploadDate
+ String id, String defectId, int fileSize, String contentType, DateTime uploadDate, String fileName
 });
 
 
@@ -626,14 +626,15 @@ class _$DefectAttachmentCopyWithImpl<$Res>
 
 /// Create a copy of DefectAttachment
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? defectId = null,Object? fileSize = null,Object? contentType = null,Object? uploadDate = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? defectId = null,Object? fileSize = null,Object? contentType = null,Object? uploadDate = null,Object? fileName = null,}) {
   return _then(DefectAttachment(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,defectId: null == defectId ? _self.defectId : defectId // ignore: cast_nullable_to_non_nullable
 as String,fileSize: null == fileSize ? _self.fileSize : fileSize // ignore: cast_nullable_to_non_nullable
 as int,contentType: null == contentType ? _self.contentType : contentType // ignore: cast_nullable_to_non_nullable
 as String,uploadDate: null == uploadDate ? _self.uploadDate : uploadDate // ignore: cast_nullable_to_non_nullable
-as DateTime,
+as DateTime,fileName: null == fileName ? _self.fileName : fileName // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 

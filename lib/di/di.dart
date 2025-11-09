@@ -87,6 +87,23 @@ IDefectDataProvider defectDataProvider(Ref ref, String reportId) {
 }
 
 @riverpod
+IDefectAttachmentProvider defectAttachmentProvider(Ref ref, String defectId) {
+  final dio = ref.watch(dioClientProvider);
+  return DefectAttachmentProvider(dio: dio, defectId: defectId);
+}
+
+@Riverpod(keepAlive: true)
+IDefectAttachmentProvider testingDefectAttachmentProvider(
+  Ref ref,
+  String defectId,
+) {
+  return TestingDefectAttachmentDataProvider(
+    ref.watch(testingDataStorageProvider),
+    defectId,
+  );
+}
+
+@riverpod
 IDefectDataProvider testingDefectDataProvider(Ref ref, String reportId) {
   return TestingDefectDataProvider(
     ref.watch(testingDataStorageProvider),
@@ -118,3 +135,6 @@ final riverpodDebouncerProvider = Provider.autoDispose(
 final projectListUpdaterProvider = Provider.autoDispose((_) => DateTime.now());
 final reportListUpdaterProvider = Provider.autoDispose((_) => DateTime.now());
 final defectListUpdaterProvider = Provider.autoDispose((_) => DateTime.now());
+final defectAttachmentListUpdaterProvider = Provider.autoDispose(
+  (_) => DateTime.now(),
+);

@@ -46,6 +46,10 @@ class ControlApp extends StatelessWidget {
                 (ref, args) =>
                     ref.watch(testingDefectDataProviderProvider(args)),
               ),
+              defectAttachmentProviderProvider.overrideWith(
+                (ref, args) =>
+                    ref.watch(testingDefectAttachmentProviderProvider(args)),
+              ),
             ]
           : [],
       child: Consumer(

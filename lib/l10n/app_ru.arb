@@ -43,5 +43,8 @@
     "inProgress": "В работе",
     "resolved": "Решено",
     "onReview": "На проверке",
-    "closed": "Закрыто"
+    "closed": "Закрыто",
+    "defectAttachments": "Вложения дефекта",
+    "fileSize": "Размер файла",
+    "uploadDate": "Дата загрузки"
 }

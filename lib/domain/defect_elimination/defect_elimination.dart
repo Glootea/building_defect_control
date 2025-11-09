@@ -6,7 +6,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'defect_elimination.g.dart';
 
 @riverpod
-class DefectElimination extends _$DefectElimination {
+class DefectEliminationProvider extends _$DefectEliminationProvider {
   late final dataProvider = ref.read(dataProviderProvider);
 
   @override

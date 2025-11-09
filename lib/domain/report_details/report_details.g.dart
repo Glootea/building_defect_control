@@ -50,7 +50,7 @@ final class ReportDetailsProvider
   }
 }
 
-String _$reportDetailsHash() => r'13c9bb9db96bc429eefbe7550ae0d10c7bf482da';
+String _$reportDetailsHash() => r'e955bba1fc09d2fe0f1359b3b962837b8d5b434b';
 
 final class ReportDetailsFamily extends $Family
     with

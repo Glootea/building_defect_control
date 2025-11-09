@@ -9,40 +9,44 @@ part of 'defect_elimination.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(DefectElimination)
-const defectEliminationProvider = DefectEliminationFamily._();
+@ProviderFor(DefectEliminationProvider)
+const defectEliminationProviderProvider = DefectEliminationProviderFamily._();
 
-final class DefectEliminationProvider
+final class DefectEliminationProviderProvider
     extends
-        $AsyncNotifierProvider<DefectElimination, models.DefectElimination?> {
-  const DefectEliminationProvider._({
-    required DefectEliminationFamily super.from,
+        $AsyncNotifierProvider<
+          DefectEliminationProvider,
+          models.DefectElimination?
+        > {
+  const DefectEliminationProviderProvider._({
+    required DefectEliminationProviderFamily super.from,
     required String super.argument,
   }) : super(
          retry: null,
-         name: r'defectEliminationProvider',
+         name: r'defectEliminationProviderProvider',
          isAutoDispose: true,
          dependencies: null,
          $allTransitiveDependencies: null,
        );
 
   @override
-  String debugGetCreateSourceHash() => _$defectEliminationHash();
+  String debugGetCreateSourceHash() => _$defectEliminationProviderHash();
 
   @override
   String toString() {
-    return r'defectEliminationProvider'
+    return r'defectEliminationProviderProvider'
         ''
         '($argument)';
   }
 
   @$internal
   @override
-  DefectElimination create() => DefectElimination();
+  DefectEliminationProvider create() => DefectEliminationProvider();
 
   @override
   bool operator ==(Object other) {
-    return other is DefectEliminationProvider && other.argument == argument;
+    return other is DefectEliminationProviderProvider &&
+        other.argument == argument;
   }
 
   @override
@@ -51,34 +55,35 @@ final class DefectEliminationProvider
   }
 }
 
-String _$defectEliminationHash() => r'2ac3df59b70d0cdaad0a892465d79934e5ed24fc';
+String _$defectEliminationProviderHash() =>
+    r'3139a5586d42f14d61d353a6be2aac53dc0dbfc1';
 
-final class DefectEliminationFamily extends $Family
+final class DefectEliminationProviderFamily extends $Family
     with
         $ClassFamilyOverride<
-          DefectElimination,
+          DefectEliminationProvider,
           AsyncValue<models.DefectElimination?>,
           models.DefectElimination?,
           FutureOr<models.DefectElimination?>,
           String
         > {
-  const DefectEliminationFamily._()
+  const DefectEliminationProviderFamily._()
     : super(
         retry: null,
-        name: r'defectEliminationProvider',
+        name: r'defectEliminationProviderProvider',
         dependencies: null,
         $allTransitiveDependencies: null,
         isAutoDispose: true,
       );
 
-  DefectEliminationProvider call(String defectId) =>
-      DefectEliminationProvider._(argument: defectId, from: this);
+  DefectEliminationProviderProvider call(String defectId) =>
+      DefectEliminationProviderProvider._(argument: defectId, from: this);
 
   @override
-  String toString() => r'defectEliminationProvider';
+  String toString() => r'defectEliminationProviderProvider';
 }
 
-abstract class _$DefectElimination
+abstract class _$DefectEliminationProvider
     extends $AsyncNotifier<models.DefectElimination?> {
   late final _$args = ref.$arg as String;
   String get defectId => _$args;

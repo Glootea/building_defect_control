@@ -43,5 +43,8 @@
     "inProgress": "In Progress",
     "resolved": "Resolved",
     "onReview": "On Review",
-    "closed": "Closed"
+    "closed": "Closed",
+    "defectAttachments": "Defect Attachments",
+    "fileSize": "File Size",
+    "uploadDate": "Upload Date"
 }

@@ -4,7 +4,9 @@ import 'package:control/models/network/pagination/pagination_query_params.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 part 'get_defect_attachments.g.dart';
 
-class GetDefectAttachementsRequest extends PaginatedRequest {}
+class GetDefectAttachementsRequest extends PaginatedRequest {
+  GetDefectAttachementsRequest({required super.pagination});
+}
 
 class GetDefectAttachmentsQueryParams extends PaginationQueryParams {
   final String? sortBy;

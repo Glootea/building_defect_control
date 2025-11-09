@@ -15,6 +15,7 @@ import 'package:control/models/network/report/get_reports_by_project_id.dart';
 import 'package:control/models/network/report/patch_report.dart';
 import 'package:control/models/network/user/create_user.dart';
 import 'package:control/models/user.dart';
+import 'package:file_picker/file_picker.dart';
 
 // TODO: separate into separate providers for features (projects, defects, etc)
 @Deprecated("Use feature-specific data providers instead")
@@ -79,7 +80,7 @@ abstract class IDefectAttachmentProvider {
   const IDefectAttachmentProvider(this.defectId);
 
   Future<CreateDefectAttachmentResponse> uploadDefectAttachment(
-    CreateDefectAttachmentRequest request,
+    PlatformFile file,
   );
   Future<GetDefectAttachmentsResponse> getDefectAttachments(
     GetDefectAttachementsRequest request,

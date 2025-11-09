@@ -35,7 +35,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
     return Scaffold(
       body: RiverpodScreen(
         state: state,
-        child: (_) => Align(
+        builder: (_) => Align(
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 400),
             child: Form(

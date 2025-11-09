@@ -1,10 +1,16 @@
+import 'package:control/di/di.dart';
+import 'package:control/domain/defect_attachment_list/defect_attachment_list.dart';
+import 'package:control/domain/defect_attachment_list/defect_attachment_list.state.dart';
+import 'package:control/domain/defect_attachment_list/defect_attachment_list_query.dart';
 import 'package:control/domain/defect_details/defect_details.dart';
 import 'package:control/domain/defect_elimination/defect_elimination.dart';
-import 'package:control/models/models.dart' as models;
+import 'package:control/models/models.dart';
 import 'package:control/utils/breadcrums.dart';
 import 'package:control/utils/context_extentions.dart';
 import 'package:control/utils/datetime_formatter.dart';
+import 'package:control/utils/paginated_grid.dart';
 import 'package:control/utils/riverpod_screen.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -24,6 +30,10 @@ class DefectDetailsScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final padding = const EdgeInsets.all(16.0);
+    final defectAttachmentsPane = SliverPadding(
+      padding: padding,
+      sliver: DefectAttachmentList(defectId: defectId, key: GlobalKey()),
+    );
     final bodyContent = [
       SliverPadding(
         padding: padding,
@@ -43,12 +53,15 @@ class DefectDetailsScreen extends HookConsumerWidget {
       body: LayoutBuilder(
         builder: (context, constraints) {
           return (constraints.maxWidth < 600)
-              ? CustomScrollView(slivers: [breadcrumbs, ...bodyContent])
+              ? CustomScrollView(
+                  slivers: [breadcrumbs, ...bodyContent, defectAttachmentsPane],
+                )
               : CustomScrollView(
                   slivers: [
                     breadcrumbs,
 
                     SliverCrossAxisGroup(slivers: bodyContent),
+                    defectAttachmentsPane,
                   ],
                 );
         },
@@ -74,7 +87,7 @@ class _DefectDetailsBody extends HookConsumerWidget {
     return RiverpodScreen(
       state: defectState,
       useSliver: true,
-      child: (defect) {
+      builder: (defect) {
         return HookBuilder(
           builder: (context) {
             final defectProvider = ref.read(
@@ -186,7 +199,7 @@ class _DefectDetailsBody extends HookConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(context.translate.status),
-                  DropdownMenu<models.DefectStatus>(
+                  DropdownMenu<DefectStatus>(
                     expandedInsets: EdgeInsets.zero,
                     initialSelection: defect.status,
                     enableFilter: true,
@@ -196,7 +209,7 @@ class _DefectDetailsBody extends HookConsumerWidget {
                         defect.copyWith(status: value),
                       );
                     },
-                    dropdownMenuEntries: models.DefectStatus.values
+                    dropdownMenuEntries: DefectStatus.values
                         .map((e) => DropdownMenuEntry(value: e, label: e.name))
                         .toList(),
                   ),
@@ -241,16 +254,18 @@ class _DefectDetailsElimination extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final eliminationProvider = ref.watch(defectEliminationProvider(defectId));
+    final eliminationProvider = ref.watch(
+      defectEliminationProviderProvider(defectId),
+    );
     final eliminationProviderNotifier = ref.read(
-      defectEliminationProvider(defectId).notifier,
+      defectEliminationProviderProvider(defectId).notifier,
     );
     return RiverpodScreen(
       useSliver: true,
       state: eliminationProvider,
-      child: (data) {
+      builder: (data) {
         if (data == null) {
-          return SliverFillRemaining(
+          return SliverToBoxAdapter(
             child: Align(
               child: TextButton(
                 onPressed: eliminationProviderNotifier.createDefectElimination,
@@ -285,7 +300,7 @@ class _DefectDetailsElimination extends HookConsumerWidget {
 }
 
 class _DefectEliminationTitleRow extends StatelessWidget {
-  final DefectElimination eliminationProviderNotifier;
+  final DefectEliminationProvider eliminationProviderNotifier;
 
   const _DefectEliminationTitleRow({required this.eliminationProviderNotifier});
 
@@ -309,8 +324,8 @@ class _DefectEliminationTitleRow extends StatelessWidget {
 }
 
 class _DefectEliminationStartDateButton extends StatelessWidget {
-  final DefectElimination eliminationProviderNotifier;
-  final models.DefectElimination data;
+  final DefectEliminationProvider eliminationProviderNotifier;
+  final DefectElimination data;
 
   const _DefectEliminationStartDateButton({
     required this.eliminationProviderNotifier,
@@ -331,8 +346,8 @@ class _DefectEliminationStartDateButton extends StatelessWidget {
 }
 
 class _DefectEliminationEndDateButton extends StatelessWidget {
-  final DefectElimination eliminationProviderNotifier;
-  final models.DefectElimination data;
+  final DefectEliminationProvider eliminationProviderNotifier;
+  final DefectElimination data;
 
   const _DefectEliminationEndDateButton({
     required this.eliminationProviderNotifier,
@@ -404,5 +419,73 @@ class _DefectEliminationDateRow extends StatelessWidget {
         ),
       ],
     );
+  }
+}
+
+class DefectAttachmentList extends StatelessWidget {
+  final String defectId;
+  const DefectAttachmentList({super.key, required this.defectId});
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer(
+      builder: (context, ref, child) {
+        return PaginatedGrid<DefectAttachmentListState, DefectAttachment>(
+          title: context.translate.defectAttachments,
+          columns: [
+            context.translate.name,
+            context.translate.fileSize,
+            context.translate.uploadDate,
+          ],
+          cardBuilder: (DefectAttachment data) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(data.fileName),
+                Text('${data.fileSize} bytes'),
+                Text(data.uploadDate.toLocal().toShortDateString()),
+              ],
+            );
+          },
+          tableRowBuilder: (DefectAttachment data) {
+            return [
+              Text(data.fileName),
+              Text('${data.fileSize} bytes'),
+              Text(data.uploadDate.toLocal().toShortDateString()),
+            ];
+          },
+          dataFetcher: (WidgetRef ref, int page) => ref.watch(
+            defectAttachmentListProvider(
+              defectId: defectId,
+              page: page,
+              query: const DefectAttachmentListQuery(),
+            ),
+          ),
+          onClick: (DefectAttachment data) {},
+
+          onCreateNewItem: () => onCreateAttachment(ref: ref, page: 1),
+          filterOverlay: null,
+          resizableRowStorage: ref.watch(
+            resizableRowStorageProvider('defect_attachments'),
+          ),
+        );
+      },
+    );
+  }
+
+  void onCreateAttachment({required WidgetRef ref, required int page}) {
+    FilePicker.platform.pickFiles().then((result) {
+      if (result == null || result.files.isEmpty) return;
+      final file = result.files.first;
+      ref
+          .read(
+            defectAttachmentListProvider(
+              defectId: defectId,
+              page: page,
+              query: const DefectAttachmentListQuery(),
+            ).notifier,
+          )
+          .createDefectAttachment(file);
+    });
   }
 }

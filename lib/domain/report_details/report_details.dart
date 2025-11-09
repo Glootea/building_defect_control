@@ -36,6 +36,6 @@ class ReportDetails extends _$ReportDetails {
       );
       await reportsDataProvider.patchReport(request);
     });
-    ref.invalidate(defectListUpdaterProvider);
+    ref.invalidate(reportListUpdaterProvider);
   }
 }

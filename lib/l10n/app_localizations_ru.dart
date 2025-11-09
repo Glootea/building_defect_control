@@ -139,4 +139,13 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get closed => 'Закрыто';
+
+  @override
+  String get defectAttachments => 'Вложения дефекта';
+
+  @override
+  String get fileSize => 'Размер файла';
+
+  @override
+  String get uploadDate => 'Дата загрузки';
 }

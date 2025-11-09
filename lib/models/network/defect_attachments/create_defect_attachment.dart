@@ -2,17 +2,19 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'create_defect_attachment.g.dart';
 
-class CreateDefectAttachmentRequest {
-  final String file;
-
-  const CreateDefectAttachmentRequest({required this.file});
-}
-
 @JsonSerializable()
 class CreateDefectAttachmentResponse {
+  final String id;
   final String fileName;
+  final int fileSize;
+  final String contentType;
 
-  const CreateDefectAttachmentResponse({required this.fileName});
+  const CreateDefectAttachmentResponse({
+    required this.fileName,
+    required this.id,
+    required this.fileSize,
+    required this.contentType,
+  });
 
   factory CreateDefectAttachmentResponse.fromJson(Map<String, dynamic> json) =>
       _$CreateDefectAttachmentResponseFromJson(json);

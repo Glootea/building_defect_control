@@ -117,6 +117,12 @@ class ReportDetailsPane extends ConsumerStatefulWidget {
 class _ReportDetailsPaneState extends ConsumerState<ReportDetailsPane> {
   @override
   Widget build(BuildContext context) {
+    final provider = ref.read(
+      reportDetailsProvider(
+        projectId: widget.projectId,
+        reportId: widget.reportId,
+      ).notifier,
+    );
     return RiverpodScreen(
       state: ref.watch(
         reportDetailsProvider(
@@ -124,7 +130,7 @@ class _ReportDetailsPaneState extends ConsumerState<ReportDetailsPane> {
           reportId: widget.reportId,
         ),
       ),
-      child: (data) {
+      builder: (data) {
         return Padding(
           padding: const EdgeInsets.all(8.0),
           child: HookBuilder(
@@ -142,10 +148,20 @@ class _ReportDetailsPaneState extends ConsumerState<ReportDetailsPane> {
               final separator = const SizedBox(height: 16, width: 16);
               final reportDetailsChildren = [
                 Text(context.translate.name, style: textStyle),
-                TextField(controller: nameController, maxLines: 1),
+                TextField(
+                  controller: nameController,
+                  maxLines: 1,
+                  onChanged: (value) =>
+                      provider.updateReport(data.copyWith(name: value)),
+                ),
                 separator,
                 Text(context.translate.description, style: textStyle),
-                TextField(controller: descriptionController, maxLines: null),
+                TextField(
+                  controller: descriptionController,
+                  maxLines: null,
+                  onChanged: (value) =>
+                      provider.updateReport(data.copyWith(description: value)),
+                ),
                 const SizedBox(height: 8),
                 Row(
                   spacing: 8,

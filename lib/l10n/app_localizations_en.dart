@@ -139,4 +139,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get closed => 'Closed';
+
+  @override
+  String get defectAttachments => 'Defect Attachments';
+
+  @override
+  String get fileSize => 'File Size';
+
+  @override
+  String get uploadDate => 'Upload Date';
 }

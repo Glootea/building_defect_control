@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class RiverpodScreen<T> extends StatefulWidget {
-  final Widget Function(T data) child;
+  final Widget Function(T data) builder;
   final AsyncValue<T> state;
   final bool useSliver;
   const RiverpodScreen({
-    required this.child,
+    required this.builder,
     required this.state,
     this.useSliver = false,
     super.key,
@@ -76,17 +76,17 @@ class _RiverpodScreenState<T> extends State<RiverpodScreen<T>> {
       return SliverFadeTransition(
         opacity: Tween(begin: 0.0, end: 1.0).animate(animation),
         sliver: (widget.state.isLoading)
-            ? const SliverFillRemaining(
+            ? const SliverToBoxAdapter(
                 child: Center(child: CircularProgressIndicator()),
               )
-            : widget.child(widget.state.value as T),
+            : widget.builder(widget.state.value as T),
       );
     }
     return FadeTransition(
       opacity: Tween(begin: 0.0, end: 1.0).animate(animation),
       child: (widget.state.isLoading)
           ? const Center(child: CircularProgressIndicator())
-          : widget.child(widget.state.value as T),
+          : widget.builder(widget.state.value as T),
     );
   }
 }

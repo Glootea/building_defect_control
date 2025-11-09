@@ -1,4 +1,5 @@
 import 'package:control/di/di.dart';
+import 'package:control/domain/project_details/project_details.dart';
 import 'package:control/domain/report_list/report_list.dart';
 import 'package:control/domain/report_list/report_list.state.dart';
 import 'package:control/domain/report_list/report_list_query.dart';
@@ -10,6 +11,7 @@ import 'package:control/utils/breadcrums.dart';
 import 'package:control/utils/context_extentions.dart';
 import 'package:control/utils/datetime_formatter.dart';
 import 'package:control/utils/paginated_grid.dart';
+import 'package:control/utils/riverpod_screen.dart';
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -43,6 +45,10 @@ class _ProjectListScreenState extends ConsumerState<ReportListScreen> {
       body: CustomScrollView(
         slivers: [
           const Breadcrums(),
+          ProjectEditPane(
+            projectId: widget.projectId,
+            initialName: widget.projectName,
+          ),
           PaginatedGrid<ReportListState, Report>(
             title: context.translate.reportsRouteName,
 
@@ -132,6 +138,62 @@ class _ProjectListScreenState extends ConsumerState<ReportListScreen> {
             projectId: projectId,
             reportId: createdReportId,
           ).push(context);
+        },
+      ),
+    );
+  }
+}
+
+class ProjectEditPane extends StatefulWidget {
+  final String projectId;
+  final String initialName;
+  const ProjectEditPane({
+    super.key,
+    required this.projectId,
+    required this.initialName,
+  });
+
+  @override
+  State<ProjectEditPane> createState() => _ProjectEditPaneState();
+}
+
+class _ProjectEditPaneState extends State<ProjectEditPane> {
+  late final TextEditingController _controller = TextEditingController(
+    text: widget.initialName,
+  );
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer(
+      builder: (context, ref, _) => RiverpodScreen(
+        useSliver: true,
+        state: ref.watch(projectDetailsProvider(projectId: widget.projectId)),
+        builder: (data) {
+          return SliverPadding(
+            padding: const EdgeInsets.all(16.0),
+            sliver: SliverToBoxAdapter(
+              child: TextField(
+                controller: _controller,
+                decoration: InputDecoration(labelText: context.translate.name),
+                onChanged: (value) {
+                  final updatedProject = data.copyWith(name: value);
+                  ref
+                      .read(
+                        projectDetailsProvider(
+                          projectId: widget.projectId,
+                        ).notifier,
+                      )
+                      .updateProject(updatedProject);
+                },
+              ),
+            ),
+          );
         },
       ),
     );

@@ -361,6 +361,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Closed'**
   String get closed;
+
+  /// No description provided for @defectAttachments.
+  ///
+  /// In en, this message translates to:
+  /// **'Defect Attachments'**
+  String get defectAttachments;
+
+  /// No description provided for @fileSize.
+  ///
+  /// In en, this message translates to:
+  /// **'File Size'**
+  String get fileSize;
+
+  /// No description provided for @uploadDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload Date'**
+  String get uploadDate;
 }
 
 class _AppLocalizationsDelegate

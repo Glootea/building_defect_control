@@ -4,6 +4,8 @@ import 'package:control/models/network/defect/create_defect.dart';
 import 'package:control/models/network/defect/get_defect_by_id.dart';
 import 'package:control/models/network/defect/get_defects_by_report_id.dart';
 import 'package:control/models/network/defect/patch_defect_by_id.dart';
+import 'package:control/models/network/defect_attachments/create_defect_attachment.dart';
+import 'package:control/models/network/defect_attachments/get_defect_attachments.dart';
 import 'package:control/models/network/project/create_project.dart';
 import 'package:control/models/network/project/get_project_by_id.dart';
 import 'package:control/models/network/project/get_projects.dart';
@@ -16,6 +18,7 @@ import 'package:control/models/network/user/create_user.dart';
 import 'package:control/models/network/user/login_user.dart';
 import 'package:control/models/user.dart';
 import 'package:dio/dio.dart';
+import 'package:file_picker/file_picker.dart';
 
 class DataProvider implements IDataProvider {
   const DataProvider(this.dio);
@@ -226,5 +229,46 @@ class DefectDataProvider implements IDefectDataProvider {
     required String reportId,
   }) async {
     await dio.delete('api/reports/$reportId/defects/$defectId');
+  }
+}
+
+class DefectAttachmentProvider implements IDefectAttachmentProvider {
+  @override
+  final String defectId;
+  final Dio dio;
+
+  const DefectAttachmentProvider({required this.dio, required this.defectId});
+
+  @override
+  Future<CreateDefectAttachmentResponse> uploadDefectAttachment(
+    PlatformFile file,
+  ) async {
+    final fileBytes = file.bytes?.toList();
+    if (fileBytes == null) {
+      throw Exception('File bytes are null');
+    }
+    final response = await dio.post(
+      'api/defects/$defectId/attachments',
+      data: MultipartFile.fromBytes(fileBytes),
+      options: Options(contentType: 'multipart/form-data'),
+    );
+
+    return CreateDefectAttachmentResponse.fromJson(response.data);
+  }
+
+  @override
+  Future<GetDefectAttachmentsResponse> getDefectAttachments(
+    GetDefectAttachementsRequest request,
+  ) async {
+    final response = await dio.get(
+      'api/defects/$defectId/attachments',
+      queryParameters: request.queryParams,
+    );
+    return GetDefectAttachmentsResponse.fromJson(response.data);
+  }
+
+  @override
+  Future<void> deleteDefectAttachment(String attachmentId) {
+    return dio.delete('api/defects/$defectId/attachments/$attachmentId');
   }
 }

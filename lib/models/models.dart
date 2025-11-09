@@ -57,6 +57,7 @@ class Report with _$Report {
 class DefectAttachment with _$DefectAttachment {
   final String id;
   final String defectId;
+  final String fileName;
   final int fileSize;
   final String contentType;
   final DateTime uploadDate;
@@ -67,6 +68,7 @@ class DefectAttachment with _$DefectAttachment {
     required this.fileSize,
     required this.contentType,
     required this.uploadDate,
+    required this.fileName,
   });
 
   factory DefectAttachment.fromJson(Map<String, Object?> json) =>

@@ -21,7 +21,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     return Scaffold(
       body: RiverpodScreen<UserData?>(
         state: state,
-        child: (user) {
+        builder: (user) {
           final items = [
             Icon(Icons.person_outline, size: 100),
             Text(

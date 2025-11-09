@@ -41,12 +41,14 @@ DefectAttachment _$DefectAttachmentFromJson(Map<String, dynamic> json) =>
       fileSize: (json['fileSize'] as num).toInt(),
       contentType: json['contentType'] as String,
       uploadDate: DateTime.parse(json['uploadDate'] as String),
+      fileName: json['fileName'] as String,
     );
 
 Map<String, dynamic> _$DefectAttachmentToJson(DefectAttachment instance) =>
     <String, dynamic>{
       'id': instance.id,
       'defectId': instance.defectId,
+      'fileName': instance.fileName,
       'fileSize': instance.fileSize,
       'contentType': instance.contentType,
       'uploadDate': instance.uploadDate.toIso8601String(),

@@ -21,7 +21,7 @@ class PaginatedGrid<PaginatedValueType extends PaginatedResponse, ValueDataType>
   final ResizableRowStorage resizableRowStorage;
 
   /// Has width of 300
-  final Widget filterOverlay;
+  final Widget? filterOverlay;
   final SliverGridDelegate gridDelegate;
   // TODO: onDelete with delete button
 
@@ -251,7 +251,7 @@ class _Header extends StatelessWidget {
     horizontal: 16,
     vertical: 8,
   );
-  final Widget filterOverlay;
+  final Widget? filterOverlay;
   final void Function()? onCreateNewItem;
 
   final bool isListLayout;
@@ -315,13 +315,17 @@ class _Header extends StatelessWidget {
 }
 
 class _FilterButton extends StatelessWidget {
-  final Widget filterOverlay;
+  final Widget? filterOverlay;
   final OverlayPortalController _tooltipController = OverlayPortalController();
 
   _FilterButton({required this.filterOverlay});
 
   @override
   Widget build(BuildContext context) {
+    if (filterOverlay == null) {
+      return SizedBox.shrink();
+    }
+
     return OverlayPortal(
       controller: _tooltipController,
       overlayChildBuilder: (_) {

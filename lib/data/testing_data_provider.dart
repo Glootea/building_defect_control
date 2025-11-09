@@ -19,6 +19,7 @@ import 'package:control/models/network/report/get_reports_by_project_id.dart';
 import 'package:control/models/network/report/patch_report.dart';
 import 'package:control/models/network/user/create_user.dart';
 import 'package:control/models/user.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:uuid/uuid.dart';
 
 class TestingDataProvider implements IDataProvider {
@@ -483,10 +484,23 @@ class TestingDefectAttachmentDataProvider implements IDefectAttachmentProvider {
 
   @override
   Future<CreateDefectAttachmentResponse> uploadDefectAttachment(
-    CreateDefectAttachmentRequest request,
+    PlatformFile file,
   ) {
+    storage.attachments.add(
+      DefectAttachment(
+        id: Uuid().v7(),
+        defectId: defectId,
+        fileName: file.name,
+        contentType: file.extension ?? 'application/octet-stream',
+        fileSize: file.size,
+        uploadDate: DateTime.now(),
+      ),
+    );
     return Future.value(
       CreateDefectAttachmentResponse(
+        id: Uuid().v7(),
+        contentType: file.extension ?? 'application/octet-stream',
+        fileSize: file.size,
         fileName: 'fileName${storage.attachments.length + 1}.ext',
       ),
     );
@@ -494,7 +508,9 @@ class TestingDefectAttachmentDataProvider implements IDefectAttachmentProvider {
 
   @override
   Future<void> deleteDefectAttachment(String attachmentId) {
-    // storage.attachments.removeWhere((attachment) => attachment.id == attachmentId); TODO: fix on backend
+    storage.attachments.removeWhere(
+      (attachment) => attachment.id == attachmentId,
+    );
     return _simulateDelay();
   }
 
