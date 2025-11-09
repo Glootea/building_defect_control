@@ -64,7 +64,13 @@ class _PaginatedGridState<
 
     return responseAsync.when(
       error: (err, stack) => (indexInPage == 0) ? Text(err.toString()) : null,
-      loading: () => null,
+      loading: () => SizedBox(
+        height: 100,
+        width: 100,
+        child: (indexInPage == 0)
+            ? Center(child: const CircularProgressIndicator())
+            : null,
+      ),
       data: (response) {
         if (index >= response.metadata.totalCount) {
           return null;
