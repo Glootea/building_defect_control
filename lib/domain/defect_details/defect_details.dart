@@ -20,17 +20,21 @@ class DefectDetails extends _$DefectDetails {
     return response.toDefect();
   }
 
+  late final _decouncer = ref.read(debouncerProvider);
+
   Future<void> updateDefect(Defect defect) async {
     state = AsyncValue.data(defect);
-    final request = PatchDefectByIdRequest(
-      reportId: reportId,
-      defectId: defectId,
-      name: defect.name,
-      description: defect.description,
-      classification: defect.classification,
-      status: defect.status,
-    );
-    await dataProvider.patchDefect(request);
-    ref.invalidate(defectListUpdaterProvider);
+    _decouncer.run(() async {
+      final request = PatchDefectByIdRequest(
+        reportId: reportId,
+        defectId: defectId,
+        name: defect.name,
+        description: defect.description,
+        classification: defect.classification,
+        status: defect.status,
+      );
+      await dataProvider.patchDefect(request);
+      ref.invalidate(defectListUpdaterProvider);
+    });
   }
 }

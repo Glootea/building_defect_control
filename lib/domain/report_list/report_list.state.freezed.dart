@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ReportListState {
 
- List<Report> get reports; String get searchQuery; PaginatedMetadata get metadata;
+ List<Report> get reports; PaginatedMetadata get metadata;
 /// Create a copy of ReportListState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $ReportListStateCopyWith<ReportListState> get copyWith => _$ReportListStateCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ReportListState&&const DeepCollectionEquality().equals(other.reports, reports)&&(identical(other.searchQuery, searchQuery) || other.searchQuery == searchQuery)&&(identical(other.metadata, metadata) || other.metadata == metadata));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ReportListState&&const DeepCollectionEquality().equals(other.reports, reports)&&(identical(other.metadata, metadata) || other.metadata == metadata));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(reports),searchQuery,metadata);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(reports),metadata);
 
 @override
 String toString() {
-  return 'ReportListState(reports: $reports, searchQuery: $searchQuery, metadata: $metadata)';
+  return 'ReportListState(reports: $reports, metadata: $metadata)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $ReportListStateCopyWith<$Res>  {
   factory $ReportListStateCopyWith(ReportListState value, $Res Function(ReportListState) _then) = _$ReportListStateCopyWithImpl;
 @useResult
 $Res call({
- List<Report> reports, String searchQuery, PaginatedMetadata metadata
+ List<Report> reports, PaginatedMetadata metadata
 });
 
 
@@ -62,11 +62,10 @@ class _$ReportListStateCopyWithImpl<$Res>
 
 /// Create a copy of ReportListState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? reports = null,Object? searchQuery = null,Object? metadata = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? reports = null,Object? metadata = null,}) {
   return _then(ReportListState(
 reports: null == reports ? _self.reports : reports // ignore: cast_nullable_to_non_nullable
-as List<Report>,searchQuery: null == searchQuery ? _self.searchQuery : searchQuery // ignore: cast_nullable_to_non_nullable
-as String,metadata: null == metadata ? _self.metadata : metadata // ignore: cast_nullable_to_non_nullable
+as List<Report>,metadata: null == metadata ? _self.metadata : metadata // ignore: cast_nullable_to_non_nullable
 as PaginatedMetadata,
   ));
 }

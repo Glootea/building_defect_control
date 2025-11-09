@@ -20,6 +20,7 @@ class DefectElimination extends _$DefectElimination {
     ref.invalidateSelf();
   }
 
+  late final _decouncer = ref.read(debouncerProvider);
   Future<void> updateDefect({
     DateTime? startDate,
     DateTime? endDate,
@@ -34,7 +35,11 @@ class DefectElimination extends _$DefectElimination {
       priority: priority ?? elimination.priority,
     );
     state = AsyncValue.data(updatedElimination);
-    await dataProvider.updateDefectElimination(updatedElimination);
+
+    return _decouncer.run(
+      () async =>
+          await dataProvider.updateDefectElimination(updatedElimination),
+    );
   }
 
   Future<void> deleteDefectElimination() async {

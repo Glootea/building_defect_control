@@ -1,5 +1,6 @@
 import 'package:control/di/di.dart';
 import 'package:control/models/models.dart';
+import 'package:control/models/network/report/patch_report.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'report_details.g.dart';
 
@@ -14,9 +15,7 @@ class ReportDetails extends _$ReportDetails {
     required String projectId,
     required String reportId,
   }) async {
-    state = const AsyncLoading();
     final response = await reportsDataProvider.getReportById(reportId);
-    print('report details loaded: $response');
     return Report(
       id: response.id,
       name: response.name,
@@ -25,8 +24,18 @@ class ReportDetails extends _$ReportDetails {
     );
   }
 
+  late final _decouncer = ref.read(debouncerProvider);
   Future<void> updateReport(Report report) async {
-    // TODO: Implement update report logic
+    state = AsyncValue.data(report);
+    _decouncer.run(() async {
+      final request = PatchReportRequest(
+        reportId: reportId,
+        projectId: projectId,
+        name: report.name,
+        description: report.description,
+      );
+      await reportsDataProvider.patchReport(request);
+    });
     ref.invalidate(defectListUpdaterProvider);
   }
 }

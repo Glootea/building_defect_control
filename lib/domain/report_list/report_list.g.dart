@@ -50,7 +50,7 @@ final class ReportListProvider
   }
 }
 
-String _$reportListHash() => r'd286d0e112d0c6f5f6d09957643bd07e8bed8293';
+String _$reportListHash() => r'f46ef61b8f12e24be24d1a5346d31f00da1002f7';
 
 final class ReportListFamily extends $Family
     with

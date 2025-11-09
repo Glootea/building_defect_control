@@ -63,7 +63,7 @@ class _PaginatedGridState<
     final responseAsync = widget.dataFetcher(ref, page);
 
     return responseAsync.when(
-      error: (err, stack) => Text(err.toString()),
+      error: (err, stack) => (indexInPage == 0) ? Text(err.toString()) : null,
       loading: () => null,
       data: (response) {
         if (index >= response.metadata.totalCount) {

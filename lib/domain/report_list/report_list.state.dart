@@ -5,16 +5,10 @@ part 'report_list.state.freezed.dart';
 
 @freezed
 class ReportListState with _$ReportListState implements PaginatedResponse {
-  const ReportListState({
-    required this.reports,
-    required this.searchQuery,
-    required this.metadata,
-  });
+  const ReportListState({required this.reports, required this.metadata});
 
   @override
   final List<Report> reports;
-  @override
-  final String searchQuery;
   @override
   final PaginatedMetadata metadata;
 

@@ -12,6 +12,10 @@ class ProjectList extends _$ProjectList {
   @override
   Future<ProjectListState> build(int page, String query) async {
     _listenToItemUpdate(ref);
+
+    final riverpodDebouncer = ref.read(riverpodDebouncerProvider);
+    await riverpodDebouncer.start(ref);
+
     final projectsDataProvider = ref.read(projectDataProviderProvider);
     final request = GetProjectsRequest(
       name: query,

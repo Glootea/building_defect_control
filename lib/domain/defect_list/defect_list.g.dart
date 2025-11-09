@@ -51,7 +51,7 @@ final class DefectListScreenProvider
   }
 }
 
-String _$defectListScreenHash() => r'09f0156dab6266a0af4b25c56c5c7521be21b236';
+String _$defectListScreenHash() => r'8bc752c09420dcecdfd83a94e17eec40895cd6d7';
 
 final class DefectListScreenFamily extends $Family
     with

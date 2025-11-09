@@ -19,6 +19,9 @@ class DefectListScreen extends _$DefectListScreen {
     // TODO: throttle in all lists with query on query change
     _listenToItemUpdate(ref);
 
+    final riverpodDebouncer = ref.read(riverpodDebouncerProvider);
+    await riverpodDebouncer.start(ref);
+
     final defectDataProvider = ref.read(defectDataProviderProvider(reportId));
 
     final request = GetDefectsByReportIdRequest(

@@ -5,6 +5,7 @@ import 'package:control/data/testing_data_provider.dart';
 import 'package:control/domain/user/user_cache.dart';
 import 'package:control/navigation/guard.dart';
 import 'package:control/utils/resizable_row_builder.dart';
+import 'package:control/utils/timed_callbacks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
@@ -103,6 +104,16 @@ ResizableRowStorage resizableRowStorage(Ref ref, String id) {
 ControlNavigatorObserver navigatorStackObserver(Ref ref) {
   return ControlNavigatorObserver();
 }
+
+const _debounceDuration = Duration(milliseconds: 300);
+
+final debouncerProvider = Provider.autoDispose(
+  (_) => Debouncer(duration: _debounceDuration),
+);
+
+final riverpodDebouncerProvider = Provider.autoDispose(
+  (_) => RiverpodDebouncer(duration: _debounceDuration),
+);
 
 final projectListUpdaterProvider = Provider.autoDispose((_) => DateTime.now());
 final reportListUpdaterProvider = Provider.autoDispose((_) => DateTime.now());

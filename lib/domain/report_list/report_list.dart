@@ -20,7 +20,9 @@ class ReportList extends _$ReportList {
     ReportListQueryState query,
   ) async {
     _listenToItemUpdate(ref);
-    final lastState = state;
+
+    final riverpodDebouncer = ref.read(riverpodDebouncerProvider);
+    await riverpodDebouncer.start(ref);
 
     final request = GetReportsByProjectIdRequest(
       pagination: PaginationQueryParams(pageNumber: page),
@@ -29,11 +31,7 @@ class ReportList extends _$ReportList {
       description: query.description,
     );
     final response = await reportsDataProvider.getReportByProjectId(request);
-    return ReportListState(
-      reports: response.data,
-      searchQuery: lastState.value?.searchQuery ?? '',
-      metadata: response.metadata,
-    );
+    return ReportListState(reports: response.data, metadata: response.metadata);
   }
 
   Future<String?> createReport(String name, String description) async {
